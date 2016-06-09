@@ -1,0 +1,3 @@
+#!/bin/sh
+rm ./graphics/*.pdf 2>/dev/null
+rm ./graphics/*.png 2>/dev/null

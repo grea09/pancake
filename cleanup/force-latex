@@ -1,0 +1,4 @@
+#!/bin/sh
+ echo "" | pdflatex *.tex >/dev/null
+rm *.log 2>/dev/null
+rm *.out 2>/dev/null

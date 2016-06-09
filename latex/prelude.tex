@@ -1,0 +1,55 @@
+\usepackage{xcolor, algorithm, amsthm}
+\usepackage{xcolor-solarized}
+\usepackage[noend]{algpseudocode}
+\usepackage{times, graphicx}
+
+%%%%%% for damn UTF8
+\DeclareUnicodeCharacter{22A7}{$\models$}
+\DeclareUnicodeCharacter{2011}{\mbox{-}}
+
+%%%%%% for algorithms
+\algnewcommand\Continue{\State \textbf{continue}}
+\algrenewcommand\alglinenumber[1]{\tiny\color{solarized-base0} #1}
+\algrenewcommand{\algorithmiccomment}[1]{{\hfill\hfill\it\color{solarized-base01} #1}}
+%\input{latex/algorithicx.rule.patch.tex} %For rulers on algorithmicx
+\renewcommand{\thealgruleextra}{\color{solarized-base0}}
+
+%%%% For listings (code blocks)
+\lstset{
+    basicstyle={\footnotesize\ttfamily},
+    numbers=left,
+    keywordstyle=\color{solarized-orange}\bfseries,
+%    identifierstyle=\color{solarized-base02},
+    stringstyle=\color{solarized-cyan},
+    commentstyle=\color{solarized-base1}\itshape,
+    numberstyle=\tiny\color{solarized-base0},
+    columns=flexible,
+    stepnumber=1,
+    numbersep=5pt,
+    backgroundcolor=\color{solarized-base3},
+    showspaces=false,
+    showstringspaces=false,
+    showtabs=false,
+    tabsize=2,
+    captionpos=b,
+    breaklines=true,
+    breakatwhitespace=true,
+    breakautoindent=true,
+    escapeinside={\%*}{*)},
+    linewidth=\textwidth,
+    basewidth=0.5em,
+}
+
+
+%%%% For links URL
+\hypersetup{colorlinks=true, linkcolor=solarized-blue, citecolor=solarized-base1, filecolor=solarized-magenta, urlcolor=solarized-cyan}
+
+\setlength{\abovecaptionskip}{-1pt} % space before figure
+%\setlength{\belowcaptionskip}{0mm} % space after figure
+%\setlength{\abovedisplayskip}{-2cm} % space before maths
+%\setlength{\belowdisplayskip}{-1cm} % space after maths
+%\setlength{\abovedisplayshortskip}{-2cm} % space before short maths
+%\setlength{\belowdisplayshortskip}{-1cm} % space after short maths
+
+\newtheorem{definition}{Definition}
+\newtheorem{lemma}{Lemma}
