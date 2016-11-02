@@ -91,7 +91,7 @@ def pandoc_science(key, value, format, meta):
                                    html('<dd>')] + contents + [html('</dd>\n</dl>')]
                     return Div([ident, classes, kvs], newcontents)
                 else:
-                    return [ RawInline('markdown', '**' + names[class_] + ' ' + str(counts[class_]) + '** ' + parentesis(name)) ] + contents
+                    return Div([ident, classes, kvs], [ html('<dt>' + names[class_] + ' ' + str(counts[class_]) + '</dt> ' + parentesis(name)) ] + contents)
     elif key == 'Span':
         [[ident, classes, kvs], contents] = value
         for class_ in classes:

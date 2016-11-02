@@ -9,7 +9,7 @@ jfpda:
                 - "\\input{.panzer/latex/prelude.tex}"
                 - "\\usepackage{booktabs}"
                 - "\\nonstopmode"
-                - "\\institute{ Université de Lyon, CNRS\\\\Université Lyon 1, LIRIS, UMR5205, F-69622, France\\\\ \\texttt{prenom.nom@univ-lyon1.fr}}"
+                - "\\institute{ Université de Lyon, CNRS\\\\Université Claude Bernard Lyon 1 , LIRIS, UMR5205, F-69622, France\\\\ \\texttt{prenom.nom@univ-lyon1.fr}}"
         cleanup:
             - kill: clean
             - run: force-latex

@@ -1,8 +1,10 @@
-ecai:
+ieee:
     parent: article
     all:
         metadata:
             csl: .panzer/csl/ieee.csl
     latex:
         metadata:
-            documentclass: .panzer/template/ecai
+            documentclass: .panzer/template/ieee
+        comandline:
+            biblatex: true

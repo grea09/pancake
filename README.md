@@ -2,17 +2,23 @@
 
 Packages to install on Ubuntu 14.04 (sudo apt-get install) :
 
-* texlive-science
-* texlive-fonts-recommended
-* texlive-latex-extra
+<!--* texlive-science * texlive-fonts-recommended * texlive-latex-extra * texlive-generic-extra-->
 * xzdec
 * pandoc
 * pandoc-citeproc
 * inotify-tools
+* git
 * python
+* python-pip
 * python3-pip
 
-CTAN package (tlmgr init-usertree && tlmgr install ):
+Manual Latex install :
+
+http://mirror.ctan.org/systems/texlive/tlnet/install-tl-unx.tar.gz
+
+sudo ./install-tl
+
+CTAN package (sudo tlmgr install ):
 
 * xcolor-solarized
 
@@ -26,7 +32,7 @@ Python 3 :
 
 # Install
 
-Simply copy the script in `./bin/paanzer-auto` to the system (somewhere like `/usr/local/bin/`)
+Simply copy the script in `./bin/panzer-auto` to the system (somewhere like `/usr/local/bin/`)
 
 # Usage
 

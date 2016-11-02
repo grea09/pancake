@@ -1,4 +1,4 @@
-article:
+jdt:
     all:
         metadata:
             smart: true
@@ -29,17 +29,12 @@ article:
 
     latex:
         metadata:
-            latex-engine: xelatex
+            latex-engine: pdflatex
             fontsize: 10pt,twocolumn
-            mainfont: Aller
-            monofont: Hack
-            documentclass: article
+            documentclass: .panzer/template/jdt
             listings: true
             cref: true
-            header-includes:
-                - "\\input{.panzer/latex/algorithmicx.rule.patch.tex}"
-                - "\\input{.panzer/latex/prelude.tex}"
-                - "\\usepackage{booktabs}"
+        template: jdt
         commandline:
             listings: true
             standalone: true
