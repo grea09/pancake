@@ -1,0 +1,37 @@
+rapport:
+    all:
+        metadata:
+            smart: true
+            standalone: true
+            numbersections: true
+            secPrefix:
+                - section
+                - sections
+            figPrefix:
+                - figure
+                - figures
+            eqnPrefix:
+                - equation
+                - equations
+            tblPrefix:
+                - table
+                - tables
+            markdown_in_html_blocks: true
+            bibliography: ".panzer/bibliography/zotero.bib"
+            csl: .panzer/csl/ieee.csl
+        filter:
+            - run: pandoc-crossref
+            - run: pandoc-science.py
+            - run: pandoc-citeproc
+            - run: pandoc-svg.py
+        preflight:
+            - run: symbolic-alias
+        postflight:
+            - run: odt2pdf
+        cleanup:
+            - run: clean
+
+    odt:
+        commandline:
+            reference-odt: "`.panzer/template/rapport.odt`"
+

@@ -1,0 +1,50 @@
+jdt:
+    all:
+        metadata:
+            smart: true
+            standalone: true
+            numbersections: true
+            secPrefix:
+                - section
+                - sections
+            figPrefix:
+                - figure
+                - figures
+            eqnPrefix:
+                - equation
+                - equations
+            tblPrefix:
+                - table
+                - tables
+            markdown_in_html_blocks: true
+            link-citations: true
+            bibliography: .panzer/bibliography/zotero.bib
+            csl: .panzer/csl/ieee.csl
+        preflight:
+            - run: symbolic-alias
+        filter:
+            - run: pandoc-crossref
+            - run: pandoc-science.py
+            - run: pandoc-citeproc
+
+    latex:
+        metadata:
+            latex-engine: pdflatex
+            fontsize: 10pt,twocolumn
+            documentclass: .panzer/template/jdt
+            listings: true
+            cref: true
+        template: jdt
+        commandline:
+            listings: true
+            standalone: true
+        filter:
+            - run: pandoc-svg.py
+            - run: pandoc-table.py
+            - run: code-minipage
+
+    odt:
+        postflight:
+            - run: odt2pdf
+        commandline:
+            reference-odt: "`.panzer/template/article.odt`"

@@ -1,6 +1,6 @@
 # Dependencies
 
-Packages to install on Ubuntu 14.04 (sudo apt-get install) :
+Packages to install on Ubuntu 16.04 (sudo apt-get install) :
 
 <!--* texlive-science * texlive-fonts-recommended * texlive-latex-extra * texlive-generic-extra-->
 * xzdec
@@ -32,11 +32,11 @@ Python 3 :
 
 # Install
 
-Simply copy the script in `./bin/panzer-auto` to the system (somewhere like `/usr/local/bin/`)
+Simply copy the script in `./bin/pancake` to the system (somewhere like `/usr/local/bin/`)
 
 # Usage
 
-panzer-auto FORMAT FILE
+pancake FILE FORMAT
 
 * FORMAT : odt, tex, pdf (generate pdf file for each method)
 

@@ -34,10 +34,13 @@ def svg_to_any(key, value, fmt, meta):
             except OSError:
                 mtime = -1
             if mtime < os.path.getmtime(src):
-                cmd_line = ['inkscape', option[0], eps_name, src]
+                cmd_line = ['inkscape', '-z', option[0] , eps_name, src]
                 #sys.stderr.write("Running %s\n" % " ".join(cmd_line))
-                subprocess.call(cmd_line, stdout=sys.stderr.fileno())
-            return Image(['', [], []], alt, [eps_name, title])
+                ps = subprocess.Popen(cmd_line, stderr=subprocess.PIPE)
+                error = subprocess.check_output(('grep', '-v', 'Gtk'), stdin=ps.stderr)
+                ps.wait()
+                print >> sys.stderr, error
+            return Image(value[0], alt, [eps_name, title])
 
 if __name__ == "__main__":
     toJSONFilter(svg_to_any)

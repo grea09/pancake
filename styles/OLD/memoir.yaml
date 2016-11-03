@@ -1,0 +1,12 @@
+memoir:
+    parent: article
+    all:
+        metadata:
+            csl: .panzer/csl/ieee.csl
+    latex:
+        metadata:
+            latex-engine: xelatex
+            fontsize: 12pt
+            documentclass: memoir
+        comandline:
+            biblatex: true

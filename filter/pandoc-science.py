@@ -7,20 +7,21 @@ in HTML output.
 """
 from __future__ import print_function
 import sys
+import re
 
-from pandocfilters import toJSONFilter, RawBlock, Div, RawInline, Str
-
-counts = {'algorithm': 0, 'proof' : 0, 'definition' : 0, 'lemma' : 0}
-refs = {'algorithm': {}, 'proof' : {}, 'definition' : {}, 'lemma' : {}}
+from pandocfilters import toJSONFilter, stringify, RawBlock, Div, RawInline, Str
 
 def warning(*objs):
-    print("WARNING: ", *objs, file=sys.stderr)
+    print("[WARNING] ", *objs, file=sys.stderr)
+
+def debug(*objs):
+     print("[DEBUG] ", *objs, file=sys.stderr)
 
 def latex(x):
-    return RawBlock('latex', x)
+    return RawBlock('tex', x)
 
 def ilatex(x):
-     return RawInline('latex', x)
+     return RawInline('tex', x)
 
 
 def html(x):
@@ -38,6 +39,15 @@ def caption(x):
 def label(x):
     return latex_command('label',x)
 
+def ref(x, title):
+    return latex_command('Cref' if title else 'cref',x)
+
+
+def begin(x):
+    return latex_command('begin',x)
+def end(x):
+    return latex_command('end',x)
+
 
 def brakets(x):
     if x == "":
@@ -51,73 +61,79 @@ def parentesis(x):
     else:
         return '(' + x + ')'
 
+def getMultiMap(meta, name):
+    # Return a MetaMap as defined in the meta
+    if not hasattr(getMultiMap, 'value'):
+        getMultiMap.value = {}
+        if name in meta and meta[name]['t'] == 'MetaMap':
+            for key, values in meta[name]['c'].items():
+                if values['t'] == 'MetaList':
+                    getMultiMap.value[key] = []
+                    for value in values['c']:
+                        string = stringify(value)
+                        if re.match('^[a-zA-Z][\w.:-]*$', string):
+                            getMultiMap.value[key].append(string)
+                    getMultiMap.value[key] = set(getMultiMap.value[key])
+    return getMultiMap.value
 
-def algorithm(name, label, content):
-    return([latex('\\begin{algorithm}' + caption(name) + label + '\\begin{algorithmic}[1]')] + content + [latex('\\end{algorithmic}\\end{algorithm}')])
+def getMap(meta, name):
+    # Return a MetaMap as defined in the meta
+    if not hasattr(getMap, 'value'):
+        getMap.value = {}
+        if name in meta and meta[name]['t'] == 'MetaMap':
+            for key, value in meta[name]['c'].items():
+                if value['t'] == 'MetaInlines':
+                    string = stringify(value['c'])
+                    if re.match('^[a-zA-Z][\w.:-]*$', string):
+                        getMap.value[key] = string
+    return getMap.value
 
-def proof(name, label, content):
-    return([latex('\\begin{proof}' + brakets(name) + label)] + content + [latex('\\end{proof}')])
-
-def definition(name, label, content):
-    return([latex('\\begin{definition}' + brakets(name) + label)] + content + [latex('\\end{definition}')])
-
-def lemma(name, label, content):
-    return([latex('\\begin{lemma}' + brakets(name) + label)] + content + [latex('\\end{lemma}')])
+def getSet(meta, name):
+    # Return a MetaMap as defined in the meta
+    if not hasattr(getSet, 'value'):
+        getSet.value = {}
+        if name in meta and meta[name]['t'] == 'MetaList':
+            getSet.value = []
+            for value in meta[name]['c']:
+                string = stringify(value)
+                if re.match('^[a-zA-Z][\w.:-]*$', string):
+                    getSet.value.append(string)
+            getSet.value = set(getSet.value)
+    return getSet.value
 
 
 def pandoc_science(key, value, format, meta):
-    global refs, counts
-    names = {'algorithm': 'Algorithm', 'proof' : 'Proof', 'definition' : 'Definition', 'lemma' : 'Lemma'}
-    prefixes = {'alg': 'algorithm', 'prf' : 'proof', 'def' : 'definition', 'lem' : 'lemma'}
-    formats = {'algorithm': algorithm, 'proof' : proof, 'definition' : definition, 'lemma' : lemma}
     if key == 'Div':
-        [[ident, classes, kvs], contents] = value
-        for class_ in classes:
-            if class_ in refs:
-                counts[class_] = counts[class_]+1
-                refs[class_].update({ident : counts[class_]})
-                key_ = ""
-                if len(kvs) > 0:
-                    [[key_, value]] = kvs
-                if key_ == "name":
-                    name = value
-                else:
-                    name = ""
-                
-                if format == "latex":
-                    return formats[class_](name, label(ident), contents)
-                elif format == "html" or format == "html5":
-                    newcontents = [html('<dt>' + names[class_] + ' ' + str(len(refs[class_])) + '</dt>'),
-                                   html('<dd>')] + contents + [html('</dd>\n</dl>')]
-                    return Div([ident, classes, kvs], newcontents)
-                else:
-                    return Div([ident, classes, kvs], [ html('<dt>' + names[class_] + ' ' + str(counts[class_]) + '</dt> ' + parentesis(name)) ] + contents)
-    elif key == 'Span':
-        [[ident, classes, kvs], contents] = value
-        for class_ in classes:
-            if class_ == 'proc':
-                if format == "latex":
-                    return([ilatex('\\textproc{')] + contents + [ilatex('}')])
+       # Get the attributes
+        [[id, classes, properties], content] = value
+
+        currentClasses = set(classes)
+
+        for environment, definedClasses in getMultiMap(meta, 'amsthm').items():
+            for definedClass in definedClasses:
+                # Is the classes correct?
+                if definedClass.lower() in currentClasses:
+                    if format == "latex":
+                        key_ = ""
+                        if len(properties) > 0:
+                            [[key_, value]] = properties
+                        if key_ == "name":
+                            name = value
+                        else:
+                            name = ""
+                        return [latex(begin(definedClass) + brakets(name) + label(id))] + content + [latex(end(definedClass))]
+                    break
     elif key == 'Cite':
         [stuff, contents] = value
         citationid = stuff[0]['citationId']
         title = citationid[0].isupper()
         citationid = citationid.lower()
-        prefix = citationid.split(":", 1)[0]
-        if prefix in prefixes:
-            class_ = prefixes[prefix]
-            name = names[class_].lower()
-            if title:
-                name = name.title()
-            if format == "latex":
-                return(RawInline('latex', '\\cref{' + citationid + '}'))
-            else:
-                return Str(name + ' ' + str(refs[class_].get(citationid, '??' )))
-        elif prefix == 'line':
-            name = 'line'
-            if title:
-                name = name.title()
-            return(RawInline('latex', '\\cref{' + citationid + '}'))
+        _prefix = citationid.split(":", 1)[0]
+        for prefix in getSet(meta, 'amsthmPrefixes'):
+            if _prefix == prefix:
+                if format == "latex":
+                    return(ilatex(ref(citationid, title)))
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     toJSONFilter(pandoc_science)
+
