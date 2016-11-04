@@ -8,7 +8,7 @@ All this is made for [Pandoc 1.18](https://github.com/jgm/pandoc).
 ## Filters
 ### pandoc-science
 Main component for scientific writing. It is an old personnal filter I recoded recently. 
-Strongly inspired by [pandoc-amsthm](htps://github.com/ickc/pandoc-amsthm) it mainly add cref support.
+Strongly inspired by [pandoc-amsthm](https://github.com/ickc/pandoc-amsthm) it mainly add cref support.
 
 ### pandoc-crossref
 Filter used to make smart cross references. Compiled version from latest version of this [github](https://github.com/lierdakil/pandoc-crossref) (2016-11-04) 
