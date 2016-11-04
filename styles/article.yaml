@@ -1,0 +1,6 @@
+article:
+    parent: pancake
+    latex:
+        metadata:
+            fontsize: 10pt,twocolumn
+            documentclass: article

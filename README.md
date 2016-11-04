@@ -1,6 +1,7 @@
 # Pancake
+![graphics/pancake_inline.svg]
 Using Panzer + Pandoc + custom filters for scientific writing. 
-This project is a custom Panzer configuration folder that contains various tools to write scientific papers in Markdown.
+This project is a custom [Panzer](https://github.com/msprev/panzer) configuration folder that contains various tools to write scientific papers in Markdown.
 All this is made for [Pandoc 1.18](https://github.com/jgm/pandoc).
 
 # General organisation

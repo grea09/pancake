@@ -1,0 +1,7 @@
+journal:
+    parent: pancake
+
+    latex:
+        metadata:
+            fontsize: 10pt
+            documentclass: elsarticle
