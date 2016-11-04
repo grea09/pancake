@@ -14,7 +14,7 @@ Strongly inspired by [pandoc-amsthm](htps://github.com/ickc/pandoc-amsthm) it ma
 Filter used to make smart cross references. Compiled version from latest version of this [github](https://github.com/lierdakil/pandoc-crossref) (2016-11-04) 
 
 ### pandoc-svg
-Filter to handle SVG format in Pandoc adapted from source code found (here)[https://github.com/jgm/pandoc/issues/265#issuecomment-27317316]. 
+Filter to handle SVG format in Pandoc adapted from source code found [here](https://github.com/jgm/pandoc/issues/265#issuecomment-27317316). 
 I corrected some bugs and ignored Gtk warnings from Inkscape.
 
 ### pandoc-table
