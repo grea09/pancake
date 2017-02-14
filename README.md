@@ -1,5 +1,5 @@
 # Pancake
-![Pancakes !](https://antoine.grea.me/wp-content/uploads/2016/11/pancake_inline-svg.png)
+![Pancakes !](pancake_inline.svg)
 
 Using Panzer + Pandoc + custom filters for scientific writing. 
 This project is a custom [Panzer](https://github.com/msprev/panzer) configuration folder that contains various tools to write scientific papers in Markdown.
@@ -22,47 +22,62 @@ I corrected some bugs and ignored Gtk warnings from Inkscape.
 ### pandoc-table
 Filter used to be able to use tables in two-column mode, adapted from [here](https://groups.google.com/forum/#!msg/pandoc-discuss/RUC-tuu_qf0/h-H3RRVt1coJ).
 
-# Dependancies
+# Dependencies
+
+Instructions writen mainly for Ubuntu 16.04.
 
 ## apt
-Packages to install on Ubuntu 16.04 (`sudo apt install`) :
+###Packages to install :
 
-<!--* texlive-science * texlive-fonts-recommended * texlive-latex-extra * texlive-generic-extra-->
-* `xzdec`
-* `pandoc`
-* `pandoc-citeproc`
-* `inotify-tools`
-* `git`
-* `python`
-* `python-pip`
-* `python3-pip`
+`sudo apt install xzdec pandoc pandoc-citeproc inotify-tools python python-pip python3-pip`
+
+###LaTeX [not compatible with tlmgr]:
+
+* `sudo apt install texlive-latex-base texlive-fonts-recommended texlive-science`
+* [optional] `sudo apt install texlive-latex-extra texlive-generic-extra`
 
 ## latex
-Manual Latex install [optional]:
+###Automatic LaTeX install [ubuntu] :
+
+`cd /tmp && wget https://github.com/scottkosty/install-tl-ubuntu/raw/master/install-tl-ubuntu && chmod +x ./install-tl-ubuntu && sudo -H ./install-tl-ubuntu`
+
+###Manual Latex install [generic]:
 
 ```
+cd /tmp
 wget http://mirror.ctan.org/systems/texlive/tlnet/install-tl-unx.tar.gz
-dtrx install-tl-unx.tar.gz
+tar -xzvf install-tl-unx.tar.gz #or use dtrx
 cd install-tl-unx
-sudo ./install-tl
+sudo -H ./install-tl #customize what you need
+sudo echo "PATH=PATH=/usr/local/texlive/2016/bin/:$PATH" >> /etc/environement
+PATH=PATH=/usr/local/texlive/2016/bin/:$PATH
 ```
 
-CTAN package (`sudo tlmgr install`):
-
-* `xcolor-solarized`
+###CTAN package :
+`sudo tlmgr install xcolor-solarized`
 
 ## python
-Python packages (`pip install`) :
+###Python packages :
 
-* `pandocfilters`
-
-Python 3 :
-
+* `pip install pandocfilters`
 * `pip3 install --upgrade git+https://github.com/msprev/panzer`
+
+# Installation
+
+## git
+
+clone the repository in `~/.panzer` (backup the previous folder if needed)
+`git clone https://github.com/grea09/pancake.git ~/.panzer`
 
 ## bin
 
 Simply copy the script in `./bin/pancake` to the system (somewhere like `/usr/local/bin/`)
+`sudo cp ~/.panzer/bin/pancake /usr/local/bin/`
 
-* Usage : pancake FILE FORMAT
+### Usage
+
+`pancake FILE FORMAT`
 * FORMAT : odt, tex, pdf (generate pdf file for each method)
+
+To manage styles please refer to [Panzer](https://github.com/msprev/panzer).
+For more syntax information please refer to [Pandoc 1.18](https://github.com/jgm/pandoc).
