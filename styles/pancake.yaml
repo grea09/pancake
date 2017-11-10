@@ -16,17 +16,33 @@ pancake:
             tblPrefix:
                 - table
                 - tables
+            lstPrefix:
+                - listing
+                - listings
             markdown_in_html_blocks: true
             verbatim-in-note: true
             link-citations: true
+            bibliography: .panzer/bibliography/zotero.bib
+            csl: .panzer/bibliography/styles/ieee.csl
+        preflight:
+            - run: symbolic-alias
+        filter:
+            - run: pandoc-science.py
+            - run: pandoc-crossref
+            - run: pandoc-citeproc
+
+    latex:
+        metadata:
+            cref: true
+            tables: true
             colorlinks: true
             solarized: true
             linkcolor: solarized-cyan
             citecolor: solarized-base1
             urlcolor: solarized-blue
             filecolor: solarized-magenta
-            bibliography: .panzer/bibliography/zotero.bib
-            csl: .panzer/bibliography/styles/ieee.csl
+            listings: true
+            codeBlockCaptions: true
             amsthm:
               plain:
               - theorem
@@ -48,31 +64,20 @@ pancake:
               proof:
               - proof
             amsthmPrefixes: [def, prf, alg, line]
-        preflight:
-            - run: symbolic-alias
-        cleanup:
-            - run: clean
-        filter:
-            - run: pandoc-science.py
-            - run: pandoc-crossref
-            - run: pandoc-citeproc
-
-    latex:
-        metadata:
-            latex-engine: xelatex
-            listings: true
-            cref: true
-            tables: true
             utf8:
                 - code: 22A7
                   macro: $\models$
                 - code: 2011
                   macro: \mbox{-}
+            mainfont: Aller
+            mathfont: TeX Gyre Schola Math
         filter:
-            - run: pandoc-svg.py
             - run: pandoc-table.py
         template:  .panzer/template/pancake.latex
-
+        commandline:
+            no-highlight: true
+            listings: true
+            pdf-engine: "`lualatex`"
     odt:
         postflight:
             - run: odt2pdf

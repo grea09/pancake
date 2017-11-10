@@ -1,0 +1,10 @@
+article:
+    parent: pancake
+
+    latex:
+        metadata:
+            latex-engine: xelatex
+            fontsize: 10pt,twocolumn
+            documentclass: article
+
+
