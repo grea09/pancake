@@ -1,0 +1,8 @@
+ecai:
+    parent: article
+    all:
+        metadata:
+            csl: .panzer/bibliography/csl/ieee.csl
+    latex:
+        metadata:
+            documentclass: .panzer/template/styles/ecai

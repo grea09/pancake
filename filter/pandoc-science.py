@@ -1,21 +1,15 @@
 #!/usr/bin/env python
 
 """
-Pandoc filter to convert divs with class="algorithm" to LaTeX
-algorithm environments in LaTeX output, and to numbered algorithm
+Pandoc filter to convert divs with classes specified in configuration to LaTeX
+theorem environments in LaTeX output, and to numbered theorems
 in HTML output.
 """
-from __future__ import print_function
+
 import sys
 import re
 
 from pandocfilters import toJSONFilter, stringify, RawBlock, Div, RawInline, Str
-
-def warning(*objs):
-    print("[WARNING] ", *objs, file=sys.stderr)
-
-def debug(*objs):
-     print("[DEBUG] ", *objs, file=sys.stderr)
 
 def latex(x):
     return RawBlock('tex', x)

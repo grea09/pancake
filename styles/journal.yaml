@@ -3,8 +3,5 @@ journal:
 
     latex:
         metadata:
-            latex-engine: xelatex
             fontsize: 10pt
             documentclass: elsarticle
-
-

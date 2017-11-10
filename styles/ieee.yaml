@@ -1,0 +1,10 @@
+ieee:
+    parent: article
+    all:
+        metadata:
+            csl: .panzer/bibliography/csl/ieee.csl
+    latex:
+        metadata:
+            documentclass: .panzer/template/styles/ieee
+        comandline:
+            biblatex: true
