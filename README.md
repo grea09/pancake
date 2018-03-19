@@ -2,8 +2,8 @@
 ![Pancakes !](https://antoine.grea.me/wp-content/uploads/2016/11/pancake_inline-svg.png)
 
 Using Panzer + Pandoc + custom filters for scientific writing. 
-This project is a custom [Panzer](https://github.com/msprev/panzer) configuration folder that contains various tools to write scientific papers in Markdown.
-All this is made for [Pandoc 2.0.1.1](https://github.com/jgm/pandoc).
+This project is a custom [Panzer v1.4.1](https://github.com/msprev/panzer) configuration folder that contains various tools to write scientific papers in Markdown.
+All this is made for [Pandoc v2.1.2](https://github.com/jgm/pandoc).
 
 # General organisation
 
@@ -15,13 +15,16 @@ Here is an example of its usage with the fenced divs of Pandoc 2 :
 
         ::: {.definition #def:resolver name="Resolvers"}
         A resolver is a potential causal link defined as a tuple $r = \langle a_s, a_t, f\rangle$
-        :::
+        ::::::::::::::::::::::::::::::::::::::::::::::::
+        
+Also, one can use code blocks to write pseudocode using
+
+        ~~~ {.algorithm #alg:example name="A smart caption" startLine="1"}
+        \Function{example}{Stuff $s$, Problem $\mathcal{P}$} \EndFunction
+        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 ### pandoc-crossref
-Filter used to make smart cross references. Compiled version from latest version of this [github](https://github.com/lierdakil/pandoc-crossref) (Update 2017-11-10) Since it isn't compatible for now I am using the [latest beta](https://github.com/lierdakil/pandoc-crossref/releases/tag/v0.3.0.0-beta2a)
-
-### pandoc-svg
-Removed as it is now included in Pandoc.
+Filter used to make smart cross references. Compiled version from latest version of this [github repository](https://github.com/lierdakil/pandoc-crossref) (v0.3.0.2)
 
 ### pandoc-table
 Filter used to be able to use tables in two-column mode, adapted from [here](https://groups.google.com/forum/#!msg/pandoc-discuss/RUC-tuu_qf0/h-H3RRVt1coJ).
