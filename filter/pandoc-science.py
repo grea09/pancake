@@ -6,10 +6,13 @@ theorem environments in LaTeX output, and to numbered theorems
 in HTML output.
 """
 
+from __future__ import print_function
+
 import sys
 import re
+import pprint
 
-from pandocfilters import toJSONFilter, stringify, RawBlock, Div, RawInline, Str
+from pandocfilters import toJSONFilter, stringify, RawBlock, Div, RawInline, Str, walk
 
 def latex(x):
     return RawBlock('tex', x)
@@ -95,28 +98,59 @@ def getSet(meta, name):
             getSet.value = set(getSet.value)
     return getSet.value
 
+def raw(x):
+    result = []
+    def flatten(key, val, format, meta):
+        if val is not None :
+            if isinstance(val[1], unicode) :
+                pprint.pprint(val[1], sys.stderr)
+                result.append(val[1])
+            if isinstance(val[1], dict) :
+                pprint.pprint(val, sys.stderr)
+                result.append(" ")
+    walk(x, flatten, "", {})
+    return ''.join(result)
+
 
 def pandoc_science(key, value, format, meta):
     if key == 'Div':
-       # Get the attributes
         [[id, classes, properties], content] = value
-
         currentClasses = set(classes)
-
         for environment, definedClasses in getMultiMap(meta, 'amsthm').items():
             for definedClass in definedClasses:
                 # Is the classes correct?
                 if definedClass.lower() in currentClasses:
                     if format == "latex":
-                        key_ = ""
-                        if len(properties) > 0:
-                            [[key_, value]] = properties
-                        if key_ == "name":
-                            name = value
-                        else:
-                            name = ""
+                        name = ""
+                        for key_, value in properties:
+                            if key_ == "name":
+                                name = value
                         return [latex(begin(definedClass) + brakets(name) + label(id))] + content + [latex(end(definedClass))]
                     break
+        for definedClass in getSet(meta, 'latexBlocks'):
+            # Is the classes correct?
+            if definedClass.lower() in currentClasses:
+                if format == "latex":
+                    name = ""
+                    for key_, value in properties:
+                        if key_ == "name":
+                            name = value
+                    return [latex(begin(definedClass) + brakets(name) + label(id))] + content + [latex(end(definedClass))]
+                break
+    elif key == 'CodeBlock':
+        [[id, classes, properties], content] = value
+        currentClasses = set(classes)
+        definedClass = stringify(meta['pseudocode']['c']).lower()
+        if definedClass in currentClasses:
+            if format == "latex":
+                name = ""
+                numbered = ""
+                for key_, value in properties:
+                    if key_ == "name":
+                        name = value
+                    elif key_ == "startLine":
+                        numbered = "[" + value + "]"
+                return [latex(begin(definedClass) + caption(name) + label(id) + begin("algorithmic") + numbered + content + end("algorithmic") + end(definedClass))]
     elif key == 'Cite':
         [stuff, contents] = value
         citationid = stuff[0]['citationId']
@@ -127,6 +161,13 @@ def pandoc_science(key, value, format, meta):
             if _prefix == prefix:
                 if format == "latex":
                     return(ilatex(ref(citationid, title)))
+    elif key == 'Image':
+        if format == "latex":
+            [[id, classes, properties],name, content] = value
+            currentClasses = set(classes)
+            if 'wide' in currentClasses: 
+                #TODO add rsvg-convert ["-f","pdf","-a","-o",pdfOut,fname] + tempfile.NamedTemporaryFile(
+                return [ilatex(latex_command('hypertarget{' + id + '}', '%\n' + begin('figure*') + '\n\\centering\n' + latex_command('includegraphics',content[0]) + '\n' + caption(stringify(name)) + label(id) + '\n' + end('figure*') + '\n'))]
 
 if __name__ == '__main__':
     toJSONFilter(pandoc_science)
