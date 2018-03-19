@@ -1,2 +1,3 @@
 #!/bin/bash
-ln -s ~/.panzer .panzer 2>/dev/null
+
+[[ "${PWD##*/}" != ".panzer" ]] && ln -n -s ~/.panzer .panzer 2>/dev/null && echo "Creating the symbolic link $PWD/.panzer" 

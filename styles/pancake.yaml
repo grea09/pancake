@@ -29,7 +29,7 @@ pancake:
             - run: pandoc-science.py
             - run: pandoc-crossref
             - run: pandoc-citeproc
-            - run: pandoc-citeproc-preamble
+#            - run: pandoc-citeproc-preamble
 
     latex:
         metadata:

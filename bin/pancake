@@ -1,9 +1,22 @@
-#!/bin/sh
-OUT=${1%.*}.$2
-UPDATE=$(echo "\033[1;33m%w%f\033[0m written. Updating $OUT…")
+#!/bin/bash
 
-while true
-do
-    panzer ---quiet "$1" -o "$OUT"
-    inotifywait -qre close_write "$1" --format "$UPDATE"
+EXT=$2
+[[ "$2" == "" ]] && EXT="pdf"
+OUT=${1%.*}.$EXT
+UPDATE=$(echo -e "\033[1m%w%f\033[0m changed. \033[1;34mUpdating\033[0m \033[1m$OUT\033[0m…")
+EXTRA=" ---quiet"
+[[ "$EXT" == "pdf" ]] && EXTRA="$EXTRA -t latex"
+MD5=`md5sum $1`
+
+echo -e "\033[1;33mConverting \033[0;1m$1\033[1;33m to \033[0;1m$OUT\033[1;33m…\033[0m"
+(panzer "$1" -o "$OUT" $EXTRA && echo -e '\033[1;32mConverted with success !\033[0m') || echo -e '\033[1;31mConversion failed !\033[0m'
+
+echo 'Openning the result…'
+xdg-open $OUT &
+
+echo -e "Watching \033[1m$1\033[0m for changes…"
+while true ; do
+    [[ $MD5 == "`md5sum $1`" ]] && inotifywait -qre close_write "$1" --format "$UPDATE" || echo -e "\033[1m$1\033[0m changed while converting. \033[1;34mUpdating\033[0m \033[1m$OUT\033[0m…"
+    MD5=`md5sum $1`
+    (panzer "$1" -o "$OUT" $EXTRA && echo -e '\033[1;32mConverted with success !\033[0m') || echo -e '\033[1;31mConversion failed !\033[0m'
 done
