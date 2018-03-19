@@ -22,7 +22,6 @@ pancake:
             markdown_in_html_blocks: true
             verbatim-in-note: true
             link-citations: true
-            bibliography: .panzer/bibliography/zotero.bib
             csl: .panzer/bibliography/styles/ieee.csl
         preflight:
             - run: symbolic-alias
@@ -30,6 +29,7 @@ pancake:
             - run: pandoc-science.py
             - run: pandoc-crossref
             - run: pandoc-citeproc
+            - run: pandoc-citeproc-preamble
 
     latex:
         metadata:
@@ -63,17 +63,21 @@ pancake:
               - note
               proof:
               - proof
+            latexBlocks: [framed]
             amsthmPrefixes: [def, prf, alg, line]
+            pseudocode: algorithm
             utf8:
                 - code: 22A7
                   macro: $\models$
                 - code: 2011
                   macro: \mbox{-}
             mainfont: Aller
-            mathfont: TeX Gyre Schola Math
+            mathfont: STIX Two Math
+            headingfont: Ubuntu
         filter:
             - run: pandoc-table.py
         template:  .panzer/template/pancake.latex
+        citeproc-preamble: .panzer/template/pancake-bibliography.latex
         commandline:
             no-highlight: true
             listings: true

@@ -1,0 +1,13 @@
+aaai:
+    parent: article
+    all:
+        metadata:
+            csl: .panzer/bibliography/styles/aaai.csl
+    latex:
+        metadata:
+            mainfont: Nimbus Roman No9 L
+            headingfont: Nimbus Roman No9 L
+            documentclass: article
+            header-includes: 
+                - \usepackage{.panzer/template/latex/aaai}
+#                - \usepackage{times}

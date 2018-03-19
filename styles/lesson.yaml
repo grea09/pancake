@@ -1,0 +1,11 @@
+lesson:
+    parent: pancake
+    latex:
+        metadata:
+            fontsize: a4paper,11pt
+            documentclass: article
+            header-includes:
+                - \usepackage{fullpage}
+                - \usepackage{enumitem, url, booktabs, amsmath}
+                - \usepackage{framed}
+                - \setlist{nolistsep}

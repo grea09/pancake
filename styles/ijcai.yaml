@@ -1,0 +1,13 @@
+ijcai:
+    parent: article
+    all:
+        metadata:
+            csl: .panzer/bibliography/styles/ijcai.csl
+    latex:
+        metadata:
+            mainfont: Nimbus Roman No9 L
+            headingfont: Nimbus Roman No9 L
+            documentclass: article
+            header-includes: 
+                - \usepackage{.panzer/template/latex/ijcai}
+#                - \usepackage{times}  
