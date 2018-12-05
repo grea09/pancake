@@ -1,0 +1,81 @@
+# Pancake
+Using Panzer + Pandoc + custom filters for scientific writing. 
+This project is a custom [Panzer v1.4.1](https://github.com/msprev/panzer) configuration folder that contains various tools to write scientific papers in Markdown.
+<<<<<<< HEAD
+All this is made for [Pandoc v2.4](https://github.com/jgm/pandoc).
+=======
+All this is made for [Pandoc v2.1.2](https://github.com/jgm/pandoc).
+>>>>>>> 2903d8c964a554d2338e6cdcde54814ee9497949
+
+# General organisation
+
+## Filters
+### pandoc-science
+Main component for scientific writing. It is an old personnal filter I recoded recently.
+Strongly inspired by [pandoc-amsthm](https://github.com/ickc/pandoc-amsthm) it mainly add cref support.
+Here is an example of its usage with the fenced divs of Pandoc 2 :
+
+        ::: {.definition #def:resolver name="Resolvers"}
+        A resolver is a potential causal link defined as a tuple $r = \langle a_s, a_t, f\rangle$
+        ::::::::::::::::::::::::::::::::::::::::::::::::
+        
+Also, one can use code blocks to write pseudocode using
+
+        ~~~ {.algorithm #alg:example name="A smart caption" startLine="1"}
+        \Function{example}{Stuff $s$, Problem $\mathcal{P}$} \EndFunction
+        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+### pandoc-crossref
+Filter used to make smart cross references. Compiled version from latest version of this [github repository](https://github.com/lierdakil/pandoc-crossref) (v0.3.0.2)
+
+### pandoc-table
+Filter used to be able to use tables in two-column mode, adapted from [here](https://groups.google.com/forum/#!msg/pandoc-discuss/RUC-tuu_qf0/h-H3RRVt1coJ).
+
+# Dependancies
+
+## apt
+Packages to install on Ubuntu 16.04 () :
+
+`sudo apt install xzdec librsvg2-bin inotify-tools git python3-pip`
+
+You can also install texlive and Pandoc from the default repositories but it is outdated and will limit the possibilities of modifications needed for Pancake:
+* `sudo apt install texlive-science texlive-fonts-recommended texlive-latex-extra texlive-generic-extra`
+* `sudo apt install pandoc pandoc-citeproc`
+
+## pandoc
+
+I use the latest version of Pandoc built directly from cabal :
+
+        cabal update
+        cabal install pandoc
+        cabal install pandoc-citeproc
+        cabal install pandoc-crossref
+
+## latex
+Manual Latex install [optional]:
+
+```
+wget http://mirror.ctan.org/systems/texlive/tlnet/install-tl-unx.tar.gz
+dtrx install-tl-unx.tar.gz
+cd install-tl-unx
+sudo ./install-tl
+```
+
+CTAN package (`sudo tlmgr install`):
+
+* `xcolor-solarized`
+
+## python
+
+<<<<<<< HEAD
+* `sudo -H pip3 install --upgrade git+https://github.com/msprev/panzer`
+=======
+* `pip3 install --upgrade git+https://github.com/msprev/panzer pandocfilters`
+>>>>>>> 2903d8c964a554d2338e6cdcde54814ee9497949
+
+## bin
+
+Simply copy the script in `./bin/pancake` to the system (somewhere like `/usr/local/bin/`)
+
+* Usage : pancake FILE [FORMAT]
+* FORMAT : odt, tex, pdf (default)
