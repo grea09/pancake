@@ -2,5 +2,5 @@ article:
     parent: pancake
     latex:
         metadata:
-            fontsize: 10pt,twocolumn
+            fontsize: a4paper, 10pt,twocolumn
             documentclass: article

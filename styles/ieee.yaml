@@ -2,9 +2,11 @@ ieee:
     parent: article
     all:
         metadata:
-            csl: .panzer/bibliography/csl/ieee.csl
+            csl: .panzer/bibliography/styles/ieee.csl
     latex:
         metadata:
-            documentclass: .panzer/template/styles/ieee
+            mainfont: Nimbus Roman No9 L
+            headingfont: Nimbus Roman No9 L
+            documentclass: .panzer/template/latex/ieee
         comandline:
             biblatex: true

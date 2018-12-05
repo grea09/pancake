@@ -16,17 +16,34 @@ pancake:
             tblPrefix:
                 - table
                 - tables
+            lstPrefix:
+                - listing
+                - listings
             markdown_in_html_blocks: true
             verbatim-in-note: true
             link-citations: true
+            csl: .panzer/bibliography/styles/aaai.csl
+        preflight:
+            - run: symbolic-alias
+        filter:
+            - run: pandoc-science.py
+            - run: pandoc-crossref
+            - run: pandoc-citeproc
+#            - run: pandoc-citeproc-preamble
+
+    latex:
+        metadata:
+            cref: true
+            tables: true
             colorlinks: true
             solarized: true
             linkcolor: solarized-cyan
             citecolor: solarized-base1
             urlcolor: solarized-blue
             filecolor: solarized-magenta
-            bibliography: .panzer/bibliography/main.bib
-            csl: .panzer/bibliography/styles/ieee.csl
+            listings: true
+            codeBlockCaptions: true
+            latexBlocks: [framed]
             amsthm:
               plain:
               - theorem
@@ -40,6 +57,8 @@ pancake:
               - example
               - postulate
               - problem
+              definition-unnumbered:
+              - axiom
               remark:
               - case
               remark-unnumbered:
@@ -47,32 +66,43 @@ pancake:
               - note
               proof:
               - proof
-            amsthmPrefixes: [def, prf, alg, line]
-        preflight:
-            - run: symbolic-alias
-        cleanup:
-            - run: clean
-        filter:
-            - run: pandoc-science.py
-            - run: pandoc-crossref
-            - run: pandoc-citeproc
-
-    latex:
-        metadata:
-            latex-engine: xelatex
-            listings: true
-            cref: true
-            tables: true
+            algorithm: algorithm
+            cref-numbered:
+              - prefix: sec
+                name: section
+              - prefix: tbl
+                name: table
+              - prefix: lst
+                name: listing
+              - prefix: theo
+                name: theorem
+              - prefix: def
+                name: definition
+              - prefix: prf
+                name: proof
+              - prefix: alg
+                name: algorithm
+              - prefix: line
+                name: line
+            cref-labelled:
+              - prefix: axi
+                name: axiom
             utf8:
                 - code: 22A7
                   macro: $\models$
                 - code: 2011
                   macro: \mbox{-}
+            mainfont: Aller
+            mathfont: STIX Two Math
+            headingfont: Ubuntu
         filter:
-            - run: pandoc-svg.py
             - run: pandoc-table.py
         template:  .panzer/template/pancake.latex
-
+        citeproc-preamble: .panzer/template/pancake-bibliography.latex
+        commandline:
+            no-highlight: true
+            listings: true
+            pdf-engine: "`lualatex`"
     odt:
         postflight:
             - run: odt2pdf

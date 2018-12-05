@@ -1,0 +1,27 @@
+thesis:
+    parent: pancake
+#    all:
+#        metadata:
+#            csl: .panzer/bibliography/styles/chicago-note.csl
+    latex:
+        metadata:
+            fontsize: 11pt
+            papersize: a4
+            classoption:
+              - twoside
+              - openright
+              - titlepage
+              - numbers=noenddot
+              - headinclude
+              - footinclude=true
+              - cleardoublepage=empty
+              - abstractoff
+              - BCOR=5mm
+            documentclass: scrreprt
+            subparagraph: yes
+            header-includes: 
+#                - \usepackage{.panzer/template/latex/classicthesis}
+                - \usepackage{marginnote}
+                - \newcounter{mynote}
+                - \newcommand{\mynote}[1]{ \refstepcounter{mynote} \mbox{\textsuperscript{\themynote}} \marginnote{\mbox{\textsuperscript{\footnotesize{\themynote}}}#1}}
+                - \renewcommand*{\footnote}{\marginnote}

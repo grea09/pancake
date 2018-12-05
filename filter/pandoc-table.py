@@ -23,20 +23,24 @@ def tbl_alignment(s):
     return ''.join([aligns[e['t']] for e in s])
 
 def tbl_headers(s):
-    result = s[0][0]['c'][:]
-    for i in range(1, len(s)):
-        result.append(inlatex(' & '))
-        if len(s[i]) > 0 :
-            result.extend(s[i][0]['c'])
-    result.append(inlatex(r' \\\midrule'))
-    return pf.Para(result)
+    if len(s[0]) >0 :
+        result = s[0][0]['c'][:]
+        for i in range(1, len(s)):
+            result.append(inlatex(' & '))
+            if len(s[i]) > 0 :
+                result.extend(s[i][0]['c'])
+        result.append(inlatex(r' \\\midrule'))
+        return pf.Para(result)
+    else :
+        return pf.Para(s[0][:])
 
 def tbl_contents(s):
     result = []
     for row in s:
         para = []
         for col in row:
-            para.extend(col[0]['c'])
+            if len(col) != 0 :
+                para.extend(col[0]['c'])
             para.append(inlatex(' & '))
         result.extend(para)
         result[-1] = inlatex(r' \\' '\n')

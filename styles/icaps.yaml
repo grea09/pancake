@@ -1,0 +1,8 @@
+icaps:
+    parent: aaai
+    latex:
+        metadata:
+            header-includes: 
+                - \usepackage{.panzer/template/latex/aaai}
+                - \nocopyright
+#                - \usepackage{times}
