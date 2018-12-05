@@ -1,83 +1,73 @@
 # Pancake
-![Pancakes !](pancake_inline.svg)
-
 Using Panzer + Pandoc + custom filters for scientific writing. 
-This project is a custom [Panzer](https://github.com/msprev/panzer) configuration folder that contains various tools to write scientific papers in Markdown.
-All this is made for [Pandoc 1.18](https://github.com/jgm/pandoc).
+This project is a custom [Panzer v1.4.1](https://github.com/msprev/panzer) configuration folder that contains various tools to write scientific papers in Markdown.
+All this is made for [Pandoc v2.4](https://github.com/jgm/pandoc).
 
 # General organisation
 
 ## Filters
 ### pandoc-science
-Main component for scientific writing. It is an old personnal filter I recoded recently. 
+Main component for scientific writing. It is an old personnal filter I recoded recently.
 Strongly inspired by [pandoc-amsthm](https://github.com/ickc/pandoc-amsthm) it mainly add cref support.
+Here is an example of its usage with the fenced divs of Pandoc 2 :
+
+        ::: {.definition #def:resolver name="Resolvers"}
+        A resolver is a potential causal link defined as a tuple $r = \langle a_s, a_t, f\rangle$
+        ::::::::::::::::::::::::::::::::::::::::::::::::
+        
+Also, one can use code blocks to write pseudocode using
+
+        ~~~ {.algorithm #alg:example name="A smart caption" startLine="1"}
+        \Function{example}{Stuff $s$, Problem $\mathcal{P}$} \EndFunction
+        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 ### pandoc-crossref
-Filter used to make smart cross references. Compiled version from latest version of this [github](https://github.com/lierdakil/pandoc-crossref) (2016-11-04) 
-
-### pandoc-svg
-Filter to handle SVG format in Pandoc adapted from source code found [here](https://github.com/jgm/pandoc/issues/265#issuecomment-27317316). 
-I corrected some bugs and ignored Gtk warnings from Inkscape.
+Filter used to make smart cross references. Compiled version from latest version of this [github repository](https://github.com/lierdakil/pandoc-crossref) (v0.3.0.2)
 
 ### pandoc-table
 Filter used to be able to use tables in two-column mode, adapted from [here](https://groups.google.com/forum/#!msg/pandoc-discuss/RUC-tuu_qf0/h-H3RRVt1coJ).
 
-# Dependencies
-
-Instructions writen mainly for Ubuntu 16.04.
+# Dependancies
 
 ## apt
-###Packages to install :
+Packages to install on Ubuntu 16.04 () :
 
-`sudo apt install xzdec pandoc pandoc-citeproc inotify-tools python python-pip python3-pip`
+`sudo apt install xzdec librsvg2-bin inotify-tools git python3-pip`
 
-###LaTeX [not compatible with tlmgr]:
+You can also install texlive and Pandoc from the default repositories but it is outdated and will limit the possibilities of modifications needed for Pancake:
+* `sudo apt install texlive-science texlive-fonts-recommended texlive-latex-extra texlive-generic-extra`
+* `sudo apt install pandoc pandoc-citeproc`
 
-* `sudo apt install texlive-latex-base texlive-fonts-recommended texlive-science`
-* [optional] `sudo apt install texlive-latex-extra texlive-generic-extra`
+## pandoc
+
+I use the latest version of Pandoc built directly from cabal :
+
+        cabal update
+        cabal install pandoc
+        cabal install pandoc-citeproc
+        cabal install pandoc-crossref
 
 ## latex
-###Automatic LaTeX install [ubuntu] :
-
-`cd /tmp && wget https://github.com/scottkosty/install-tl-ubuntu/raw/master/install-tl-ubuntu && chmod +x ./install-tl-ubuntu && sudo -H ./install-tl-ubuntu`
-
-###Manual Latex install [generic]:
+Manual Latex install [optional]:
 
 ```
-cd /tmp
 wget http://mirror.ctan.org/systems/texlive/tlnet/install-tl-unx.tar.gz
-tar -xzvf install-tl-unx.tar.gz #or use dtrx
+dtrx install-tl-unx.tar.gz
 cd install-tl-unx
-sudo -H ./install-tl #customize what you need
-sudo echo "PATH=PATH=/usr/local/texlive/2016/bin/:$PATH" >> /etc/environement
-PATH=PATH=/usr/local/texlive/2016/bin/:$PATH
+sudo ./install-tl
 ```
 
-###CTAN package :
-`sudo tlmgr install xcolor-solarized`
+CTAN package (`sudo tlmgr install`):
+
+* `xcolor-solarized`
 
 ## python
-###Python packages :
 
-* `pip install pandocfilters`
-* `pip3 install --upgrade git+https://github.com/msprev/panzer`
-
-# Installation
-
-## git
-
-clone the repository in `~/.panzer` (backup the previous folder if needed)
-`git clone https://github.com/grea09/pancake.git ~/.panzer`
+* `sudo -H pip3 install --upgrade git+https://github.com/msprev/panzer`
 
 ## bin
 
 Simply copy the script in `./bin/pancake` to the system (somewhere like `/usr/local/bin/`)
-`sudo cp ~/.panzer/bin/pancake /usr/local/bin/`
 
-### Usage
-
-`pancake FILE FORMAT`
-* FORMAT : odt, tex, pdf (generate pdf file for each method)
-
-To manage styles please refer to [Panzer](https://github.com/msprev/panzer).
-For more syntax information please refer to [Pandoc 1.18](https://github.com/jgm/pandoc).
+* Usage : pancake FILE [FORMAT]
+* FORMAT : odt, tex, pdf (default)
