@@ -1,0 +1,106 @@
+#!/bin/bash
+
+POSITIONAL=()
+
+while [[ $# -gt 0 ]]
+do
+key="$1"
+
+case $key in
+    -o|--output)
+    OUT="$2"
+    shift # past argument
+    shift # past value
+    ;;
+    -1|--once)
+    ONCE=true
+    shift # past argument
+    ;;
+    -t|--type)
+    EXT="$2"
+    shift # past argument
+    shift # past value
+    ;;
+    *)    # unknown option
+    POSITIONAL+=("$1") # save it in an array for later
+    shift # past argument
+    ;;
+esac
+done
+set -- "${POSITIONAL[@]}" # restore positional parameters
+
+PANDOC="pandoc"
+CONF="/root/.pancake"
+
+declare -a IN
+if [ $# == 0 ]; then
+    if [ ! ls *.md 2>/dev/null ] ; then
+        echo -e "\033[1;31mNo markdown files found!\033[0m"; 
+        exit 1;
+    fi
+    IN=$(ls *.md)
+fi
+
+while [[ $# -gt 0 ]]
+do
+if [ ! ls $1 2>/dev/null ] ; then
+    echo -e "\033[1;31mFile '$i' not found !\033[0m"; 
+    exit 1;
+fi
+
+IN=("${IN[@]}" $(ls $1))
+shift
+done
+
+if [ -z "$EXT" ]; then
+    if [ -z "$OUT" ]; then
+        EXT="pdf"
+    else
+        EXT="${OUT##*.}"
+    fi
+fi
+
+if [ ${#IN[@]} -eq 1 ]; then
+    OUT="${IN[0]%.*}.$EXT"
+elif [ -z "$OUT" ]; then
+    OUT="$(basename ${PWD%.*}.$EXT)"
+fi
+
+
+UPDATE=$(echo -e "\033[1m%w%f\033[0m changed. Updating \033[1m$OUT\033[0m…")
+
+OPT= -s --template=$CONF/templates/pancake --metadata-file=$CONF/pancake.yaml
+
+for i in $CONF/filters/* ; do
+FILTERS=$FILTERS --filter "$i"
+done
+
+#EXTRA=" --verbose"
+
+if [ "$EXT" == "pdf" ] ; then
+    EXTRA="$EXTRA -t latex --pdf-engine tectonic"
+fi
+
+echo -e "\033[1;33mConverting \033[0;1m$IN\033[1;33m to \033[0;1m$OUT\033[1;33m…\033[0m"
+
+echo -e "Watching \033[1m$IN\033[0m for changes…"
+while true ; do
+    if [[ $MD5 == $(md5sum $IN) ]] ; then
+        inotifywait -qre close_write $IN --format "$UPDATE"
+    else
+        echo -e "\033[1m$OUT\033[0m needs updating…"
+    fi
+    MD5=$(md5sum $IN)
+    FAIL=0
+    $PANDOC $OPT $FILTERS $EXTRA $IN -o "$OUT" || FAIL=$?
+    OWNER=($(ls -ld ${IN[0]}))
+    chown ${OWNER[2]}:${OWNER[3]} $OUT 2>/dev/null
+    if [ $ONCE ] ; then
+        [[ -L ".panzer" ]] && rm .panzer
+        exit 0;
+    fi
+    if [ $FAIL != 0 ] ; then
+        echo -e '\033[1;31mConversion failed !\033[0m';
+    fi
+    echo -e '\033[1;32mConverted with success !\033[0m'
+done
