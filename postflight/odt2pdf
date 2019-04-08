@@ -1,6 +1,0 @@
-#!/bin/bash
-if [[ $(libreoffice --headless --convert-to pdf *.odt) != *"writer_pdf_Export"* ]]
-then
-	>&2 echo "Libreoffice didn't converted the document. Maybe it is opened already…"
-	exit 1
-fi

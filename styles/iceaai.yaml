@@ -1,5 +1,0 @@
-iceaai:
-    parent: ieee
-    latex:
-        metadata:
-            documentclass: .panzer/template/latex/iceaai

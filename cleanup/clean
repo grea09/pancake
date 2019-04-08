@@ -1,5 +1,0 @@
-#!/bin/sh
-for svg in ./graphics/*.svg; do
-    rm ${svg%.*}.pdf 2>/dev/null
-    rm ${svg%.*}.png 2>/dev/null
-done

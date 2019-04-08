@@ -1,7 +1,0 @@
-aaai18:
-    parent: aaai
-    latex:
-        metadata:
-            header-includes: 
-                - \usepackage{.panzer/template/latex/aaai18}
-#                - \usepackage{times}
