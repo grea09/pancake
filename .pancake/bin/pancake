@@ -8,16 +8,16 @@ key="$1"
 
 case $key in
     -o|--output)
-    OUT="$2"
+    PANCAKE_OUTPUT="$2"
     shift # past argument
     shift # past value
     ;;
     -1|--once)
-    ONCE=true
+    PANCAKE_ONCE=true
     shift # past argument
     ;;
     -t|--type)
-    EXT="$2"
+    PANCAKE_TYPE="$2"
     shift # past argument
     shift # past value
     ;;
@@ -52,51 +52,56 @@ IN=("${IN[@]}" $(ls $1))
 shift
 done
 
-if [ -z "$EXT" ]; then
-    if [ -z "$OUT" ]; then
-        EXT="pdf"
+if [ -z "$PANCAKE_TYPE" ]; then
+    if [ -z "$PANCAKE_OUTPUT" ]; then
+        PANCAKE_TYPE="pdf"
     else
-        EXT="${OUT##*.}"
+        PANCAKE_TYPE="${PANCAKE_OUTPUT##*.}"
     fi
 fi
 
 if [ ${#IN[@]} -eq 1 ]; then
-    OUT="${IN[0]%.*}.$EXT"
-elif [ -z "$OUT" ]; then
-    OUT="$(basename ${PWD%.*}.$EXT)"
+    PANCAKE_OUTPUT="${IN[0]%.*}.$PANCAKE_TYPE"
+elif [ -z "$PANCAKE_OUTPUT" ]; then
+    PANCAKE_OUTPUT="$(basename ${PWD%.*}.$PANCAKE_TYPE)"
 fi
 
 
-UPDATE=$(echo -e "\033[1m%w%f\033[0m changed. Updating \033[1m$OUT\033[0m…")
+UPDATE=$(echo -e "\033[1m%w%f\033[0m changed. Updating \033[1m$PANCAKE_OUTPUT\033[0m…")
 
-OPT= -s --template=$CONF/templates/pancake --metadata-file=$CONF/pancake.yaml
+OPT="-s --template=$CONF/templates/pancake --metadata-file=$CONF/pancake.yaml"
 
 for i in $CONF/filters/* ; do
-FILTERS=$FILTERS --filter "$i"
+    FILTERS="$FILTERS --filter $i"
 done
 
-#EXTRA=" --verbose"
+EXTRA=" --verbose"
 
-if [ "$EXT" == "pdf" ] ; then
+if [ "$PANCAKE_TYPE" == "pdf" ] ; then
     EXTRA="$EXTRA -t latex --pdf-engine tectonic"
 fi
 
-echo -e "\033[1;33mConverting \033[0;1m$IN\033[1;33m to \033[0;1m$OUT\033[1;33m…\033[0m"
+if [ ls *.yaml ] ; then
+    for i in *.yaml ; do
+        EXTRA="$EXTRA --metadata-file=$i"
+    done
+fi
+
+echo -e "\033[1;33mConverting \033[0;1m$IN\033[1;33m to \033[0;1m$PANCAKE_OUTPUT\033[1;33m…\033[0m"
 
 echo -e "Watching \033[1m$IN\033[0m for changes…"
 while true ; do
     if [[ $MD5 == $(md5sum $IN) ]] ; then
         inotifywait -qre close_write $IN --format "$UPDATE"
     else
-        echo -e "\033[1m$OUT\033[0m needs updating…"
+        echo -e "\033[1m$PANCAKE_OUTPUT\033[0m needs updating…"
     fi
     MD5=$(md5sum $IN)
     FAIL=0
-    $PANDOC $OPT $FILTERS $EXTRA $IN -o "$OUT" || FAIL=$?
+    $PANDOC $OPT $FILTERS $EXTRA $PANCAKE_OPTIONS $IN -o "$PANCAKE_OUTPUT" || FAIL=$?
     OWNER=($(ls -ld ${IN[0]}))
-    chown ${OWNER[2]}:${OWNER[3]} $OUT 2>/dev/null
-    if [ $ONCE ] ; then
-        [[ -L ".panzer" ]] && rm .panzer
+    chown ${OWNER[2]}:${OWNER[3]} $PANCAKE_OUTPUT 2>/dev/null
+    if [ $PANCAKE_ONCE ] ; then
         exit 0;
     fi
     if [ $FAIL != 0 ] ; then
