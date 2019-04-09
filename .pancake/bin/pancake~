@@ -81,7 +81,7 @@ if [ "$PANCAKE_TYPE" == "pdf" ] ; then
     EXTRA="$EXTRA -t latex --pdf-engine tectonic"
 fi
 
-if ls *.yaml ; then
+if [ ls *.yaml ] ; then
     for i in *.yaml ; do
         EXTRA="$EXTRA --metadata-file=$i"
     done

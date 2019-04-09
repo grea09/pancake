@@ -1,7 +1,6 @@
 FROM alpine:latest
-RUN apk --no-cache --update add python3 py2-pip inotify-tools librsvg wget bash
+RUN apk --no-cache --update add python3 inotify-tools librsvg wget bash
 RUN ln -s `which python3` /usr/bin/python
-RUN ln -s `which pip3` /usr/bin/pip
 
 RUN apk --no-cache --update add git g++ openssl-dev fontconfig-dev harfbuzz-dev icu-dev graphite2-dev libpng-dev zlib-dev
 #RUN apk --no-cache --update add fontconfig harfbuzz harfbuzz-icu icu freetype graphite2 libpng zlib
@@ -23,8 +22,6 @@ RUN chmod +x /root/.pancake/bin -R
 ENV PATH="/root/.pancake/bin:${PATH}"
 RUN ln -s /root/.cabal/bin/pandoc-citeproc /root/.pancake/filters/pandoc-citeproc
 RUN ln -s /root/.cabal/bin/pandoc-crossref /root/.pancake/filters/pandoc-crossref
-
-RUN pip install pandocfilters
 
 RUN mkdir /tmp/pancake
 RUN echo -e "# Initialization\n\nInit latex $\mathbb{Math}$ !" > /tmp/pancake/init.md
