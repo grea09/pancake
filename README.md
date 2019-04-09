@@ -1,7 +1,7 @@
 # Pancake
-Using Panzer + Pandoc + custom filters for scientific writing. 
-This project is a custom [Panzer v1.4.1](https://github.com/msprev/panzer) configuration folder that contains various tools to write scientific papers in Markdown.
-All this is made for [Pandoc v2.4](https://github.com/jgm/pandoc).
+Using Tectonic + Pandoc + custom filters for scientific writing. 
+This project is a docker image that contains various tools to write scientific papers in Markdown.
+All this is made for [Pandoc v2.7](https://github.com/jgm/pandoc).
 
 # General organisation
 
@@ -22,52 +22,11 @@ Also, one can use code blocks to write pseudocode using
         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 ### pandoc-crossref
-Filter used to make smart cross references. Compiled version from latest version of this [github repository](https://github.com/lierdakil/pandoc-crossref) (v0.3.0.2)
+Filter used to make smart cross references. Compiled version from latest version of this [github repository](https://github.com/lierdakil/pandoc-crossref)
 
 ### pandoc-table
 Filter used to be able to use tables in two-column mode, adapted from [here](https://groups.google.com/forum/#!msg/pandoc-discuss/RUC-tuu_qf0/h-H3RRVt1coJ).
 
-# Dependancies
+# Docker
 
-## apt
-Packages to install on Ubuntu 16.04 () :
-
-`sudo apt install xzdec librsvg2-bin inotify-tools git python3-pip`
-
-You can also install texlive and Pandoc from the default repositories but it is outdated and will limit the possibilities of modifications needed for Pancake:
-* `sudo apt install texlive-science texlive-fonts-recommended texlive-latex-extra texlive-generic-extra`
-* `sudo apt install pandoc pandoc-citeproc`
-
-## pandoc
-
-I use the latest version of Pandoc built directly from cabal :
-
-        cabal update
-        cabal install pandoc
-        cabal install pandoc-citeproc
-        cabal install pandoc-crossref
-
-## latex
-Manual Latex install [optional]:
-
-```
-wget http://mirror.ctan.org/systems/texlive/tlnet/install-tl-unx.tar.gz
-dtrx install-tl-unx.tar.gz
-cd install-tl-unx
-sudo ./install-tl
-```
-
-CTAN package (`sudo tlmgr install`):
-
-* `xcolor-solarized`
-
-## python
-
-* `sudo -H pip3 install --upgrade git+https://github.com/msprev/panzer`
-
-## bin
-
-Simply copy the script in `./bin/pancake` to the system (somewhere like `/usr/local/bin/`)
-
-* Usage : pancake FILE [FORMAT]
-* FORMAT : odt, tex, pdf (default)
+The image will have most useful tools for writing scientific papers using markdown. It uses tectonic that downloads all dependancies as needed. You will need to mount your work directory in `/doc` and Pancake will scan for files in it to convert.
