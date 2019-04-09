@@ -1,5 +1,5 @@
 FROM alpine:latest
-RUN apk --no-cache --update add python3 py2-pip inotify-tools librsvg wget bash
+RUN apk --no-cache --update add python3 py3-pip inotify-tools librsvg wget bash
 RUN ln -s `which python3` /usr/bin/python
 RUN ln -s `which pip3` /usr/bin/pip
 
