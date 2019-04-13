@@ -26,10 +26,10 @@ RUN ln -s /root/.cabal/bin/pandoc-crossref /root/.pancake/filters/pandoc-crossre
 
 RUN pip install pandocfilters
 
-RUN mkdir /tmp/pancake
-RUN echo -e "# Initialization\n\nInit latex $\mathbb{Math}$ !" > /tmp/pancake/init.md
-RUN pancake -1 /tmp/pancake/init.md
-RUN rm -R /tmp/pancake
+#RUN mkdir /tmp/pancake
+#RUN echo -e "# Initialization\n\nInit latex $\mathbb{Math}$ !" > /tmp/pancake/init.md
+#RUN pancake -1 /tmp/pancake/init.md
+#RUN rm -R /tmp/pancake
 
 WORKDIR /doc
 ENTRYPOINT ["pancake"]
