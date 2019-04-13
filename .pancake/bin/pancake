@@ -75,7 +75,7 @@ for i in $CONF/filters/* ; do
     FILTERS="$FILTERS --filter $i"
 done
 
-EXTRA=" --verbose"
+#EXTRA=" --verbose"
 
 if [ "$PANCAKE_TYPE" == "pdf" ] ; then
     EXTRA="$EXTRA -t latex --pdf-engine tectonic"
