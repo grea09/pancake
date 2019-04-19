@@ -23,6 +23,7 @@ RUN chmod +x /root/.pancake/bin -R
 ENV PATH="/root/.pancake/bin:${PATH}"
 RUN ln -s /root/.cabal/bin/pandoc-citeproc /root/.pancake/filters/pandoc-citeproc
 RUN ln -s /root/.cabal/bin/pandoc-crossref /root/.pancake/filters/pandoc-crossref
+RUN ln -s /root/.cache/Tectonic /data
 
 RUN pip install pandocfilters
 
