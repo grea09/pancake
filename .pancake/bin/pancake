@@ -98,6 +98,7 @@ while true ; do
     fi
     MD5=$(md5sum $IN)
     FAIL=0
+    echo "$PANDOC $OPT $FILTERS $EXTRA $PANCAKE_OPTIONS $IN -o \"$PANCAKE_OUTPUT\""
     $PANDOC $OPT $FILTERS $EXTRA $PANCAKE_OPTIONS $IN -o "$PANCAKE_OUTPUT" || FAIL=$?
     OWNER=($(ls -ld ${IN[0]}))
     chown ${OWNER[2]}:${OWNER[3]} $PANCAKE_OUTPUT 2>/dev/null
