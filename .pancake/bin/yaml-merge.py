@@ -6,14 +6,15 @@ import ruamel.yaml
 
 yaml = ruamel.yaml.YAML()
 
-data = {'resources':None}
+data = {}
 
-optlist, args = getopt.getopt(sys.argv[1:], 'o')
+optlist, args = getopt.getopt(sys.argv[1:], 'o:')
+print(args)
+print(optlist)
 
 for f in args:
+  print(f)
   with open(str(f)) as fp:
-    yaml_data = yaml.load(fp)
-    for i in yaml_data['resources']:
-      data['resources'].update({i:yaml_data['resources'][i]})
-
+    data = {**data, **(yaml.load(fp))}
 yaml.dump(data,file(optlist['-o'], 'w'))
+
