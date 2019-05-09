@@ -35,4 +35,4 @@ RUN pip install -U pandocfilters ruamel.yaml pip
 #RUN rm -R /tmp/pancake
 
 WORKDIR /doc
-ENTRYPOINT ["pancake"]
+CMD pancake

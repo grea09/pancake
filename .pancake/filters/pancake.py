@@ -49,7 +49,8 @@ def label(x, t):
     return latex_command('label',x, option=t)
 
 def ref(x, name, title):
-    return (name.title() if title else name) + " " + latex_command('ref',x)
+#    return (name.title() if title else name) + " " + latex_command('ref',x)
+    return latex_command('cref',x)
 
 def labelref(x, title):
     return latex_command('nameCref' if title else 'namecref',x) + ' of ' + latex_command('nameref',x)
@@ -150,7 +151,6 @@ def raw(x):
                 result.append(" ")
     walk(x, flatten, "", {})
     return ''.join(result)
-
 
 def pandoc_science(key, value, format, meta):
     if key == 'Div':

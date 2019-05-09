@@ -53,18 +53,15 @@ IN=("${IN[@]}" $(ls $1))
 shift
 done
 
-if [ -z "$PANCAKE_TYPE" ]; then
-    if [ -z "$PANCAKE_OUTPUT" ]; then
+if [ -z $PANCAKE_OUTPUT ]; then
+    if [ -z $PANCAKE_TYPE ]; then
         PANCAKE_TYPE="pdf"
-    else
-        PANCAKE_TYPE="${PANCAKE_OUTPUT##*.}"
+        PANCAKE_OUTPUT="output.pdf"
+    elif [ ${#IN[@]} -eq 1 ]; then
+        PANCAKE_OUTPUT="${IN[0]%.*}.$PANCAKE_TYPE"
     fi
-fi
-
-if [ ${#IN[@]} -eq 1 ]; then
-    PANCAKE_OUTPUT="${IN[0]%.*}.$PANCAKE_TYPE"
-elif [ -z "$PANCAKE_OUTPUT" ]; then
-    PANCAKE_OUTPUT="$(basename ${PWD%.*}.$PANCAKE_TYPE)"
+elif [ -z $PANCAKE_TYPE ]; then
+  PANCAKE_TYPE="${PANCAKE_OUTPUT##*.}"
 fi
 
 
@@ -76,7 +73,7 @@ for i in $CONF/filters/* ; do
     FILTERS="$FILTERS --filter $i"
 done
 
-EXTRA=" --verbose"
+EXTRA=" --quiet"
 
 
 if [ "$PANCAKE_TYPE" == "pdf" ] ; then
@@ -90,11 +87,9 @@ if ls *.yaml ; then
     done
 fi
 mkdir $TMP 2>/dev/null
-echo "python3 $CONF/bin/yaml-merge.py $YAML -o "$TMP/merged.yaml""
+#echo "python3 $CONF/bin/yaml-merge.py $YAML -o "$TMP/merged.yaml""
 python3 $CONF/bin/yaml-merge.py $YAML -o "$TMP/merged.yaml"
 META="--metadata-file=$TMP/merged.yaml"
-
-echo -e "\033[1;33mConverting \033[0;1m$IN\033[1;33m to \033[0;1m$PANCAKE_OUTPUT\033[1;33m…\033[0m"
 
 echo -e "Watching \033[1m$IN\033[0m for changes…"
 while true ; do
@@ -105,7 +100,7 @@ while true ; do
     fi
     MD5=$(md5sum $IN)
     FAIL=0
-    echo "$PANDOC $OPT $FILTERS $EXTRA $META $PANCAKE_OPTIONS $IN -o \"$PANCAKE_OUTPUT\""
+    #echo "$PANDOC $OPT $FILTERS $EXTRA $META $PANCAKE_OPTIONS $IN -o \"$PANCAKE_OUTPUT\""
     $PANDOC $OPT $FILTERS $EXTRA $META $PANCAKE_OPTIONS $IN -o "$PANCAKE_OUTPUT" || FAIL=$?
     OWNER=($(ls -ld ${IN[0]}))
     chown ${OWNER[2]}:${OWNER[3]} $PANCAKE_OUTPUT 2>/dev/null
@@ -113,7 +108,9 @@ while true ; do
         exit 0;
     fi
     if [ $FAIL != 0 ] ; then
-        echo -e '\033[1;31mConversion failed !\033[0m';
+        echo -e '\033[1;31mConversion failed !\033[0m'
+    else
+        echo -e '\033[1;32mConverted with success !\033[0m'
     fi
-    echo -e '\033[1;32mConverted with success !\033[0m'
+    
 done

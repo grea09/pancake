@@ -27,7 +27,7 @@ linkcolor: solarized-cyan
 citecolor: solarized-base1
 urlcolor: solarized-blue
 filecolor: solarized-magenta
-listings: true
+listings: false
 codeBlockCaptions: true
 latexBlocks: [framed, multicols, center, minipage]
 amsthm:

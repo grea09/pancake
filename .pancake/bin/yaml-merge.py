@@ -1,20 +1,20 @@
 #!/usr/bin/python3
 
 import sys
-import getopt
+import argparse
 import ruamel.yaml
 
 yaml = ruamel.yaml.YAML()
 
 data = {}
 
-optlist, args = getopt.getopt(sys.argv[1:], 'o:')
-print(args)
-print(optlist)
+parser = argparse.ArgumentParser()
+parser.add_argument("inputs", nargs='+', type=str, help="Merged YAML file path")
+parser.add_argument("-o", "--output", type=str, help="Merged YAML file path")
+args = parser.parse_args()
 
-for f in args:
-  print(f)
+for f in args.inputs:
   with open(str(f)) as fp:
     data = {**data, **(yaml.load(fp))}
-yaml.dump(data,file(optlist['-o'], 'w'))
+yaml.dump(data,open(args.output, 'w'))
 
