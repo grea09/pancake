@@ -1,6 +1,10 @@
 smart: true
 standalone: true
 numbersections: true
+secHeaderTemplate: $$secHeaderPrefix[n]$$$$i$$. $$t$$
+secHeaderPrefix:
+  - "chapter&#32;"
+  - "section&#32;"
 secPrefix:
     - section
     - sections
@@ -77,7 +81,9 @@ utf8:
     - code: 22A7
       macro: $\models$
     - code: 2011
-      macro: \mbox{-}
+      macro: $-$
+    - code: 204E
+      macro: $\ast$
 mainfont: Aller
 mathfont: STIX Two Math
 headingfont: Aller Display

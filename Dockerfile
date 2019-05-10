@@ -15,24 +15,20 @@ ENV PATH="/root/.cargo/bin:${PATH}"
 RUN rm -R /root/.cargo/registry
 
 RUN cabal update
-RUN cabal install pandoc pandoc-citeproc pandoc-crossref
+RUN cabal install Cabal
+RUN cabal new-install pandoc pandoc-crossref pandoc-citeproc
 RUN rm -R /root/.cabal/packages
 ENV PATH="/root/.cabal/bin:${PATH}"
+
+RUN pip install -U pandocfilters ruamel.yaml pip
 
 COPY .fonts /root/.fonts
 COPY .pancake /root/.pancake
 RUN chmod +x /root/.pancake/bin -R
 ENV PATH="/root/.pancake/bin:${PATH}"
-RUN ln -s /root/.cabal/bin/pandoc-citeproc /root/.pancake/filters/pandoc-citeproc
-RUN ln -s /root/.cabal/bin/pandoc-crossref /root/.pancake/filters/pandoc-crossref
+RUN ln -s /root/.cabal/bin/pandoc-citeproc /root/.pancake/filters/3.pandoc-citeproc
+RUN ln -s /root/.cabal/bin/pandoc-crossref /root/.pancake/filters/2_pandoc-crossref
 RUN ln -s /root/.cache/Tectonic /data
-
-RUN pip install -U pandocfilters ruamel.yaml pip
-
-#RUN mkdir /tmp/pancake
-#RUN echo -e "# Initialization\n\nInit latex $\mathbb{Math}$ !" > /tmp/pancake/init.md
-#RUN pancake -1 /tmp/pancake/init.md
-#RUN rm -R /tmp/pancake
 
 WORKDIR /doc
 CMD pancake
