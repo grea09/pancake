@@ -65,8 +65,8 @@ elif [ -z $PANCAKE_TYPE ]; then
   PANCAKE_TYPE="${PANCAKE_OUTPUT##*.}"
 fi
 
-if [ -d "$PANCAKE_FONTS" ] ; then
-    ln -s $PANCAKE_FONTS "/root/.fonts/custom"
+if [ -d "$FONTS" ] ; then
+    ln -s $FONTS "/root/.fonts/custom"
 fi
 
 UPDATE=$(echo -e "\033[1m%w%f\033[0m changed. Updating \033[1m$PANCAKE_OUTPUT\033[0m…")
