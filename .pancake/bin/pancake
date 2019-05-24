@@ -104,6 +104,7 @@ while true ; do
     fi
     MD5=$(md5sum $IN)
     FAIL=0
+    python3 $CONF/bin/yaml-merge.py $YAML -o "$TMP/merged.yaml"
     #echo "$PANDOC $OPT $FILTERS $EXTRA $META $PANCAKE_OPTIONS $IN -o \"$PANCAKE_OUTPUT\""
     $PANDOC $OPT $FILTERS $EXTRA $META $PANCAKE_OPTIONS $IN -o "$PANCAKE_OUTPUT" || FAIL=$?
     OWNER=($(ls -ld ${IN[0]}))
