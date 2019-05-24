@@ -22,7 +22,7 @@ ENV PATH="/root/.cabal/bin:${PATH}"
 
 RUN pip install -U pandocfilters ruamel.yaml pip
 
-RUN echo "<dir>/doc/fonts</dir><dir>~/.fonts</dir>" >  /etc/fonts/local.conf
+RUN echo -e "<fontconfig>\n\t<dir>/doc/fonts</dir>\n\t<dir>~/.fonts</dir>\n</fontconfig>" >  /etc/fonts/local.conf
 COPY .fonts /root/.fonts
 COPY .pancake /root/.pancake
 RUN chmod +x /root/.pancake/bin -R
