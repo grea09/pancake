@@ -31,6 +31,7 @@ set -- "${POSITIONAL[@]}" # restore positional parameters
 
 PANDOC="pandoc"
 CONF="/root/.pancake"
+FONTS="fonts"
 TMP="/tmp/pancake"
 
 declare -a IN
@@ -64,6 +65,9 @@ elif [ -z $PANCAKE_TYPE ]; then
   PANCAKE_TYPE="${PANCAKE_OUTPUT##*.}"
 fi
 
+if [ ls $PANCAKE_FONTS 2>/dev/null ] ; then
+    ln -s $PANCAKE_FONTS "/root/.fonts/custom"
+fi
 
 UPDATE=$(echo -e "\033[1m%w%f\033[0m changed. Updating \033[1m$PANCAKE_OUTPUT\033[0m…")
 
