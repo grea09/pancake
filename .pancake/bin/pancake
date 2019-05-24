@@ -65,7 +65,7 @@ elif [ -z $PANCAKE_TYPE ]; then
   PANCAKE_TYPE="${PANCAKE_OUTPUT##*.}"
 fi
 
-if [ ls $PANCAKE_FONTS 2>/dev/null ] ; then
+if [ -d "$PANCAKE_FONTS" ] ; then
     ln -s $PANCAKE_FONTS "/root/.fonts/custom"
 fi
 
