@@ -27,7 +27,7 @@ COPY .fonts /root/.fonts
 COPY .pancake /root/.pancake
 RUN chmod +x /root/.pancake/bin -R
 ENV PATH="/root/.pancake/bin:${PATH}"
-RUN ln -s /root/.cabal/bin/pandoc-citeproc /root/.pancake/filters/3.pandoc-citeproc
+RUN ln -s /root/.cabal/bin/pandoc-citeproc /root/.pancake/filters/3_pandoc-citeproc
 RUN ln -s /root/.cabal/bin/pandoc-crossref /root/.pancake/filters/2_pandoc-crossref
 RUN ln -s /root/.cache/Tectonic /data
 
