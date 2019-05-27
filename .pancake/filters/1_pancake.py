@@ -45,7 +45,7 @@ def cite(x):
 def caption(x):
     return latex_command('caption',x)
 
-def caption(x):
+def captionof(x):
     return latex_command('captionof',x) if x else ""
 
 def label(x, t):
