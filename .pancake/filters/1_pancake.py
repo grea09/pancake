@@ -46,7 +46,7 @@ def caption(x):
     return latex_command('caption',x)
 
 def captionof(x):
-    return latex_command('captionof',x) if x else ""
+    return latex_command('captionof',x)
 
 def label(x, t):
     return latex_command('label',x, option=t)
@@ -235,9 +235,7 @@ def pandoc_science(key, value, format, meta):
             if 'margin' in currentClasses: 
                 if str(image).endswith("svg"):
                     image = tmpPdf(image)
-                return [ilatex(latex_command('hypertarget{' + id + '}', '%\n' + latex_command('marginpar', '%\n' + latex_command('includegraphics',image) + '\n' + captionof(stringify(name)) + label(id,'figure') + '\n' )))]
-
-
+                return [ilatex(latex_command('marginpar', '%\n' + latex_command('includegraphics',image) + '\n' + captionof(stringify(name)) + label(id,'figure') + '\n' ))]
 
 if __name__ == '__main__':
     toJSONFilter(pandoc_science)
