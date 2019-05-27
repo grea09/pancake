@@ -46,7 +46,7 @@ def caption(x):
     return latex_command('caption',x)
 
 def captionof(x):
-    return latex_command('captionof{figure}',"\\\\\\hspace{\\textwidth}" + x)
+    return latex_command('captionof{figure}',x)
 
 def label(x, t):
     return latex_command('label',x, option=t)

@@ -475,6 +475,7 @@ $else$
 \IfFileExists{footnotehyper.sty}{\usepackage{footnotehyper}}{\usepackage{footnote}}
 \makesavenoteenv{longtable}
 $endif$
+\captionsetup{format=plain, font=small, labelfont=bf} %%%%% PANCAKE
 $endif$
 $if(graphics)$
 \usepackage{graphicx,grffile}
