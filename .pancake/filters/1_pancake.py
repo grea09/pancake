@@ -235,7 +235,7 @@ def pandoc_science(key, value, format, meta):
             if 'margin' in currentClasses: 
                 if str(image).endswith("svg"):
                     image = tmpPdf(image)
-                return [ilatex(latex_command('marginnote', '%\n' + latex_command('includegraphics',image) + '\n' + captionof(stringify(name)) + label(id,'figure') + '\n' ))]
+                return [ilatex(latex_command('marginpar', '%\n' + latex_command('includegraphics',image) + '\n' + captionof(stringify(name)) + label(id,'figure') + '\n' ))]
 
 if __name__ == '__main__':
     toJSONFilter(pandoc_science)
