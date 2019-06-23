@@ -33,13 +33,17 @@ PANDOC="pandoc"
 CONF="/root/.pancake"
 TMP="/tmp/pancake"
 
+if [ -z $PANCAKE_INPUT ]; then
+  PANCAKE_INPUT="*.md"
+fi
+
 declare -a IN
 if [ $# == 0 ]; then
-    if [ ! ls *.md 2>/dev/null ] ; then
-        echo -e "\033[1;31mNo markdown files found!\033[0m";
+    if [ ! ls $PANCAKE_INPUT 2>/dev/null ] ; then
+        echo -e "\033[1;31mNo file to convert!\033[0m";
         exit 1;
     fi
-    IN=$(ls *.md)
+    IN=$(ls $PANCAKE_INPUT)
 fi
 
 while [[ $# -gt 0 ]]
