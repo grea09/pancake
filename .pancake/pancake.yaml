@@ -1,90 +1,76 @@
 smart: true
 standalone: true
-numbersections: true
-secHeaderTemplate: $$secHeaderPrefix[n]$$$$i$$. $$t$$
-secHeaderPrefix:
-  - "chapter&#32;"
-  - "section&#32;"
-secPrefix:
-    - section
-    - sections
-figPrefix:
-    - figure
-    - figures
-eqnPrefix:
-    - equation
-    - equations
-tblPrefix:
-    - table
-    - tables
-lstPrefix:
-    - listing
-    - listings
-markdown_in_html_blocks: true
-verbatim-in-note: true
+mainfont: Aller
+mathfont: STIX Two Math
+headingfont: Aller Display
+# markdown_in_html_blocks: true
+# verbatim-in-note: true
+# tables: true
 link-citations: true
-cref: true
-tables: true
 colorlinks: true
 solarized: true
 linkcolor: solarized-cyan
 citecolor: solarized-base1
 urlcolor: solarized-blue
 filecolor: solarized-magenta
-listings: false
+
+
+#### pandoc-crossref
+# cref: true
+listings: true
+
+numberSections: true
+secHeaderTemplate: $$secHeaderPrefix[n]$$$$i$$. $$t$$
+secHeaderPrefix:
+  - "chapter&#32;"
+  - "section&#32;"
+# secPrefix:
+#     - section
+#     - sections
+# figPrefix:
+#     - figure
+#     - figures
+# eqnPrefix:
+#     - equation
+#     - equations
+# tblPrefix:
+#     - table
+#     - tables
+# lstPrefix:
+#     - listing
+#     - listings
 codeBlockCaptions: true
-latexBlocks: [framed, multicols, center, minipage]
+####
+
+# latexBlocks: [framed, multicols, center, minipage]
+algorithm: algorithm
 amsthm:
   plain:
   - theorem
   plain-unnumbered:
   - lemma
   - proposition
-  - corollary
   definition:
   - definition
-  - conjecture
   - example
   - postulate
   - problem
   definition-unnumbered:
   - axiom
-  remark:
-  - case
-  remark-unnumbered:
-  - remark
-  - note
   proof:
   - proof
-algorithm: algorithm
-cref-numbered:
-  - prefix: sec
-    name: section
-  - prefix: tbl
-    name: table
-  - prefix: lst
-    name: listing
-  - prefix: theo
-    name: theorem
-  - prefix: def
-    name: definition
-  - prefix: prf
-    name: proof
-  - prefix: alg
-    name: algorithm
-  - prefix: line
-    name: line
-cref-labelled:
-  - prefix: axi
-    name: axiom
-utf8:
-    - code: 22A7
-      macro: $\models$
-    - code: 2011
-      macro: $-$
-    - code: 204E
-      macro: $\ast$
-mainfont: Aller
-mathfont: STIX Two Math
-headingfont: Aller Display
-
+ref-numbered:
+  - ch: chapter
+  - sec: section
+  - fig: figure
+  - eq: equation
+  - sec: section
+  - tbl: table
+  - lst: listing
+  - theo: theorem
+  - def: definition
+  - prf: proof
+  - alg: algorithm
+  - line: line
+ref-named:
+  - axi: axiom

@@ -2,9 +2,9 @@
 
 import sys
 import argparse
-import ruamel.yaml
+from ruamel.yaml import YAML
 
-yaml = ruamel.yaml.YAML()
+yaml = YAML(typ='safe')
 
 data = {}
 

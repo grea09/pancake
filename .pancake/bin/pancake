@@ -76,7 +76,9 @@ for i in $CONF/filters/* ; do
     FILTERS="$FILTERS --filter $i"
 done
 
-EXTRA=" --quiet"
+echo "Filters loaded: $FILTERS"
+
+# EXTRA=" --quiet"
 
 
 if [ "$PANCAKE_TYPE" == "pdf" ] ; then
@@ -88,9 +90,10 @@ if ls *.yaml ; then
     for i in *.yaml ; do
         YAML="$YAML $i"
     done
+    echo "Styling files found : $YAML"
 fi
 mkdir $TMP 2>/dev/null
-#echo "python3 $CONF/bin/yaml-merge.py $YAML -o "$TMP/merged.yaml""
+echo "Merging styles…"
 python3 $CONF/bin/yaml-merge.py $YAML -o "$TMP/merged.yaml"
 META="--metadata-file=$TMP/merged.yaml"
 
@@ -103,8 +106,9 @@ while true ; do
     fi
     MD5=$(md5sum $IN)
     FAIL=0
+    echo "Merging styles…"
     python3 $CONF/bin/yaml-merge.py $YAML -o "$TMP/merged.yaml"
-    #echo "$PANDOC $OPT $FILTERS $EXTRA $META $PANCAKE_OPTIONS $IN -o \"$PANCAKE_OUTPUT\""
+    echo "$PANDOC $OPT $FILTERS $EXTRA $META $PANCAKE_OPTIONS $IN -o \"$PANCAKE_OUTPUT\""
     $PANDOC $OPT $FILTERS $EXTRA $META $PANCAKE_OPTIONS $IN -o "$PANCAKE_OUTPUT" 2>&1 || FAIL=$?
     OWNER=($(ls -ld ${IN[0]}))
     chown ${OWNER[2]}:${OWNER[3]} $PANCAKE_OUTPUT 2>/dev/null
