@@ -23,3 +23,6 @@ runs:
   volumes:
     - ${{ inputs.doc }}:/doc 
     - /tmp/cache:/data
+branding:
+  icon: 'menu'  
+  color: 'orange'
