@@ -5,7 +5,7 @@ RUN apk --no-cache --update add python3 python3-dev py3-pip inotify-tools librsv
 RUN ln -s `which python3` /usr/bin/python
 RUN ln -s `which pip3` /usr/bin/pip
 
-RUN apk --no-cache --update add git g++ openssl-dev fontconfig-dev harfbuzz-dev icu-dev graphite2-dev libpng-dev zlib-dev
+RUN apk --no-cache --update add git g++ libressl-dev fontconfig-dev harfbuzz-dev icu-dev graphite2-dev libpng-dev zlib-dev
 
 RUN apk --no-cache --update add cargo ghc cabal outils-md5
 
