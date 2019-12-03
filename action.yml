@@ -1,0 +1,28 @@
+name: 'Pancake'
+description: 'Use the Pancake Framework to convert files'
+inputs:
+  input:
+    description: 'Path or expression of the input files'
+  type:
+    description: 'Target file type'
+  output: 
+    description: 'Path of the output file'
+  options:
+    description: 'Extra options for Pandoc'
+  doc:
+    description: 'Path of the working dir that binds to /doc'
+runs:
+  using: 'docker'
+  image: 'Dockerfile'
+  envs:
+    PANCAKE_ONCE: true
+    PANCAKE_INPUT: ${{ inputs.input }}
+    PANCAKE_OPTIONS: ${{ inputs.options }}
+    PANCAKE_OUTPUT: ${{ inputs.output }}
+    PANCAKE_TYPE: ${{ inputs.type }}
+  volumes:
+    - ${{ inputs.doc }}:/doc 
+    - /tmp/cache:/data
+branding:
+  icon: 'menu'  
+  color: 'orange'
