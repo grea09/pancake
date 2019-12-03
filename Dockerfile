@@ -1,13 +1,16 @@
 FROM alpine:latest
 RUN echo -e "http://dl-cdn.alpinelinux.org/alpine/edge/community\nhttp://dl-cdn.alpinelinux.org/alpine/edge/main" >> /etc/apk/repositories
 
-RUN apk --no-cache --update add python3 python3-dev py3-pip inotify-tools librsvg wget bash
+RUN apk -U upgrade -a
+RUN apk --no-cache update
+
+RUN apk --no-cache -U add python3 python3-dev py3-pip inotify-tools librsvg wget bash
 RUN ln -s `which python3` /usr/bin/python
 RUN ln -s `which pip3` /usr/bin/pip
 
-RUN apk --no-cache --update add git g++ libressl-dev fontconfig-dev harfbuzz-dev icu-dev graphite2-dev libpng-dev zlib-dev
+RUN apk --no-cache -U add git g++ libressl-dev fontconfig-dev harfbuzz-dev icu-dev graphite2-dev libpng-dev zlib-dev
 
-RUN apk --no-cache --update add cargo ghc cabal outils-md5
+RUN apk --no-cache -U add cargo ghc cabal outils-md5
 
 RUN cargo install --git https://github.com/tectonic-typesetting/tectonic.git tectonic
 ENV PATH="/root/.cargo/bin:${PATH}"
