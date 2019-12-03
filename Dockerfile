@@ -19,7 +19,7 @@ RUN cabal new-install pandoc pandoc-citeproc pandoc-crossref
 RUN rm -R /root/.cabal/packages
 ENV PATH="/root/.cabal/bin:${PATH}"
 
-RUN pip install -U pandocfilters ruamel.yaml pip
+RUN pip install -U pandocfilters pip
 
 COPY .fonts /root/.fonts
 RUN echo -e "<fontconfig>\n\t<dir>/doc/fonts</dir>\n\t<dir>~/.fonts</dir>\n</fontconfig>" >  /etc/fonts/local.conf
