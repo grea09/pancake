@@ -85,17 +85,12 @@ if [ "$PANCAKE_TYPE" == "pdf" ] ; then
     EXTRA="$EXTRA -t latex --pdf-engine tectonic"
 fi
 
-YAML=$CONF/pancake.yaml
+YAML="--metadata-file=$CONF/pancake.yaml"
 if ls *.yaml ; then
     for i in *.yaml ; do
-        YAML="$YAML $i"
+        YAML="$YAML --metadata-file=$i"
     done
-    echo "Styling files found : $YAML"
 fi
-mkdir $TMP 2>/dev/null
-echo "Merging styles…"
-python3 $CONF/bin/yaml-merge.py $YAML -o "$TMP/merged.yaml"
-META="--metadata-file=$TMP/merged.yaml"
 
 echo -e "Watching \033[1m$IN\033[0m for changes…"
 while true ; do
@@ -106,10 +101,9 @@ while true ; do
     fi
     MD5=$(md5sum $IN)
     FAIL=0
-    echo "Merging styles…"
-    python3 $CONF/bin/yaml-merge.py $YAML -o "$TMP/merged.yaml"
-    echo "$PANDOC $OPT $FILTERS $EXTRA $META $PANCAKE_OPTIONS $IN -o \"$PANCAKE_OUTPUT\""
-    $PANDOC $OPT $FILTERS $EXTRA $META $PANCAKE_OPTIONS $IN -o "$PANCAKE_OUTPUT" 2>&1 || FAIL=$?
+    CMD="$PANDOC $OPT $FILTERS $EXTRA $YAML $PANCAKE_OPTIONS $IN -o $PANCAKE_OUTPUT"
+    echo "$CMD"
+    $CMD 2>&1 || FAIL=$?
     OWNER=($(ls -ld ${IN[0]}))
     chown ${OWNER[2]}:${OWNER[3]} $PANCAKE_OUTPUT 2>/dev/null
     if [ $PANCAKE_ONCE ] ; then
@@ -120,5 +114,6 @@ while true ; do
     else
         echo -e '\033[1;32mConverted with success !\033[0m'
     fi
-    
+    chmod 755 -R "/data"
+    chmod 755 -R "/doc/.pancake.log"
 done

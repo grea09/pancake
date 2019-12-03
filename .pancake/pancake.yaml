@@ -3,6 +3,7 @@ standalone: true
 mainfont: Aller
 mathfont: STIX Two Math
 headingfont: Aller Display
+monofont: Hack
 # markdown_in_html_blocks: true
 # verbatim-in-note: true
 # tables: true
@@ -24,21 +25,21 @@ secHeaderTemplate: $$secHeaderPrefix[n]$$$$i$$. $$t$$
 secHeaderPrefix:
   - "chapter&#32;"
   - "section&#32;"
-# secPrefix:
-#     - section
-#     - sections
-# figPrefix:
-#     - figure
-#     - figures
-# eqnPrefix:
-#     - equation
-#     - equations
-# tblPrefix:
-#     - table
-#     - tables
-# lstPrefix:
-#     - listing
-#     - listings
+secPrefix:
+    - section
+    - sections
+figPrefix:
+    - figure
+    - figures
+eqnPrefix:
+    - equation
+    - equations
+tblPrefix:
+    - table
+    - tables
+lstPrefix:
+    - listing
+    - listings
 codeBlockCaptions: true
 ####
 
