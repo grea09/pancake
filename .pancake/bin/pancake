@@ -72,13 +72,15 @@ UPDATE=$(echo -e "\033[1m%w%f\033[0m changed. Updating \033[1m$PANCAKE_OUTPUT\03
 
 OPT="-s --template=$CONF/templates/pancake"
 
+FILTERS="--filter pandoc-crossref --filter pandoc-citeproc"
+
 for i in $CONF/filters/* ; do
     FILTERS="$FILTERS --filter $i"
 done
 
 echo "Filters loaded: $FILTERS"
 
-EXTRA=" --quiet --log=/doc/.pancake.log"
+EXTRA=" --quiet --log=/data/.pancake.log"
 
 
 if [ "$PANCAKE_TYPE" == "pdf" ] ; then
@@ -114,6 +116,6 @@ while true ; do
     else
         echo -e '\033[1;32mConverted with success !\033[0m'
     fi
-    chmod 755 -R "/data"
-    chmod 755 -R "/doc/.pancake.log"
+    chmod 755 -R "/data/.cache"
+    chmod 755 -R "/data/.pancake.log"
 done
