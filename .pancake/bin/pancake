@@ -72,7 +72,7 @@ UPDATE=$(echo -e "\033[1m%w%f\033[0m changed. Updating \033[1m$PANCAKE_OUTPUT\03
 
 OPT="-s --template=$CONF/templates/pancake"
 
-for i in $(find "$CONF"/filters -type f -executable) ; do
+for i in $CONF/filters/* ; do
     FILTERS="$FILTERS --filter $i"
 done
 
