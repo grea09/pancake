@@ -72,13 +72,11 @@ UPDATE=$(echo -e "\033[1m%w%f\033[0m changed. Updating \033[1m$PANCAKE_OUTPUT\03
 
 OPT="-s --template=$CONF/templates/pancake"
 
-for i in $CONF/filters/* ; do
+for i in $(find "$CONF"/filters -type f -executable) ; do
     FILTERS="$FILTERS --filter $i"
 done
 
-FILTERS=" --filter pandoc-crossref --filter pandoc-citeproc"
-
-echo "Filters loaded: $FILTERS"
+FILTERS="$FILTERS --filter pandoc-crossref --filter pandoc-citeproc"
 
 EXTRA=" --quiet --log=/data/.pancake.log"
 
