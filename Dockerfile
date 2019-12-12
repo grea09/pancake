@@ -25,8 +25,8 @@ RUN cabal update \
   && mv /root/.cabal/bin/cabal /usr/local/bin/cabal
 
 # Get sources
-ARG pandoc_commit=master
-RUN git clone --depth=1 --quiet \
+ARG pandoc_commit=rc/2.8.1
+RUN git clone --branch=$pandoc_commit --depth=1 --quiet \
         https://github.com/jgm/pandoc /usr/src/pandoc
 RUN git clone --quiet \
         https://github.com/lierdakil/pandoc-crossref.git /usr/src/pandoc-crossref
