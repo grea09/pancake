@@ -20,55 +20,37 @@ RUN apk --no-cache add \
 
 # Install newer cabal-install version
 COPY cabal.root.config /root/.cabal/config
-RUN cabal update \
-  && cabal install cabal-install \
+RUN cabal new-update \
+  && cabal new-install cabal-install \
   && mv /root/.cabal/bin/cabal /usr/local/bin/cabal
 
-# Get sources
-ARG pandoc_commit=rc/2.8.1
-RUN git clone --branch=$pandoc_commit --depth=1 --quiet \
-        https://github.com/jgm/pandoc /usr/src/pandoc
-RUN git clone --quiet \
-        https://github.com/lierdakil/pandoc-crossref.git /usr/src/pandoc-crossref
 
 # Install Haskell dependencies
-WORKDIR /usr/src/pandoc
 RUN cabal --version \
-  && ghc --version \
-  && cabal new-update \
-  && cabal new-clean \
-  && cabal new-configure \
-           --flag embed_data_files \
-           --flag bibutils \
-           --constraint 'hslua +system-lua +pkg-config' \
-           --enable-tests \
-           . pandoc-citeproc \
-  && cabal new-build . pandoc-citeproc
-WORKDIR /usr/src/pandoc-crossref
-RUN cabal new-configure  \
-           --flag embed_data_files \
-           --flag bibutils \
-           --constraint 'hslua +system-lua +pkg-config' \
-           . exe:pandoc-crossref \
-  && cabal new-build . exe:pandoc-crossref
+  && ghc --version
+RUN cabal new-clean
+
+RUN cabal new-install pandoc pandoc-citeproc \
+#      --install-method=copy --installdir=/usr/bin \
+      --flag embed_data_files \
+      --flag bibutils \
+      --constraint 'hslua +system-lua +pkg-config'
+
+RUN cabal new-install pandoc-crossref \
+#            --install-method=copy --installdir=/usr/bin \
+            --flag embed_data_files
 
 # Install Tectonic
 
-RUN apk --no-cache -U add git g++ libressl-dev libssl1.1 libcrypto1.1 fontconfig-dev harfbuzz-dev icu-dev graphite2-dev libpng-dev zlib-dev
+RUN apk --no-cache -U add cargo g++ outils-md5
 
-RUN apk --no-cache -U add cargo outils-md5
+RUN apk --no-cache -U add git libressl-dev libssl1.1 libcrypto1.1 fontconfig-dev harfbuzz-dev icu-dev graphite2-dev libpng-dev zlib-dev
 
 RUN cargo install --git https://github.com/tectonic-typesetting/tectonic.git tectonic
 
-
-RUN cp /usr/src/pandoc*/dist-newstyle/build/*/*/pandoc*/x/pandoc*/build/pandoc*/pandoc /usr/bin
-RUN cp /usr/src/pandoc*/dist-newstyle/build/*/*/pandoc-citeproc*/build/pandoc-citeproc/pandoc-citeproc /usr/bin
-RUN cp /usr/src/pandoc*/dist-newstyle/build/*/*/pandoc*/x/pandoc*/build/pandoc*/pandoc-crossref /usr/bin
-
-
 FROM alpine AS alpine-pandoc
 
-COPY --from=pandoc-builder /usr/bin/pandoc* /usr/bin/
+COPY --from=pandoc-builder /root/.cabal/bin/* /usr/bin/
 COPY --from=pandoc-builder /root/.cargo/bin/tectonic /usr/bin/
 
 RUN echo -e "http://dl-cdn.alpinelinux.org/alpine/edge/community\nhttp://dl-cdn.alpinelinux.org/alpine/edge/main" >> /etc/apk/repositories
