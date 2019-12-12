@@ -580,7 +580,7 @@ $if(csl-refs)$
 $endif$
 
 $if(glossary)$ %%%%%PANCAKE
-\usepackage{glossaries}
+\usepackage[acronym]{glossaries}
 \usepackage[symbols]{glossaries-extra}
 $for(glossary.entries)$
 \newglossaryentry{$glossary.entries$}{
@@ -594,6 +594,7 @@ $endfor$
 $for(glossary.acronyms)$
 \newacronym{$glossary.acronyms.label$}{$glossary.acronyms.short$}{$glossary.acronyms.long$}
 $endfor$
+\makeglossaries
 $endif$ %%%%%PANCAKE
 
 $if(title)$
@@ -690,6 +691,11 @@ $endif$
 $if(lof)$
 \listoffigures
 $endif$
+
+$if(glossary)$
+\printglossaries[title=$glossary.title$]
+$endif$
+
 $if(linestretch)$
 \setstretch{$linestretch$}
 $endif$
