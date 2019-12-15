@@ -147,6 +147,7 @@ $endif$ %%%%% PANCAKE
 \else % if luatex or xetex
 $if(mathspec)$
   \ifxetex
+    \usepackage{amsmath}
     \usepackage{mathspec}
   \else
     \usepackage{unicode-math}
@@ -580,21 +581,21 @@ $if(csl-refs)$
 $endif$
 
 $if(glossary)$ %%%%%PANCAKE
-\usepackage[acronym]{glossaries}
-\usepackage[symbols]{glossaries-extra}
+\usepackage[symbols, acronym, footnote]{glossaries-extra}
 $for(glossary.entries)$
 \newglossaryentry{$glossary.entries$}{
   name={$glossary.entries.name$},
-$if(glossary.entries.symbol)$
-  symbol={\ensuremath{$glossary.entries.symbol$}},
-$endif$
   description={$glossary.entries.description$}
 }
 $endfor$
 $for(glossary.acronyms)$
 \newacronym{$glossary.acronyms.label$}{$glossary.acronyms.short$}{$glossary.acronyms.long$}
 $endfor$
-\makeglossaries
+$for(glossary.symbols)$
+\newcommand{\$glossary.symbols.label$}{$glossary.symbols.symbol$}
+\glsxtrnewsymbol[description={$glossary.symbols.description$}]{$glossary.symbols.label$}{\ensuremath{$glossary.symbols.symbol$}}
+$endfor$
+\makenoidxglossaries
 $endif$ %%%%%PANCAKE
 
 $if(title)$
@@ -735,6 +736,10 @@ $if(beamer)$
 \end{frame}
 $else$
 \printbibliography$if(biblio-title)$[title=$biblio-title$]$endif$
+$endif$
+
+$if(glossary)$
+\printnoidxglossaries
 $endif$
 
 $endif$
