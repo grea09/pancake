@@ -91,6 +91,11 @@ if ls *.yaml ; then
         YAML="$YAML --metadata-file=$i"
     done
 fi
+if ls style/*.yaml ; then
+    for i in style/*.yaml ; do
+        YAML="$YAML --metadata-file=$i"
+    done
+fi
 
 echo -e "Watching \033[1m$IN\033[0m for changes…"
 while true ; do

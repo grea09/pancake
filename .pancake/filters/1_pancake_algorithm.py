@@ -19,7 +19,7 @@ def pancake_algorithm(key, value, format, meta):
                 definedClass = stringify(meta['algorithm']['c']).lower()
             if definedClass in currentClasses:
                 name = ""
-                numbered = ""
+                numbered = "[1]"
                 for key_, value in properties:
                     if key_ == "name":
                         name = value

@@ -14,13 +14,13 @@ def gls(entry, glsid):
     if entry == '-':
         command+= 'entry'
         command+= 'name' if (glsid.endswith('S')) else 'plural'
-    else:
+    elif entry == '+':
         command+= 'pl' if (glsid.endswith('S')) else ''
     return ilatex(latex_command(command,glsid.lower()))
 
 def pancake_glossary(key, value, format, meta):
     if format == "latex":
-        regex = "<([\+-])([^\)]+)>"
+        regex = "<([\+-])([^!\)]+)>"
         if key == 'Str':
             if re.search(regex, value) is not None:
                 return gls(*re.match(regex, value).group(1,2))

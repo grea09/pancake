@@ -45,7 +45,6 @@ codeBlockCaptions: true
 
 # latexBlocks: [framed, multicols, center, minipage]
 algorithm: algorithm
-mathspec: true
 amsthm:
   plain:
   - theorem

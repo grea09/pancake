@@ -581,21 +581,22 @@ $if(csl-refs)$
 $endif$
 
 $if(glossary)$ %%%%%PANCAKE
-\usepackage[symbols, acronym, footnote]{glossaries-extra}
+\usepackage[acronym,symbols,toc,footnote]{glossaries-extra}
+\makenoidxglossaries
 $for(glossary.entries)$
-\newglossaryentry{$glossary.entries$}{
+\newglossaryentry{$glossary.entries$}
+{%
   name={$glossary.entries.name$},
   description={$glossary.entries.description$}
 }
 $endfor$
-$for(glossary.acronyms)$
-\newacronym{$glossary.acronyms.label$}{$glossary.acronyms.short$}{$glossary.acronyms.long$}
+$for(glossary.acronyms/pairs)$
+\newacronym{$it.key/lowercase$}{$it.key$}{$it.value$}
 $endfor$
 $for(glossary.symbols)$
 \newcommand{\$glossary.symbols.label$}{$glossary.symbols.symbol$}
 \glsxtrnewsymbol[description={$glossary.symbols.description$}]{$glossary.symbols.label$}{\ensuremath{$glossary.symbols.symbol$}}
 $endfor$
-\makenoidxglossaries
 $endif$ %%%%%PANCAKE
 
 $if(title)$
@@ -694,7 +695,7 @@ $if(lof)$
 $endif$
 
 $if(glossary)$
-\printglossaries[title=$glossary.title$]
+\printnoidxglossaries
 $endif$
 
 $if(linestretch)$
@@ -736,10 +737,6 @@ $if(beamer)$
 \end{frame}
 $else$
 \printbibliography$if(biblio-title)$[title=$biblio-title$]$endif$
-$endif$
-
-$if(glossary)$
-\printnoidxglossaries
 $endif$
 
 $endif$
