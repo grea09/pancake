@@ -85,16 +85,12 @@ while true ; do
     FILTERS="$FILTERS --filter pandoc-crossref --filter pandoc-citeproc"
     
     YAML="--metadata-file=$CONF/pancake.yaml"
-    if ls *.yaml 2>/dev/null ; then
-        for i in *.yaml ; do
-            YAML="$YAML --metadata-file=$i"
-        done
-    fi
-    if ls style/*.yaml 2>/dev/null ; then
-        for i in style/*.yaml ; do
-            YAML="$YAML --metadata-file=$i"
-        done
-    fi
+    for i in *.yaml ; do
+        [ -e "$i" ] && YAML="$YAML --metadata-file=$i"
+    done
+    for i in style/*.yaml ; do
+        [ -e "$i" ] && YAML="$YAML --metadata-file=$i"
+    done
     
     if [[ $MD5 == $(md5sum $IN) ]] ; then
         inotifywait -qre close_write $IN --format "$UPDATE"
