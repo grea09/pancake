@@ -68,37 +68,34 @@ elif [ -z $PANCAKE_TYPE ]; then
   PANCAKE_TYPE="${PANCAKE_OUTPUT##*.}"
 fi
 
-UPDATE=$(echo -e "\033[1m%w%f\033[0m changed. Updating \033[1m$PANCAKE_OUTPUT\033[0m…")
-
 OPT="-s --template=$CONF/templates/pancake"
 
-for i in $CONF/filters/* ; do
-    FILTERS="$FILTERS --filter $i"
-done
-
-FILTERS="$FILTERS --filter pandoc-crossref --filter pandoc-citeproc"
-
-EXTRA=" --quiet --log=/data/.pancake.log"
-
-
+EXTRA=" --quiet --log=.pancake.log"
 if [ "$PANCAKE_TYPE" == "pdf" ] ; then
     EXTRA="$EXTRA -t latex --pdf-engine tectonic"
 fi
 
-YAML="--metadata-file=$CONF/pancake.yaml"
-if ls *.yaml ; then
-    for i in *.yaml ; do
-        YAML="$YAML --metadata-file=$i"
-    done
-fi
-if ls style/*.yaml ; then
-    for i in style/*.yaml ; do
-        YAML="$YAML --metadata-file=$i"
-    done
-fi
-
+UPDATE=$(echo -e "\033[1m%w%f\033[0m changed. Updating \033[1m$PANCAKE_OUTPUT\033[0m…")
 echo -e "Watching \033[1m$IN\033[0m for changes…"
 while true ; do
+    FILTERS=""
+    for i in $CONF/filters/* ; do
+    FILTERS="$FILTERS --filter $i"
+    done
+    FILTERS="$FILTERS --filter pandoc-crossref --filter pandoc-citeproc"
+    
+    YAML="--metadata-file=$CONF/pancake.yaml"
+    if ls *.yaml 2>/dev/null ; then
+        for i in *.yaml ; do
+            YAML="$YAML --metadata-file=$i"
+        done
+    fi
+    if ls style/*.yaml 2>/dev/null ; then
+        for i in style/*.yaml ; do
+            YAML="$YAML --metadata-file=$i"
+        done
+    fi
+    
     if [[ $MD5 == $(md5sum $IN) ]] ; then
         inotifywait -qre close_write $IN --format "$UPDATE"
     else
@@ -119,6 +116,6 @@ while true ; do
     else
         echo -e '\033[1;32mConverted with success !\033[0m'
     fi
-    chmod 755 -R "/data/.cache"
-    chmod 755 -R "/data/.pancake.log"
+    chmod 755 -R ".cache"
+    chmod 755 -R ".pancake.log"
 done
