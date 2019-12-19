@@ -31,7 +31,8 @@ set -- "${POSITIONAL[@]}" # restore positional parameters
 
 PANDOC="pandoc"
 CONF="/root/.pancake"
-TMP="/tmp/pancake"
+CACHE=".cache"
+LOG=".pancake.log"
 
 if [ -z "$PANCAKE_INPUT" ]; then
   PANCAKE_INPUT="*.md"
@@ -70,7 +71,7 @@ fi
 
 OPT="-s --template=$CONF/templates/pancake"
 
-EXTRA=" --quiet --log=.pancake.log"
+EXTRA=" --quiet --log=$LOG"
 if [ "$PANCAKE_TYPE" == "pdf" ] ; then
     EXTRA="$EXTRA -t latex --pdf-engine tectonic"
 fi
@@ -78,6 +79,7 @@ fi
 UPDATE=$(echo -e "\033[1m%w%f\033[0m changed. Updating \033[1m$PANCAKE_OUTPUT\033[0m…")
 echo -e "Watching \033[1m$IN\033[0m for changes…"
 while true ; do
+    mkdir $CACHE 2>/dev/null
     FILTERS=""
     for i in $CONF/filters/* ; do
     FILTERS="$FILTERS --filter $i"
@@ -112,6 +114,6 @@ while true ; do
     else
         echo -e '\033[1;32mConverted with success !\033[0m'
     fi
-    chmod 755 -R ".cache"
-    chmod 755 -R ".pancake.log"
+    chmod 755 -R $CACHE
+    chmod 755 -R $LOG
 done

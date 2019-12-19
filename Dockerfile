@@ -74,7 +74,7 @@ RUN chmod +x /root/.pancake/bin -R
 ENV PATH="/root/.pancake/bin:${PATH}"
 ENV PYTHONPATH="/root/.pancake/lib:${PYTHONPATH}"
 RUN mkdir /data
-RUN ln -s /root/.cache/Tectonic /data/.cache
+RUN ln -s /data/.cache /root/.cache/Tectonic
 
 WORKDIR /data
 ENTRYPOINT ["pancake"]

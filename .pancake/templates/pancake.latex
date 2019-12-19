@@ -584,18 +584,22 @@ $if(glossary)$ %%%%%PANCAKE
 \usepackage[acronym,symbols,toc,footnote]{glossaries-extra}
 \makenoidxglossaries
 $for(glossary.entries)$
-\newglossaryentry{$glossary.entries$}
-{%
+\newglossaryentry{$glossary.entries$}{
   name={$glossary.entries.name$},
   description={$glossary.entries.description$}
 }
 $endfor$
-$for(glossary.acronyms/pairs)$
+$for(glossary.acronyms)$
+  $for(glossary.acronyms/pairs)$
 \newacronym{$it.key/lowercase$}{$it.key$}{$it.value$}
+  $endfor$
 $endfor$
 $for(glossary.symbols)$
-\newcommand{\$glossary.symbols.label$}{$glossary.symbols.symbol$}
-\glsxtrnewsymbol[description={$glossary.symbols.description$}]{$glossary.symbols.label$}{\ensuremath{$glossary.symbols.symbol$}}
+$if(glossary.symbols.nomacro)$
+$else$
+\newcommand{\$glossary.symbols.label$}{\ensuremath{$glossary.symbols.symbol$}}
+$endif$
+\glsxtrnewsymbol[description={$glossary.symbols.description$}]{$glossary.symbols.label$}{\$glossary.symbols.label$}
 $endfor$
 $endif$ %%%%%PANCAKE
 
