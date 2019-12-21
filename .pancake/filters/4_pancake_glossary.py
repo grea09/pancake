@@ -1,13 +1,15 @@
 #!/usr/bin/env python
 
 """
-Pandoc filter to allow for correct cref usage and more.
+Pandoc filter to add glossary capabilities
 """
 
 from utils import *
+from itertools import chain, zip_longest
+
 import re
 
-from pandocfilters import toJSONFilter
+from pandocfilters import toJSONFilter, Str
 
 def gls(entry, glsid):
     command= 'Gls' if glsid.isupper() else 'gls'
@@ -20,10 +22,17 @@ def gls(entry, glsid):
 
 def pancake_glossary(key, value, format, meta):
     if format == "latex":
-        regex = "<([\+-])([^!\)]+)>"
+        r = re.compile(r"<([\+-])([^!>]+)>")
         if key == 'Str':
-            if re.search(regex, value) is not None:
-                return gls(*re.match(regex, value).group(1,2))
+            if r.search(value) is not None:
+                keep = lambda x: ((x['c'] != '') and (r.match(str(x['c'])) == None))
+                parse = lambda m: gls(*m.group(1,2))
+                result = list(filter(keep, 
+                    chain.from_iterable(
+                      zip_longest(
+                        map(Str, re.split(r"<[\+-][^!>]+>", value)), 
+                        map(parse, r.finditer(value)), fillvalue=Str('')))))
+                return result
 
 if __name__ == '__main__':
     toJSONFilter(pancake_glossary)
