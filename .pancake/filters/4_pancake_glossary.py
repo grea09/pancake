@@ -6,7 +6,6 @@ Pandoc filter to add glossary capabilities
 
 from utils import *
 from itertools import chain, zip_longest
-
 import re
 
 from pandocfilters import toJSONFilter, Str
@@ -18,7 +17,8 @@ def gls(entry, glsid):
         command+= 'name' if (glsid.endswith('S')) else 'plural'
     elif entry == '+':
         command+= 'pl' if (glsid.endswith('S')) else ''
-    return ilatex(latex_command(command,glsid.lower()))
+    glsid = glsid.lower()[:-1] if (glsid.endswith('S')) else glsid.lower()
+    return ilatex(latex_command(command,glsid))
 
 def pancake_glossary(key, value, format, meta):
     if format == "latex":
