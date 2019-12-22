@@ -30,7 +30,7 @@ def pancake_glossary(key, value, format, meta):
                 result = list(filter(keep, 
                     chain.from_iterable(
                       zip_longest(
-                        map(Str, re.split(r"<[\+-][^!>]+>", value)), 
+                        map(Str, re.split(r"<[\+-][^!>]+>", value) + [' ']), 
                         map(parse, r.finditer(value)), fillvalue=Str('')))))
                 return result
 
