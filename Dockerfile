@@ -46,8 +46,9 @@ RUN apk --no-cache -U add cargo g++ outils-md5
 
 RUN apk --no-cache -U add git libressl-dev libssl1.1 libcrypto1.1 fontconfig-dev harfbuzz-dev icu-dev graphite2-dev libpng-dev zlib-dev
 
-# --git https://github.com/tectonic-typesetting/tectonic.git
-RUN cargo install tectonic
+RUN ldconfig /usr/local/lib
+
+RUN cargo install --git https://github.com/tectonic-typesetting/tectonic.git tectonic
 
 FROM alpine AS alpine-pandoc
 
