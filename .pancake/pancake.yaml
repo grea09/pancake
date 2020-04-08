@@ -2,8 +2,8 @@ smart: true
 standalone: true
 mainfont: Aller
 mathfont: STIX Two Math
-headingfont: Aller Display
-monofont: Hack
+headingfont: Century Gothic
+monofont: Space Mono
 # markdown_in_html_blocks: true
 # verbatim-in-note: true
 # tables: true
@@ -48,8 +48,8 @@ algorithm: algorithm
 amsthm:
   plain:
   - theorem
-  plain-unnumbered:
   - lemma
+  plain-unnumbered:
   - proposition
   definition:
   - definition
@@ -71,6 +71,7 @@ ref-numbered:
   - theo: theorem
   - def: definition
   - prf: proof
+  - lem: lemma
   - alg: algorithm
   - line: line
 ref-named:

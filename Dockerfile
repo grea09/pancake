@@ -21,8 +21,7 @@ RUN apk --no-cache add \
 # Install newer cabal-install version
 COPY cabal.root.config /root/.cabal/config
 RUN cabal new-update \
-  && cabal new-install cabal-install \
-  && mv /root/.cabal/bin/cabal /usr/local/bin/cabal
+  && cabal new-install cabal-install
 
 
 # Install Haskell dependencies
@@ -30,15 +29,10 @@ RUN cabal --version \
   && ghc --version
 RUN cabal new-clean
 
-RUN cabal new-install pandoc pandoc-citeproc \
-#      --install-method=copy --installdir=/usr/bin \
+RUN cabal new-install pandoc pandoc-citeproc pandoc-crossref \
       --flag embed_data_files \
       --flag bibutils \
       --constraint 'hslua +system-lua +pkg-config'
-
-RUN cabal new-install pandoc-crossref \
-#            --install-method=copy --installdir=/usr/bin \
-            --flag embed_data_files
 
 # Install Tectonic
 
@@ -52,7 +46,7 @@ RUN cargo install --git https://github.com/tectonic-typesetting/tectonic.git tec
 
 FROM alpine AS alpine-pandoc
 
-COPY --from=pandoc-builder /root/.cabal/bin/* /usr/bin/
+COPY --from=pandoc-builder /usr/bin/pand* /usr/bin/
 COPY --from=pandoc-builder /root/.cargo/bin/tectonic /usr/bin/
 
 RUN echo -e "http://dl-cdn.alpinelinux.org/alpine/edge/community\nhttp://dl-cdn.alpinelinux.org/alpine/edge/main" >> /etc/apk/repositories
