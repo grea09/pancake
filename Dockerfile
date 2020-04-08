@@ -31,8 +31,8 @@ RUN cabal new-clean
 
 RUN cabal new-install pandoc pandoc-citeproc pandoc-crossref \
       --flag embed_data_files \
-      --flag bibutils \
-      --constraint 'hslua +system-lua +pkg-config'
+      --flag bibutils
+#      --constraint 'hslua +system-lua +pkg-config'
 
 # Install Tectonic
 
