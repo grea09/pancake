@@ -56,7 +56,7 @@ RUN apk --no-cache update
 
 RUN apk --no-cache -U add python3 python3-dev py3-pip
 RUN ln -s `which python3` /usr/bin/python
-RUN ln -s `which pip3` /usr/bin/pip
+#RUN ln -s `which pip3` /usr/bin/pip
 RUN pip install -U pandocfilters pip
 
 RUN apk --no-cache -U add lua5.3 lua5.3-lpeg gmp
