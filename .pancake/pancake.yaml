@@ -1,8 +1,7 @@
 smart: true
 standalone: true
 mainfont: Recursive Sans Linear Static
-mathfont: Recursive Sans Casual Static
-#STIX Two Math
+mathfont: STIX Two Math
 headingfont: Bebas Neue
 monofont: Recursive Mono Linear Static
 # markdown_in_html_blocks: true
