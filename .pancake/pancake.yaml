@@ -1,9 +1,10 @@
 smart: true
 standalone: true
-mainfont: Aller
-mathfont: STIX Two Math
-headingfont: Century Gothic
-monofont: Space Mono
+mainfont: Recursive Sans Linear Static
+mathfont: Recursive Sans Casual Static
+#STIX Two Math
+headingfont: Bebas Neue
+monofont: Recursive Mono Linear Static
 # markdown_in_html_blocks: true
 # verbatim-in-note: true
 # tables: true
