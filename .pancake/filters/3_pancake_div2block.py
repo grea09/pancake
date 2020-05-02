@@ -28,8 +28,6 @@ def pancake_div2block(key, value, format, meta):
                         return [latex(begin(definedClass) + brakets(name) + braces(param) + label(id))] + content + [latex(end(definedClass))]
                         break
             for definedClass in getSet(meta, 'latexBlocks'):
-                # Is the classes correct?
-                #pprint(currentClasses, stream=sys.stderr)
                 if definedClass.lower() in currentClasses:
                     param = ""
                     for key_, value in properties:

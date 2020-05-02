@@ -1,9 +1,17 @@
 smart: true
 standalone: true
+
 mainfont: Recursive Sans Linear Static
+mainfontoptions:
+  - ItalicFont=Recursive Sn Csl St SmB Italic
+  - BoldItalicFont=Recursive Sn Lnr St XBd Italic
 mathfont: STIX Two Math
-headingfont: Bebas Neue
 monofont: Recursive Mono Linear Static
+titlefont: Recursive Sn Lnr St XBk
+sectfont: Bebas Neue
+sectfontsize: [22,16]
+chapfont: Recursive Sn Csl St Lt
+chapfontsize: [24]
 # markdown_in_html_blocks: true
 # verbatim-in-note: true
 # tables: true
@@ -15,6 +23,11 @@ citecolor: solarized-base1
 urlcolor: solarized-blue
 filecolor: solarized-magenta
 
+multicol: true
+toc-col: 2
+lot-col: 2
+lof-col: 2
+glos-col: 3
 
 #### pandoc-crossref
 # cref: true

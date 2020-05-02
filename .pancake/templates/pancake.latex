@@ -9,6 +9,9 @@ $if(latex-dir-rtl)$
 \PassOptionsToPackage{RTLdocument}{bidi}
 $endif$
 $endif$
+$if(CJKmainfont)$
+\PassOptionsToPackage{space}{xeCJK}
+$endif$
 %
 \documentclass[
 $if(fontsize)$
@@ -91,9 +94,6 @@ $if(fontfamily)$
 $else$
 \usepackage{lmodern}
 $endif$
-$if(multicol)$
-\usepackage{multicol}
-$endif$
 $if(linestretch)$
 \usepackage{setspace}
 $endif$
@@ -147,7 +147,6 @@ $endif$ %%%%% PANCAKE
 \else % if luatex or xetex
 $if(mathspec)$
   \ifxetex
-    \usepackage{amsmath}
     \usepackage{mathspec}
   \else
     \usepackage{unicode-math}
@@ -182,7 +181,7 @@ $endif$
 $endif$
 $if(CJKmainfont)$
   \ifxetex
-    \usepackage[space]{xeCJK}
+    \usepackage{xeCJK}
     \setCJKmainfont[$for(CJKoptions)$$CJKoptions$$sep$,$endfor$]{$CJKmainfont$}
   \fi
 $endif$
@@ -197,6 +196,18 @@ $if(CJKmainfont)$
     \setmainjfont[$for(CJKoptions)$$CJKoptions$$sep$,$endfor$]{$CJKmainfont$}
   \fi
 $endif$
+$if(sectfont)$ %%%%% PANCAKE
+  \newfontfamily\sectionfont[$for(sectfontoptions)$$sectfontoptions$$sep$,$endfor$]{$sectfont$}
+  \addtokomafont{section}{$if(sectfontsize)$\fontsize$for(sectfontsize)${$sectfontsize$}$endfor$$endif$\sectionfont}
+  \addtokomafont{subsection}{$if(sectfontsize)$\fontsize$for(sectfontsize)${$sectfontsize$}$endfor$$endif$\sectionfont}
+  \addtokomafont{subsubsection}{$if(sectfontsize)$\fontsize$for(sectfontsize)${$sectfontsize$}$endfor$$endif$\sectionfont}
+$endif$
+
+$if(chapfont)$ %%%%% PANCAKE
+  \newfontfamily\chfont[$for(chapfontoptions)$$chapfontoptions$$sep$,$endfor$]{$chapfont$}
+%  \addtokomafont{chapter}{$if(chapfontsize)$\fontsize$for(chapfontsize)${$chapfontsize$}$endfor$$endif$\chfont}
+$endif$
+
 \fi
 $if(beamer)$
 $if(theme)$
@@ -285,9 +296,9 @@ $if(keywords)$
 $endif$
 $if(colorlinks)$
   colorlinks=true,
-  linkcolor=$if(linkcolor)$$linkcolor$$else$Cyan$endif$, %%%%% PANCAKE
-  filecolor=$if(filecolor)$$filecolor$$else$Red$endif$, %%%%% PANCAKE
-  citecolor=$if(citecolor)$$citecolor$$else$Grey$endif$, %%%%% PANCAKE
+  linkcolor=$if(linkcolor)$$linkcolor$$else$Blue$endif$, %%%%% PANCAKE
+  filecolor=$if(filecolor)$$filecolor$$else$Pink$endif$, %%%%% PANCAKE
+  citecolor=$if(citecolor)$$citecolor$$else$Green$endif$, %%%%% PANCAKE
   urlcolor=$if(urlcolor)$$urlcolor$$else$Blue$endif$,
 $else$
   hidelinks,
@@ -582,6 +593,9 @@ $endif$
 
 $if(glossary)$ %%%%%PANCAKE
 \usepackage[acronym,symbols,toc,footnote]{glossaries-extra}
+$if(multicol)$
+\usepackage{multicol}
+$endif$
 \makenoidxglossaries
 $for(glossary.entries)$
 \newglossaryentry{$glossary.entries$}{
@@ -602,9 +616,8 @@ $endif$
 \glsxtrnewsymbol[description={$glossary.symbols.description$}]{$glossary.symbols.label$}{\$glossary.symbols.label$}
 $endfor$
 $endif$ %%%%%PANCAKE
-
 $if(title)$
-\title{$title$$if(thanks)$\thanks{$thanks$}$endif$}
+\title{$if(titlefont)$\newfontfamily\titlefont[$for(titlefontoptions)$$titlefontoptions$$sep$,$endfor$]{$titlefont$}\titlefont$endif$ $title$$if(thanks)$\thanks{$thanks$}$endif$}
 $endif$
 $if(subtitle)$
 $if(beamer)$
@@ -618,9 +631,7 @@ $else$
 $endif$
 \subtitle{$subtitle$}
 $endif$
-$if(author)$
 \author{$for(author)$$author$$sep$ \and $endfor$}
-$endif$
 \date{$date$}
 $if(beamer)$
 $if(institute)$
@@ -671,11 +682,14 @@ $include-before$
 
 $endfor$
 $if(toc)$
+$if(toc-col)$ %%%%% PANCAKE
+\begin{multicols}{$toc-col$}
+$endif$
 $if(toc-title)$
 \renewcommand*\contentsname{$toc-title$}
 $endif$
 $if(beamer)$
-\begin{frame}
+\begin{frame}[allowframebreaks]
 $if(toc-title)$
   \frametitle{$toc-title$}
 $endif$
@@ -690,17 +704,37 @@ $endif$
 \tableofcontents
 }
 $endif$
+$if(toc-col)$ %%%%% PANCAKE
+\end{multicols}
+$endif$
 $endif$
 $if(lot)$
+$if(lot-col)$ %%%%% PANCAKE
+\begin{multicols}{$lot-col$}
+$endif$
 \listoftables
+$if(lot-col)$ %%%%% PANCAKE
+\end{multicols}
+$endif$
 $endif$
 $if(lof)$
+$if(lof-col)$ %%%%% PANCAKE
+\begin{multicols}{$lof-col$}
+$endif$
 \listoffigures
+$if(lof-col)$ %%%%% PANCAKE
+\end{multicols}
 $endif$
-
-$if(glossary)$
+$endif$
+$if(glossary)$ %%%%% PANCAKE
+$if(glos-col)$ %%%%% PANCAKE
+\begin{multicols}{$glos-col$}
+$endif$
 \printnoidxglossaries
+$if(glos-col)$ %%%%% PANCAKE
+\end{multicols}
 $endif$
+$endif$ %%%%% PANCAKE
 
 $if(linestretch)$
 \setstretch{$linestretch$}
