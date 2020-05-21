@@ -97,6 +97,9 @@ $endif$
 $if(linestretch)$
 \usepackage{setspace}
 $endif$
+$if(pagecolor)$ %%%%% PANCAKE
+\usepackage{pagecolor}
+$endif$ %%%%% PANCAKE
 \usepackage{amssymb,amsmath}
 $if(amsthm)$ %%%%% PANCAKE
 	\usepackage{amsthm}
@@ -303,7 +306,7 @@ $if(colorlinks)$
 $else$
   hidelinks,
 $endif$
-  pdfcreator={LaTeX via pandoc}}
+  pdfcreator={Pancake}}
 \urlstyle{same} % disable monospaced font for URLs
 $if(cref)$ %%%%% PANCAKE
   \usepackage{thmtools}
@@ -658,6 +661,12 @@ $endif$
   \newcommand{\and}{\quad}
 \fi %%%%% PANCAKE
 \begin{document}
+$if(pagecolor)$ %%%%% PANCAKE
+\pagecolor{$pagecolor$}
+$endif$ %%%%% PANCAKE
+$if(textcolor)$ %%%%% PANCAKE
+\color{$textcolor$}
+$endif$ %%%%% PANCAKE
 $if(has-frontmatter)$
 \frontmatter
 $endif$

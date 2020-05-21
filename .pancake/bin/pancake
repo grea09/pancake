@@ -73,7 +73,7 @@ OPT="-s --template=$CONF/templates/pancake"
 
 EXTRA=" --quiet --log=$LOG"
 if [ "$PANCAKE_TYPE" == "pdf" ] ; then
-    EXTRA="$EXTRA -t latex --pdf-engine tectonic"
+    EXTRA="$EXTRA -t latex --pdf-engine=tectonic --pdf-engine-opt=--print"
 fi
 
 UPDATE=$(echo -e "\033[1m%w%f\033[0m changed. Updating \033[1m$PANCAKE_OUTPUT\033[0m…")
