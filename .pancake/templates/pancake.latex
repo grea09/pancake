@@ -2,146 +2,126 @@
 \PassOptionsToPackage{unicode$for(hyperrefoptions)$,$hyperrefoptions$$endfor$}{hyperref}
 \PassOptionsToPackage{hyphens}{url}
 $if(colorlinks)$
-\PassOptionsToPackage{dvipsnames,svgnames*,x11names*}{xcolor}
+  \PassOptionsToPackage{dvipsnames,svgnames*,x11names*}{xcolor}
 $endif$
 $if(dir)$
-$if(latex-dir-rtl)$
-\PassOptionsToPackage{RTLdocument}{bidi}
-$endif$
+  $if(latex-dir-rtl)$
+  \PassOptionsToPackage{RTLdocument}{bidi}
+  $endif$
 $endif$
 $if(CJKmainfont)$
-\PassOptionsToPackage{space}{xeCJK}
+  \PassOptionsToPackage{space}{xeCJK}
 $endif$
-%
+
+%%%% Document class
 \documentclass[
-$if(fontsize)$
-  $fontsize$,
-$endif$
-$if(lang)$
-  $babel-lang$,
-$endif$
-$if(papersize)$
-  $papersize$paper,
-$endif$
-$if(beamer)$
-  ignorenonframetext,
-$if(handout)$
-  handout,
-$endif$
-$if(aspectratio)$
-  aspectratio=$aspectratio$,
-$endif$
-$endif$
-$for(classoption)$
-  $classoption$$sep$,
-$endfor$
+  $if(fontsize)$
+    $fontsize$,
+  $endif$
+  $if(lang)$
+    $babel-lang$,
+  $endif$
+  $if(papersize)$
+    $papersize$paper,
+  $endif$
+  $if(beamer)$
+    ignorenonframetext,
+  $if(handout)$
+    handout,
+  $endif$
+  $if(aspectratio)$
+    aspectratio=$aspectratio$,
+  $endif$
+  $endif$
+  $for(classoption)$
+    $classoption$$sep$,
+  $endfor$
 ]{$documentclass$}
+
+%%%% Beamer style
 $if(beamer)$
-$if(background-image)$
-\usebackgroundtemplate{%
-  \includegraphics[width=\paperwidth]{$background-image$}%
-}
-$endif$
-\usepackage{pgfpages}
-\setbeamertemplate{caption}[numbered]
-\setbeamertemplate{caption label separator}{: }
-\setbeamercolor{caption name}{fg=normal text.fg}
-\beamertemplatenavigationsymbols$if(navigation)$$navigation$$else$empty$endif$
-$for(beameroption)$
-\setbeameroption{$beameroption$}
-$endfor$
-% Prevent slide breaks in the middle of a paragraph
-\widowpenalties 1 10000
-\raggedbottom
-$if(section-titles)$
-\setbeamertemplate{part page}{
-  \centering
-  \begin{beamercolorbox}[sep=16pt,center]{part title}
-    \usebeamerfont{part title}\insertpart\par
-  \end{beamercolorbox}
-}
-\setbeamertemplate{section page}{
-  \centering
-  \begin{beamercolorbox}[sep=12pt,center]{part title}
-    \usebeamerfont{section title}\insertsection\par
-  \end{beamercolorbox}
-}
-\setbeamertemplate{subsection page}{
-  \centering
-  \begin{beamercolorbox}[sep=8pt,center]{part title}
-    \usebeamerfont{subsection title}\insertsubsection\par
-  \end{beamercolorbox}
-}
-\AtBeginPart{
-  \frame{\partpage}
-}
-\AtBeginSection{
-  \ifbibliography
-  \else
-    \frame{\sectionpage}
-  \fi
-}
-\AtBeginSubsection{
-  \frame{\subsectionpage}
-}
-$endif$
+  $if(background-image)$
+    \usebackgroundtemplate{%
+      \includegraphics[width=\paperwidth]{$background-image$}%
+    }
+  $endif$
+  \usepackage{pgfpages}
+  \setbeamertemplate{caption}[numbered]
+  \setbeamertemplate{caption label separator}{: }
+  \setbeamercolor{caption name}{fg=normal text.fg}
+  \beamertemplatenavigationsymbols$if(navigation)$$navigation$$else$empty$endif$
+  $for(beameroption)$
+    \setbeameroption{$beameroption$}
+  $endfor$
+  % Prevent slide breaks in the middle of a paragraph
+  \widowpenalties 1 10000
+  \raggedbottom
+  $if(section-titles)$
+    \setbeamertemplate{part page}{
+      \centering
+      \begin{beamercolorbox}[sep=16pt,center]{part title}
+        \usebeamerfont{part title}\insertpart\par
+      \end{beamercolorbox}
+    }
+    \setbeamertemplate{section page}{
+      \centering
+      \begin{beamercolorbox}[sep=12pt,center]{part title}
+        \usebeamerfont{section title}\insertsection\par
+      \end{beamercolorbox}
+    }
+    \setbeamertemplate{subsection page}{
+      \centering
+      \begin{beamercolorbox}[sep=8pt,center]{part title}
+        \usebeamerfont{subsection title}\insertsubsection\par
+      \end{beamercolorbox}
+    }
+    \AtBeginPart{
+      \frame{\partpage}
+    }
+    \AtBeginSection{
+      \ifbibliography
+      \else
+        \frame{\sectionpage}
+      \fi
+    }
+    \AtBeginSubsection{
+      \frame{\subsectionpage}
+    }
+  $endif$
 $endif$
 $if(beamerarticle)$
-\usepackage{beamerarticle} % needs to be loaded first
+  \usepackage{beamerarticle} % needs to be loaded first
 $endif$
+
+$if(beamer)$
+  $if(theme)$
+    \usetheme[$for(themeoptions)$$themeoptions$$sep$,$endfor$]{$theme$}
+  $endif$
+  $if(colortheme)$
+    \usecolortheme{$colortheme$}
+  $endif$
+  $if(fonttheme)$
+    \usefonttheme{$fonttheme$}
+  $endif$
+  $if(mainfont)$
+    \usefonttheme{serif} % use mainfont rather than sansfont for slide text
+  $endif$
+  $if(innertheme)$
+    \useinnertheme{$innertheme$}
+  $endif$
+  $if(outertheme)$
+    \useoutertheme{$outertheme$}
+  $endif$
+$endif$
+
+
+%%%% Font definitions
 $if(fontfamily)$
-\usepackage[$for(fontfamilyoptions)$$fontfamilyoptions$$sep$,$endfor$]{$fontfamily$}
+  \usepackage[$for(fontfamilyoptions)$$fontfamilyoptions$$sep$,$endfor$]{$fontfamily$}
 $else$
-\usepackage{lmodern}
+  \usepackage{lmodern}
 $endif$
-$if(linestretch)$
-\usepackage{setspace}
-$endif$
-$if(pagecolor)$ %%%%% PANCAKE
-\usepackage{pagecolor}
-$endif$ %%%%% PANCAKE
-\usepackage{amssymb,amsmath}
-$if(amsthm)$ %%%%% PANCAKE
-	\usepackage{amsthm}
-	\usepackage{mfirstuc}
-	\theoremstyle{plain}
-	$for(amsthm.plain)$
-	\newtheorem{$amsthm.plain$}{\capitalisewords{$amsthm.plain$}}[$amsthm.parentcounter$]
-	$endfor$
-	$for(amsthm.plain-unnumbered)$
-	\newtheorem*{$amsthm.plain-unnumbered$}{\capitalisewords{$amsthm.plain-unnumbered$}}
-	$endfor$
-	\theoremstyle{definition}
-	$for(amsthm.definition)$
-	\newtheorem{$amsthm.definition$}{\capitalisewords{$amsthm.definition$}}[$amsthm.parentcounter$]
-	$endfor$
-	$for(amsthm.definition-unnumbered)$
-	\newtheorem*{$amsthm.definition-unnumbered$}{\capitalisewords{$amsthm.definition-unnumbered$}}
-	$endfor$
-	\theoremstyle{remark}
-	$for(amsthm.remark)$
-	\newtheorem{$amsthm.remark$}{\capitalisewords{$amsthm.remark$}}[$amsthm.parentcounter$]
-	$endfor$
-	$for(amsthm.remark-unnumbered)$
-	\newtheorem*{$amsthm.remark-unnumbered$}{\capitalisewords{$amsthm.remark-unnumbered$}}
-	$endfor$
-$endif$
-$if(noqed)$ %%%%% PANCAKE
-\makeatletter
-\renewenvironment{proof}[1][\proofname]{\par
-%  \pushQED{\qed}% <--- remove the QED business
-  \normalfont \topsep6\p@\@plus6\p@\relax
-  \trivlist
-  \item[\hskip\labelsep
-        \itshape
-    #1\@addpunct{.}]\ignorespaces
-}{%
-%  \popQED% <--- remove the QED business
-  \endtrivlist\@endpefalse
-}
-\renewcommand\qedhere{} % to ensure code portability
-\makeatother
-$endif$ %%%%% PANCAKE
+
 \usepackage{ifxetex,ifluatex}
 \ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
   \usepackage[$if(fontenc)$$fontenc$$else$T1$endif$]{fontenc}
@@ -159,33 +139,30 @@ $else$
 $endif$
   \defaultfontfeatures{Scale=MatchLowercase}
   \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
-$if(mainfont)$
-  \setmainfont[$for(mainfontoptions)$$mainfontoptions$$sep$,$endfor$]{$mainfont$}
+$if(fonts.main)$
+  \setmainfont$fonts.main:font()$
 $endif$
-$if(sansfont)$
-  \setsansfont[$for(sansfontoptions)$$sansfontoptions$$sep$,$endfor$]{$sansfont$}
+$if(fonts.sans)$
+  \setsansfont$fonts.sans:font()$
 $endif$
-$if(monofont)$
-  \setmonofont[$for(monofontoptions)$$monofontoptions$$sep$,$endfor$]{$monofont$}
+$if(fonts.mono)$
+  \setmonofont$fonts.mono:font()$
 $endif$
-$for(fontfamilies)$
-  \newfontfamily{$fontfamilies.name$}[$for(fontfamilies.options)$$fontfamilies.options$$sep$,$endfor$]{$fontfamilies.font$}
-$endfor$
 $if(mathfont)$
 $if(mathspec)$
   \ifxetex
-    \setmathfont(Digits,Latin,Greek)[$for(mathfontoptions)$$mathfontoptions$$sep$,$endfor$]{$mathfont$}
+    \setmathfont(Digits,Latin,Greek)$fonts.math:font()$
   \else
-    \setmathfont[$for(mathfontoptions)$$mathfontoptions$$sep$,$endfor$]{$mathfont$}
+    \setmathfont$fonts.math:font()$
   \fi
 $else$
-  \setmathfont[$for(mathfontoptions)$$mathfontoptions$$sep$,$endfor$]{$mathfont$}
+  \setmathfont$fonts.math:font()$
 $endif$
 $endif$
-$if(CJKmainfont)$
+$if(fonts.cjk)$
   \ifxetex
     \usepackage{xeCJK}
-    \setCJKmainfont[$for(CJKoptions)$$CJKoptions$$sep$,$endfor$]{$CJKmainfont$}
+    \setCJKmainfont$fonts.cjk:font()$
   \fi
 $endif$
 $if(luatexjapresetoptions)$
@@ -193,92 +170,115 @@ $if(luatexjapresetoptions)$
     \usepackage[$for(luatexjapresetoptions)$$luatexjapresetoptions$$sep$,$endfor$]{luatexja-preset}
   \fi
 $endif$
-$if(CJKmainfont)$
+$if(fonts.cjk)$
   \ifluatex
     \usepackage[$for(luatexjafontspecoptions)$$luatexjafontspecoptions$$sep$,$endfor$]{luatexja-fontspec}
-    \setmainjfont[$for(CJKoptions)$$CJKoptions$$sep$,$endfor$]{$CJKmainfont$}
+    \setmainjfont$fonts.cjk:font()$
   \fi
 $endif$
-$if(sectfont)$ %%%%% PANCAKE
-  \newfontfamily\sectionfont[$for(sectfontoptions)$$sectfontoptions$$sep$,$endfor$]{$sectfont$}
-  \addtokomafont{section}{$if(sectfontsize)$\fontsize$for(sectfontsize)${$sectfontsize$}$endfor$$endif$\sectionfont}
-  \addtokomafont{subsection}{$if(sectfontsize)$\fontsize$for(sectfontsize)${$sectfontsize$}$endfor$$endif$\sectionfont}
-  \addtokomafont{subsubsection}{$if(sectfontsize)$\fontsize$for(sectfontsize)${$sectfontsize$}$endfor$$endif$\sectionfont}
-$endif$
-
-$if(chapfont)$ %%%%% PANCAKE
-  \newfontfamily\chfont[$for(chapfontoptions)$$chapfontoptions$$sep$,$endfor$]{$chapfont$}
-%  \addtokomafont{chapter}{$if(chapfontsize)$\fontsize$for(chapfontsize)${$chapfontsize$}$endfor$$endif$\chfont}
-$endif$
-
 \fi
-$if(beamer)$
-$if(theme)$
-\usetheme[$for(themeoptions)$$themeoptions$$sep$,$endfor$]{$theme$}
+
+$for(fonts)$
+  \newfontfamily{$it.name$}$it:font()$
+$endfor$
+
+$if(elements.section.font)$
+  \addtokomafont{section}{\$elements.section.font$}
+  \addtokomafont{subsection}{\$elements.section.font$}
+  \addtokomafont{subsubsection}{\$elements.section.font$}
 $endif$
-$if(colortheme)$
-\usecolortheme{$colortheme$}
+
+$if(elements.chapter.font)$
+  \addtokomafont{chapter}{\$elements.chapter.font$}
 $endif$
-$if(fonttheme)$
-\usefonttheme{$fonttheme$}
+
+
+%%%% Geometry
+$if(linestretch)$
+  \usepackage{setspace}
 $endif$
-$if(mainfont)$
-\usefonttheme{serif} % use mainfont rather than sansfont for slide text
+
+$if(indent)$
+$else$
+  \makeatletter
+  \@ifundefined{KOMAClassName}{% if non-KOMA class
+    \IfFileExists{parskip.sty}{%
+      \usepackage{parskip}
+    }{% else
+      \setlength{\parindent}{0pt}
+      \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+  }{% if KOMA class
+    \KOMAoptions{parskip=half}}
+  \makeatother
 $endif$
-$if(innertheme)$
-\useinnertheme{$innertheme$}
+
+%%%% Color
+$if(pagecolor)$ 
+  \usepackage{pagecolor}
 $endif$
-$if(outertheme)$
-\useoutertheme{$outertheme$}
+
+$if(colorlinks)$
+  \usepackage{xcolor}
+  $if(solarized)$
+
+    \IfFileExists{xcolor-solarized.sty}{\usepackage{xcolor-solarized}} {
+    % We now define the sixteen \solarized{} colors.
+    \definecolor{solarized-base03} {RGB}{000, 043, 054}
+    \definecolor{solarized-base02} {RGB}{007, 054, 066}
+    \definecolor{solarized-base01} {RGB}{088, 110, 117}
+    \definecolor{solarized-base00} {RGB}{101, 123, 131}
+    \definecolor{solarized-base0}  {RGB}{131, 148, 150}
+    \definecolor{solarized-base1}  {RGB}{147, 161, 161}
+    \definecolor{solarized-base2}  {RGB}{238, 232, 213}
+    \definecolor{solarized-base3}  {RGB}{253, 246, 227}
+    \definecolor{solarized-yellow} {RGB}{181, 137, 000}
+    \definecolor{solarized-orange} {RGB}{203, 075, 022}
+    \definecolor{solarized-red}    {RGB}{220, 050, 047}
+    \definecolor{solarized-magenta}{RGB}{211, 054, 130}
+    \definecolor{solarized-violet} {RGB}{108, 113, 196}
+    \definecolor{solarized-blue}   {RGB}{038, 139, 210}
+    \definecolor{solarized-cyan}   {RGB}{042, 161, 152}
+    \definecolor{solarized-green}  {RGB}{133, 153, 000}
+    }
+  $endif$
 $endif$
+
+%%%% Theorems
+\usepackage{amssymb,amsmath}
+$if(amsthm)$ 
+  \usepackage{amsthm}
+  \usepackage{mfirstuc}
+
 $endif$
+
+$if(noqed)$
+  \makeatletter
+  \renewenvironment{proof}[1][\proofname]{\par
+  %  \pushQED{\qed}% <--- remove the QED business
+    \normalfont \topsep6\p@\@plus6\p@\relax
+    \trivlist
+    \item[\hskip\labelsep
+          \itshape
+      #1\@addpunct{.}]\ignorespaces
+  }{%
+  %  \popQED% <--- remove the QED business
+    \endtrivlist\@endpefalse
+  }
+  \renewcommand\qedhere{} % to ensure code portability
+  \makeatother
+$endif$
+
 % Use upquote if available, for straight quotes in verbatim environments
 \IfFileExists{upquote.sty}{\usepackage{upquote}}{}
 \IfFileExists{microtype.sty}{% use microtype if available
   \usepackage[$for(microtypeoptions)$$microtypeoptions$$sep$,$endfor$]{microtype}
   \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
 }{}
-$if(indent)$
-$else$
-\makeatletter
-\@ifundefined{KOMAClassName}{% if non-KOMA class
-  \IfFileExists{parskip.sty}{%
-    \usepackage{parskip}
-  }{% else
-    \setlength{\parindent}{0pt}
-    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
-}{% if KOMA class
-  \KOMAoptions{parskip=half}}
-\makeatother
-$endif$
+
 $if(verbatim-in-note)$
 \usepackage{fancyvrb}
 $endif$
-$if(colorlinks)$
-\usepackage{xcolor}
-$if(solarized)$ %%%%% PANCAKE
 
-\IfFileExists{xcolor-solarized.sty}{\usepackage{xcolor-solarized}} {
-% We now define the sixteen \solarized{} colors.
-\definecolor{solarized-base03} {RGB}{000, 043, 054}
-\definecolor{solarized-base02} {RGB}{007, 054, 066}
-\definecolor{solarized-base01} {RGB}{088, 110, 117}
-\definecolor{solarized-base00} {RGB}{101, 123, 131}
-\definecolor{solarized-base0}  {RGB}{131, 148, 150}
-\definecolor{solarized-base1}  {RGB}{147, 161, 161}
-\definecolor{solarized-base2}  {RGB}{238, 232, 213}
-\definecolor{solarized-base3}  {RGB}{253, 246, 227}
-\definecolor{solarized-yellow} {RGB}{181, 137, 000}
-\definecolor{solarized-orange} {RGB}{203, 075, 022}
-\definecolor{solarized-red}    {RGB}{220, 050, 047}
-\definecolor{solarized-magenta}{RGB}{211, 054, 130}
-\definecolor{solarized-violet} {RGB}{108, 113, 196}
-\definecolor{solarized-blue}   {RGB}{038, 139, 210}
-\definecolor{solarized-cyan}   {RGB}{042, 161, 152}
-\definecolor{solarized-green}  {RGB}{133, 153, 000}
-}
-$endif$ %%%%% PANCAKE
-$endif$
 \IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
 \IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
 \hypersetup{
@@ -299,16 +299,16 @@ $if(keywords)$
 $endif$
 $if(colorlinks)$
   colorlinks=true,
-  linkcolor=$if(linkcolor)$$linkcolor$$else$Blue$endif$, %%%%% PANCAKE
-  filecolor=$if(filecolor)$$filecolor$$else$Pink$endif$, %%%%% PANCAKE
-  citecolor=$if(citecolor)$$citecolor$$else$Green$endif$, %%%%% PANCAKE
+  linkcolor=$if(linkcolor)$$linkcolor$$else$Blue$endif$, 
+  filecolor=$if(filecolor)$$filecolor$$else$Pink$endif$, 
+  citecolor=$if(citecolor)$$citecolor$$else$Green$endif$, 
   urlcolor=$if(urlcolor)$$urlcolor$$else$Blue$endif$,
 $else$
   hidelinks,
 $endif$
   pdfcreator={Pancake}}
 \urlstyle{same} % disable monospaced font for URLs
-$if(cref)$ %%%%% PANCAKE
+$if(cref)$ 
   \usepackage{thmtools}
 	\usepackage{nameref,cleveref}
 	$for(cref-numbered)$
@@ -317,7 +317,7 @@ $if(cref)$ %%%%% PANCAKE
 	$for(cref-labelled)$
 	\crefname{$cref-labelled.name$}{$cref-labelled.name$}{$if(cref-labelled.plurial)$$cref-labelled.plurial$$else$$cref-labelled.name$s$endif$}
 	$endfor$
-$endif$ %%%%% PANCAKE
+$endif$ 
 $if(verbatim-in-note)$
 \VerbatimFootnotes % allow verbatim text in footnotes
 $endif$
@@ -331,7 +331,7 @@ $endif$
 $if(beamer)$
 \newif\ifbibliography
 $endif$
-$if(algorithm)$ %%%%% PANCAKE
+$if(algorithm)$ 
 \usepackage{algorithm}
 \usepackage[noend]{algpseudocode}
 
@@ -405,13 +405,13 @@ $if(algorithm)$ %%%%% PANCAKE
     \def\thealgruledepth{\dimexpr .25\baselineskip+1pt\relax}%
 }
 % end vertical rule patch for algorithmicx
-$endif$ %%%%% PANCAKE
+$endif$ 
 $if(listings)$
 \usepackage{listings}
 \newcommand{\passthrough}[1]{#1}
 \lstset{defaultdialect=[5.3]Lua}
 \lstset{defaultdialect=[x86masm]Assembler}
-%%%%% PANCAKE
+
 \lstset{
     language=java,
     keywords={pre, eff, method, Action},
@@ -430,9 +430,9 @@ $if(listings)$
     breakautoindent=true,
 %    framexrightmargin=-2mm,
     xleftmargin=5mm,
-    framexleftmargin=5mm} %%%%% PANCAKE
+    framexleftmargin=5mm} 
 
-$if(solarized)$ %%%%% PANCAKE
+$if(solarized)$ 
 
 %%%% For listings (code blocks)
 \lstset{
@@ -445,13 +445,13 @@ $if(solarized)$ %%%%% PANCAKE
     numberstyle=\footnotesize\color{solarized-base0}
 }
 
-$endif$ %%%%% PANCAKE
+$endif$ 
 $endif$
 $if(lhs)$
 \lstnewenvironment{code}{\lstset{language=Haskell,basicstyle=\small\ttfamily}}{}
 $endif$
 $if(highlighting-macros)$
-$if(solarized)$ %%%%% PANCAKE
+$if(solarized)$ 
 \newcommand{\VerbBar}{|}
 \newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
 \DefineVerbatimEnvironment{Highlighting}{Verbatim}{fontsize=\footnotesize,commandchars=\\\{\}}
@@ -472,10 +472,10 @@ $if(solarized)$ %%%%% PANCAKE
 \newcommand{\ErrorTok}[1]{\color{solarized-red}{\textbf{{#1}}}}
 \newcommand{\NormalTok}[1]{\color{solarized-base02}{#1}}
 \newcommand{\BuiltInTok}[1]{\color{solarized-blue}{\textbf{{#1}}}}
-$else$ %%%%% PANCAKE
+$else$ 
 $highlighting-macros$
 $endif$
-$endif$ %%%%% PANCAKE
+$endif$ 
 $if(tables)$
 \usepackage{longtable,booktabs}
 $if(beamer)$
@@ -638,16 +638,16 @@ $endif$
 \date{$date$}
 $if(beamer)$
 $if(institute)$
-\providecommand{\institute}[1]{} %%%%% PANCAKE
+\providecommand{\institute}[1]{} 
 \institute{$for(institute)$$institute$$sep$ \and $endfor$}
 $endif$
-$if(titleabstract)$ %%%%% PANCAKE
+$if(titleabstract)$ 
 \abstract{$abstract$}
-$endif$ %%%%% PANCAKE
+$endif$ 
 \date{$date$}
-$if(keywords)$ %%%%% PANCAKE
+$if(keywords)$ 
 \keywords{$for(keywords)$$keywords$$sep$, $endfor$}
-$endif$ %%%%% PANCAKE
+$endif$ 
 $if(titlegraphic)$
 \titlegraphic{\includegraphics{$titlegraphic$}}
 $endif$
@@ -656,17 +656,17 @@ $if(logo)$
 $endif$
 $endif$
 
-\ifdefined\and %%%%% PANCAKE
+\ifdefined\and 
 \else
   \newcommand{\and}{\quad}
-\fi %%%%% PANCAKE
+\fi 
 \begin{document}
-$if(pagecolor)$ %%%%% PANCAKE
+$if(pagecolor)$ 
 \pagecolor{$pagecolor$}
-$endif$ %%%%% PANCAKE
-$if(textcolor)$ %%%%% PANCAKE
+$endif$ 
+$if(textcolor)$ 
 \color{$textcolor$}
-$endif$ %%%%% PANCAKE
+$endif$ 
 $if(has-frontmatter)$
 \frontmatter
 $endif$
@@ -676,22 +676,22 @@ $if(beamer)$
 $else$
 \maketitle
 $endif$
-$if(titleabstract)$ %%%%% PANCAKE
-$else$ %%%%% PANCAKE
+$if(titleabstract)$ 
+$else$ 
 $if(abstract)$
 \begin{abstract}
 $abstract$
 \end{abstract}
 $endif$
 $endif$
-$endif$ %%%%% PANCAKE
+$endif$ 
 
 $for(include-before)$
 $include-before$
 
 $endfor$
 $if(toc)$
-$if(toc-col)$ %%%%% PANCAKE
+$if(toc-col)$ 
 \begin{multicols}{$toc-col$}
 $endif$
 $if(toc-title)$
@@ -713,37 +713,37 @@ $endif$
 \tableofcontents
 }
 $endif$
-$if(toc-col)$ %%%%% PANCAKE
+$if(toc-col)$ 
 \end{multicols}
 $endif$
 $endif$
 $if(lot)$
-$if(lot-col)$ %%%%% PANCAKE
+$if(lot-col)$ 
 \begin{multicols}{$lot-col$}
 $endif$
 \listoftables
-$if(lot-col)$ %%%%% PANCAKE
+$if(lot-col)$ 
 \end{multicols}
 $endif$
 $endif$
 $if(lof)$
-$if(lof-col)$ %%%%% PANCAKE
+$if(lof-col)$ 
 \begin{multicols}{$lof-col$}
 $endif$
 \listoffigures
-$if(lof-col)$ %%%%% PANCAKE
+$if(lof-col)$ 
 \end{multicols}
 $endif$
 $endif$
-$if(glossary)$ %%%%% PANCAKE
-$if(glos-col)$ %%%%% PANCAKE
+$if(glossary)$ 
+$if(glos-col)$ 
 \begin{multicols}{$glos-col$}
 $endif$
 \printnoidxglossaries
-$if(glos-col)$ %%%%% PANCAKE
+$if(glos-col)$ 
 \end{multicols}
 $endif$
-$endif$ %%%%% PANCAKE
+$endif$ 
 
 $if(linestretch)$
 \setstretch{$linestretch$}

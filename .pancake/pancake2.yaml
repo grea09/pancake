@@ -1,0 +1,48 @@
+# Base pandoc options
+smart: true
+standalone: true
+numberSections: true
+
+# Elements option:
+
+packages:
+  - multicol
+
+
+fonts:
+  ex:
+    font:
+    regular:
+    italic:
+    bold:
+    bold-italic:
+    slanted:
+    bold-slanted:
+    smallcaps:
+    scale:
+    color:
+    options:
+  main:
+  sans:
+  mono:
+  math:
+  cjk:
+
+page:
+
+listsof:
+  glossary:
+  figures:
+  content:
+  tables:
+
+elements:
+  theorem:
+  code:
+  algorithm:
+  title:
+  chapter:
+  section:
+  figure:
+  table:
+  equation:

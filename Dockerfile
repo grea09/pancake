@@ -1,53 +1,7 @@
-FROM alpine AS pandoc-builder
+FROM alpine
 
-RUN echo -e "http://dl-cdn.alpinelinux.org/alpine/edge/community\nhttp://dl-cdn.alpinelinux.org/alpine/edge/main" >> /etc/apk/repositories
-
-RUN apk -U upgrade -a
-RUN apk --no-cache update
-
-RUN apk --no-cache add \
-         alpine-sdk \
-         bash \
-         ca-certificates \
-         cabal \
-         fakeroot \
-         ghc \
-         git \
-         gmp-dev \
-         lua5.3-dev \
-         pkgconfig \
-         zlib-dev
-
-# Install newer cabal-install version
-COPY cabal.root.config /root/.cabal/config
-RUN cabal new-update \
-  && cabal new-install cabal-install
-
-
-# Install Haskell dependencies
-RUN cabal --version \
-  && ghc --version
-RUN cabal new-clean
-
-RUN cabal new-install pandoc pandoc-citeproc pandoc-crossref \
-      --flag embed_data_files \
-      --flag bibutils
-#      --constraint 'hslua +system-lua +pkg-config'
-
-# Install Tectonic
-
-RUN apk --no-cache -U add cargo g++ outils-md5
-
-RUN apk --no-cache -U add git libressl-dev libssl1.1 libcrypto1.1 fontconfig-dev harfbuzz-dev icu-dev graphite2-dev libpng-dev zlib-dev
-
-RUN ldconfig /usr/local/lib
-
-RUN cargo install --git https://github.com/tectonic-typesetting/tectonic.git tectonic
-
-FROM alpine AS alpine-pandoc
-
-COPY --from=pandoc-builder /usr/bin/pand* /usr/bin/
-COPY --from=pandoc-builder /root/.cargo/bin/tectonic /usr/bin/
+COPY --from=pandoc/core /usr/bin/pandoc* /usr/local/bin/
+COPY --from=grea09/tectonic /root/.cargo/bin/tectonic /usr/local/bin/
 
 RUN echo -e "http://dl-cdn.alpinelinux.org/alpine/edge/community\nhttp://dl-cdn.alpinelinux.org/alpine/edge/main" >> /etc/apk/repositories
 
