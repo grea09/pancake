@@ -212,6 +212,14 @@ $else$
   \makeatother
 $endif$
 
+$if(geometry)$
+  $if(beamer)$
+    \geometry{$for(geometry)$$geometry$$sep$,$endfor$}
+  $else$
+    \usepackage[$for(geometry)$$geometry$$sep$,$endfor$]{geometry}
+  $endif$
+$endif$
+
 %%%% Color
 $if(pagecolor)$ 
   \usepackage{pagecolor}
@@ -268,6 +276,9 @@ $if(noqed)$
   \makeatother
 $endif$
 
+
+%%%% Verbatim
+
 % Use upquote if available, for straight quotes in verbatim environments
 \IfFileExists{upquote.sty}{\usepackage{upquote}}{}
 \IfFileExists{microtype.sty}{% use microtype if available
@@ -276,519 +287,474 @@ $endif$
 }{}
 
 $if(verbatim-in-note)$
-\usepackage{fancyvrb}
+  \usepackage{fancyvrb}
 $endif$
+$if(verbatim-in-note)$
+  \VerbatimFootnotes % allow verbatim text in footnotes
+$endif$
+
+
+%%%% Links
 
 \IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
 \IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
 \hypersetup{
-$if(title-meta)$
-  pdftitle={$title-meta$},
-$endif$
-$if(author-meta)$
-  pdfauthor={$author-meta$},
-$endif$
-$if(lang)$
-  pdflang={$lang$},
-$endif$
-$if(subject)$
-  pdfsubject={$subject$},
-$endif$
-$if(keywords)$
-  pdfkeywords={$for(keywords)$$keywords$$sep$, $endfor$},
-$endif$
-$if(colorlinks)$
-  colorlinks=true,
-  linkcolor=$if(linkcolor)$$linkcolor$$else$Blue$endif$, 
-  filecolor=$if(filecolor)$$filecolor$$else$Pink$endif$, 
-  citecolor=$if(citecolor)$$citecolor$$else$Green$endif$, 
-  urlcolor=$if(urlcolor)$$urlcolor$$else$Blue$endif$,
-$else$
-  hidelinks,
-$endif$
-  pdfcreator={Pancake}}
+  $if(title-meta)$
+    pdftitle={$title-meta$},
+  $endif$
+  $if(author-meta)$
+    pdfauthor={$author-meta$},
+  $endif$
+  $if(lang)$
+    pdflang={$lang$},
+  $endif$
+  $if(subject)$
+    pdfsubject={$subject$},
+  $endif$
+  $if(keywords)$
+    pdfkeywords={$for(keywords)$$keywords$$sep$, $endfor$},
+  $endif$
+  $if(colorlinks)$
+    colorlinks=true,
+    linkcolor=$if(linkcolor)$$linkcolor$$else$Blue$endif$, 
+    filecolor=$if(filecolor)$$filecolor$$else$Pink$endif$, 
+    citecolor=$if(citecolor)$$citecolor$$else$Green$endif$, 
+    urlcolor=$if(urlcolor)$$urlcolor$$else$Blue$endif$,
+  $else$
+    hidelinks,
+  $endif$
+  pdfcreator={Pancake}
+}
 \urlstyle{same} % disable monospaced font for URLs
+
 $if(cref)$ 
   \usepackage{thmtools}
-	\usepackage{nameref,cleveref}
-	$for(cref-numbered)$
-	\crefname{$cref-numbered.name$}{$cref-numbered.name$}{$if(cref-numbered.plurial)$$cref-numbered.plurial$$else$$cref-numbered.name$s$endif$}
-	$endfor$
-	$for(cref-labelled)$
-	\crefname{$cref-labelled.name$}{$cref-labelled.name$}{$if(cref-labelled.plurial)$$cref-labelled.plurial$$else$$cref-labelled.name$s$endif$}
-	$endfor$
+  \usepackage{nameref,cleveref}
+  $for(cref-numbered)$
+    \crefname{$cref-numbered.name$}{$cref-numbered.name$}{$if(cref-numbered.plurial)$$cref-numbered.plurial$$else$$cref-numbered.name$s$endif$}
+  $endfor$
+  $for(cref-labelled)$
+    \crefname{$cref-labelled.name$}{$cref-labelled.name$}{$if(cref-labelled.plurial)$$cref-labelled.plurial$$else$$cref-labelled.name$s$endif$}
+  $endfor$
 $endif$ 
-$if(verbatim-in-note)$
-\VerbatimFootnotes % allow verbatim text in footnotes
-$endif$
-$if(geometry)$
+
+
 $if(beamer)$
-\geometry{$for(geometry)$$geometry$$sep$,$endfor$}
-$else$
-\usepackage[$for(geometry)$$geometry$$sep$,$endfor$]{geometry}
+  \newif\ifbibliography
 $endif$
+
+$if(algorithm)$
+  $algorithm()$
 $endif$
-$if(beamer)$
-\newif\ifbibliography
-$endif$
-$if(algorithm)$ 
-\usepackage{algorithm}
-\usepackage[noend]{algpseudocode}
 
-%%%%%% for algorithms
-\errorcontextlines\maxdimen
-\makeatletter
-\algrenewcommand\ALG@beginalgorithmic{\footnotesize}
-%\algrenewcommand\alglinenumber[1]{\color{solarized-base0} #1}
-\renewcommand{\algorithmiccomment}[1]{{\hfill\(\smalltriangleright\) \emph{#1}}}
-
-\newcommand{\algorithmicbreak}{\textbf{break}}
-\newcommand{\Break}{\State \algorithmicbreak}\newcommand{\algorithmiccontinue}{\textbf{continue}} 
-\newcommand{\Continue}{\State \algorithmiccontinue}
-
-% begin vertical rule patch for algorithmicx (http://tex.stackexchange.com/questions/144840/vertical-loop-block-lines-in-algorithmicx-with-noend-option)
-% start with some helper code
-% This is the vertical rule that is inserted
-    \newcommand*{\algrule}[1][\algorithmicindent]{\makebox[#1][l]{\color{solarized-base0}\hspace*{.5em}\thealgruleextra\vrule height \thealgruleheight depth \thealgruledepth}}%
-% its height and depth need to be adjustable
-\newcommand*{\thealgruleextra}{}
-\newcommand*{\thealgruleheight}{.95\baselineskip}
-\newcommand*{\thealgruledepth}{.25\baselineskip}
-
-\newcount\ALG@printindent@tempcnta
-\def\ALG@printindent{%
-    \ifnum \theALG@nested>0% is there anything to print
-        \ifx\ALG@text\ALG@x@notext% is this an end group without any text?
-            % do nothing
-        \else
-            \unskip
-            \addvspace{-1pt}% FUDGE to make the rules line up
-            % draw a rule for each indent level
-            \ALG@printindent@tempcnta=1
-            \loop
-                \algrule[\csname ALG@ind@\the\ALG@printindent@tempcnta\endcsname]%
-                \advance \ALG@printindent@tempcnta 1
-            \ifnum \ALG@printindent@tempcnta<\numexpr\theALG@nested+1\relax% can't do <=, so add one to RHS and use < instead
-            \repeat
-        \fi
-    \fi
-    }%
-\usepackage{etoolbox}
-% the following line injects our new indent handling code in place of the default spacing
-\patchcmd{\ALG@doentity}{\noindent\hskip\ALG@tlm}{\ALG@printindent}{}{\errmessage{failed to patch}}
-\makeatother
-
-%For nested Calls
-\MakeRobust{\Call}
-
-% the required height and depth are set by measuring the content to be shown
-% this means that the content is processed twice
-\newbox\statebox
-\newcommand{\myState}[1]{%
-    \setbox\statebox=\vbox{#1}%
-    \edef\thealgruleheight{\dimexpr \the\ht\statebox+1pt\relax}%
-    \edef\thealgruledepth{\dimexpr \the\dp\statebox+1pt\relax}%
-    \ifdim\thealgruleheight<.75\baselineskip
-        \def\thealgruleheight{\dimexpr .75\baselineskip+1pt\relax}%
-    \fi
-    \ifdim\thealgruledepth<.25\baselineskip
-        \def\thealgruledepth{\dimexpr .25\baselineskip+1pt\relax}%
-    \fi
-    %\showboxdepth=100
-    %\showboxbreadth=100
-    %\showbox\statebox
-    \State #1%
-    %\State \usebox\statebox
-    %\State \unvbox\statebox
-    %reset in case the next command is not wrapped in \myState
-    \def\thealgruleheight{\dimexpr .75\baselineskip+1pt\relax}%
-    \def\thealgruledepth{\dimexpr .25\baselineskip+1pt\relax}%
-}
-% end vertical rule patch for algorithmicx
-$endif$ 
 $if(listings)$
-\usepackage{listings}
-\newcommand{\passthrough}[1]{#1}
-\lstset{defaultdialect=[5.3]Lua}
-\lstset{defaultdialect=[x86masm]Assembler}
+  \usepackage{listings}
+  \newcommand{\passthrough}[1]{#1}
+  \lstset{defaultdialect=[5.3]Lua}
+  \lstset{defaultdialect=[x86masm]Assembler}
 
-\lstset{
-    language=java,
-    keywords={pre, eff, method, Action},
-    numbers=left,
-    stepnumber=1,
-    numbersep=5pt,
-    showspaces=false,
-    showstringspaces=false,
-    keepspaces=true,
-    showtabs=true,
-    tabsize=1,
-    extendedchars=true,
-    captionpos=b,
-    breaklines=true,
-    breakatwhitespace=true,
-    breakautoindent=true,
-%    framexrightmargin=-2mm,
-    xleftmargin=5mm,
-    framexleftmargin=5mm} 
+  \lstset{
+      language=java,
+      keywords={pre, eff, method, Action},
+      numbers=left,
+      stepnumber=1,
+      numbersep=5pt,
+      showspaces=false,
+      showstringspaces=false,
+      keepspaces=true,
+      showtabs=true,
+      tabsize=1,
+      extendedchars=true,
+      captionpos=b,
+      breaklines=true,
+      breakatwhitespace=true,
+      breakautoindent=true,
+  %    framexrightmargin=-2mm,
+      xleftmargin=5mm,
+      framexleftmargin=5mm} 
 
-$if(solarized)$ 
-
-%%%% For listings (code blocks)
-\lstset{
-    basicstyle={\color{solarized-base02}\footnotesize\ttfamily},
-    backgroundcolor=\color{solarized-base3},
-    keywordstyle=\color{solarized-orange}\bfseries,
-    identifierstyle=\color{solarized-base01},
-    stringstyle=\color{solarized-green},
-    commentstyle=\color{solarized-base1}\itshape,
-    numberstyle=\footnotesize\color{solarized-base0}
-}
-
-$endif$ 
+  $if(solarized)$
+    %%%% For listings (code blocks)
+    \lstset{
+        basicstyle={\color{solarized-base02}\footnotesize\ttfamily},
+        backgroundcolor=\color{solarized-base3},
+        keywordstyle=\color{solarized-orange}\bfseries,
+        identifierstyle=\color{solarized-base01},
+        stringstyle=\color{solarized-green},
+        commentstyle=\color{solarized-base1}\itshape,
+        numberstyle=\footnotesize\color{solarized-base0}
+    }
+  $endif$
 $endif$
+
 $if(lhs)$
-\lstnewenvironment{code}{\lstset{language=Haskell,basicstyle=\small\ttfamily}}{}
+  \lstnewenvironment{code}{\lstset{language=Haskell,basicstyle=\small\ttfamily}}{}
 $endif$
+
 $if(highlighting-macros)$
-$if(solarized)$ 
-\newcommand{\VerbBar}{|}
-\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
-\DefineVerbatimEnvironment{Highlighting}{Verbatim}{fontsize=\footnotesize,commandchars=\\\{\}}
-\newenvironment{Shaded}{\linespread{1}}{}
-\newcommand{\KeywordTok}[1]{\color{solarized-yellow}{\textbf{{#1}}}}
-\newcommand{\DataTypeTok}[1]{\color{solarized-cyan}{{#1}}}
-\newcommand{\DecValTok}[1]{\color{solarized-magenta}{{#1}}}
-\newcommand{\BaseNTok}[1]{\color{solarized-magenta}{{#1}}}
-\newcommand{\FloatTok}[1]{\color{solarized-magenta}{{#1}}}
-\newcommand{\CharTok}[1]{\color{solarized-cyan}{{#1}}}
-\newcommand{\StringTok}[1]{\color{solarized-cyan}{{#1}}}
-\newcommand{\SpecialCharTok}[1]{\color{solarized-violet}{\textbf{{#1}}}}
-\newcommand{\CommentTok}[1]{\color{solarized-base0}{\textit{{#1}}}}
-\newcommand{\OtherTok}[1]{\color{solarized-base00}{{#1}}}
-\newcommand{\AlertTok}[1]{\color{solarized-orange}{\textbf{{#1}}}}
-\newcommand{\FunctionTok}[1]{\color{solarized-green}{{#1}}}
-\newcommand{\RegionMarkerTok}[1]{{#1}}
-\newcommand{\ErrorTok}[1]{\color{solarized-red}{\textbf{{#1}}}}
-\newcommand{\NormalTok}[1]{\color{solarized-base02}{#1}}
-\newcommand{\BuiltInTok}[1]{\color{solarized-blue}{\textbf{{#1}}}}
-$else$ 
-$highlighting-macros$
+  $if(solarized)$ 
+  \newcommand{\VerbBar}{|}
+  \newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+  \DefineVerbatimEnvironment{Highlighting}{Verbatim}{fontsize=\footnotesize,commandchars=\\\{\}}
+  \newenvironment{Shaded}{\linespread{1}}{}
+  \newcommand{\KeywordTok}[1]{\color{solarized-yellow}{\textbf{{#1}}}}
+  \newcommand{\DataTypeTok}[1]{\color{solarized-cyan}{{#1}}}
+  \newcommand{\DecValTok}[1]{\color{solarized-magenta}{{#1}}}
+  \newcommand{\BaseNTok}[1]{\color{solarized-magenta}{{#1}}}
+  \newcommand{\FloatTok}[1]{\color{solarized-magenta}{{#1}}}
+  \newcommand{\CharTok}[1]{\color{solarized-cyan}{{#1}}}
+  \newcommand{\StringTok}[1]{\color{solarized-cyan}{{#1}}}
+  \newcommand{\SpecialCharTok}[1]{\color{solarized-violet}{\textbf{{#1}}}}
+  \newcommand{\CommentTok}[1]{\color{solarized-base0}{\textit{{#1}}}}
+  \newcommand{\OtherTok}[1]{\color{solarized-base00}{{#1}}}
+  \newcommand{\AlertTok}[1]{\color{solarized-orange}{\textbf{{#1}}}}
+  \newcommand{\FunctionTok}[1]{\color{solarized-green}{{#1}}}
+  \newcommand{\RegionMarkerTok}[1]{{#1}}
+  \newcommand{\ErrorTok}[1]{\color{solarized-red}{\textbf{{#1}}}}
+  \newcommand{\NormalTok}[1]{\color{solarized-base02}{#1}}
+  \newcommand{\BuiltInTok}[1]{\color{solarized-blue}{\textbf{{#1}}}}
+  $else$ 
+  $highlighting-macros$
+  $endif$
 $endif$
-$endif$ 
+
 $if(tables)$
-\usepackage{longtable,booktabs}
-$if(beamer)$
-\usepackage{caption}
-% Make caption package work with longtable
-\makeatletter
-\def\fnum@table{\tablename~\thetable}
-\makeatother
-$else$
-% Correct order of tables after \paragraph or \subparagraph
-\usepackage{etoolbox}
-\makeatletter
-\patchcmd\longtable{\par}{\if@noskipsec\mbox{}\fi\par}{}{}
-\makeatother
-% Allow footnotes in longtable head/foot
-\IfFileExists{footnotehyper.sty}{\usepackage{footnotehyper}}{\usepackage{footnote}}
-\makesavenoteenv{longtable}
+  \usepackage{longtable,booktabs}
+  $if(beamer)$
+    \usepackage{caption}
+    % Make caption package work with longtable
+    \makeatletter
+    \def\fnum@table{\tablename~\thetable}
+    \makeatother
+  $else$
+    % Correct order of tables after \paragraph or \subparagraph
+    \usepackage{etoolbox}
+    \makeatletter
+    \patchcmd\longtable{\par}{\if@noskipsec\mbox{}\fi\par}{}{}
+    \makeatother
+    % Allow footnotes in longtable head/foot
+    \IfFileExists{footnotehyper.sty}{\usepackage{footnotehyper}}{\usepackage{footnote}}
+    \makesavenoteenv{longtable}
+  $endif$
 $endif$
-$endif$
+
 $if(graphics)$
-\usepackage{graphicx}
-\makeatletter
-\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
-\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
-\makeatother
-% Scale images if necessary, so that they will not overflow the page
-% margins by default, and it is still possible to overwrite the defaults
-% using explicit options in \includegraphics[width, height, ...]{}
-\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
-% Set default figure placement to htbp
-\makeatletter
-\def\fps@figure{htbp}
-\makeatother
+  \usepackage{graphicx}
+  \makeatletter
+  \def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+  \def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+  \makeatother
+  % Scale images if necessary, so that they will not overflow the page
+  % margins by default, and it is still possible to overwrite the defaults
+  % using explicit options in \includegraphics[width, height, ...]{}
+  \setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+  % Set default figure placement to htbp
+  \makeatletter
+  \def\fps@figure{htbp}
+  \makeatother
 $endif$
+
 $if(links-as-notes)$
-% Make links footnotes instead of hotlinks:
-\DeclareRobustCommand{\href}[2]{#2\footnote{\url{#1}}}
+  % Make links footnotes instead of hotlinks:
+  \DeclareRobustCommand{\href}[2]{#2\footnote{\url{#1}}}
 $endif$
+
 $if(strikeout)$
-\usepackage[normalem]{ulem}
-% Avoid problems with \sout in headers with hyperref
-\pdfstringdefDisableCommands{\renewcommand{\sout}{}}
+  \usepackage[normalem]{ulem}
+  % Avoid problems with \sout in headers with hyperref
+  \pdfstringdefDisableCommands{\renewcommand{\sout}{}}
 $endif$
+
 \setlength{\emergencystretch}{3em} % prevent overfull lines
 \providecommand{\tightlist}{%
   \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+
 $if(numbersections)$
-\setcounter{secnumdepth}{$if(secnumdepth)$$secnumdepth$$else$5$endif$}
+  \setcounter{secnumdepth}{$if(secnumdepth)$$secnumdepth$$else$5$endif$}
 $else$
-\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
-$endif$
-$if(beamer)$
-$else$
-$if(block-headings)$
-% Make \paragraph and \subparagraph free-standing
-\ifx\paragraph\undefined\else
-  \let\oldparagraph\paragraph
-  \renewcommand{\paragraph}[1]{\oldparagraph{#1}\mbox{}}
-\fi
-\ifx\subparagraph\undefined\else
-  \let\oldsubparagraph\subparagraph
-  \renewcommand{\subparagraph}[1]{\oldsubparagraph{#1}\mbox{}}
-\fi
-$endif$
-$endif$
-$if(pagestyle)$
-\pagestyle{$pagestyle$}
-$endif$
-$for(header-includes)$
-$header-includes$
-$endfor$
-$if(lang)$
-\ifxetex
-  % Load polyglossia as late as possible: uses bidi with RTL langages (e.g. Hebrew, Arabic)
-  \usepackage{polyglossia}
-  \setmainlanguage[$polyglossia-lang.options$]{$polyglossia-lang.name$}
-$for(polyglossia-otherlangs)$
-  \setotherlanguage[$polyglossia-otherlangs.options$]{$polyglossia-otherlangs.name$}
-$endfor$
-\else
-  \usepackage[shorthands=off,$for(babel-otherlangs)$$babel-otherlangs$,$endfor$main=$babel-lang$]{babel}
-$if(babel-newcommands)$
-  $babel-newcommands$
-$endif$
-\fi
-$endif$
-$if(dir)$
-\ifxetex
-  % Load bidi as late as possible as it modifies e.g. graphicx
-  \usepackage{bidi}
-\fi
-\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
-  \TeXXeTstate=1
-  \newcommand{\RL}[1]{\beginR #1\endR}
-  \newcommand{\LR}[1]{\beginL #1\endL}
-  \newenvironment{RTL}{\beginR}{\endR}
-  \newenvironment{LTR}{\beginL}{\endL}
-\fi
-$endif$
-$if(natbib)$
-\usepackage[$natbiboptions$]{natbib}
-\bibliographystyle{$if(biblio-style)$$biblio-style$$else$plainnat$endif$}
-$endif$
-$if(biblatex)$
-\usepackage[$if(biblio-style)$style=$biblio-style$,$endif$$for(biblatexoptions)$$biblatexoptions$$sep$,$endfor$]{biblatex}
-$for(bibliography)$
-\addbibresource{$bibliography$}
-$endfor$
-$endif$
-$if(csl-refs)$
-\newlength{\cslhangindent}
-\setlength{\cslhangindent}{1.5em}
-\newenvironment{cslreferences}%
-  {$if(csl-hanging-indent)$\setlength{\parindent}{0pt}%
-  \everypar{\setlength{\hangindent}{\cslhangindent}}\ignorespaces$endif$}%
-  {\par}
+  \setcounter{secnumdepth}{-\maxdimen} % remove section numbering
 $endif$
 
-$if(glossary)$ %%%%%PANCAKE
-\usepackage[acronym,symbols,toc,footnote]{glossaries-extra}
-$if(multicol)$
-\usepackage{multicol}
-$endif$
-\makenoidxglossaries
-$for(glossary.entries)$
-\newglossaryentry{$glossary.entries$}{
-  name={$glossary.entries.name$},
-  description={$glossary.entries.description$}
-}
-$endfor$
-$for(glossary.acronyms)$
-  $for(glossary.acronyms/pairs)$
-\newacronym{$it.key/lowercase$}{$it.key$}{$it.value$}
-  $endfor$
-$endfor$
-$for(glossary.symbols)$
-$if(glossary.symbols.nomacro)$
-$else$
-\newcommand{\$glossary.symbols.label$}{\ensuremath{$glossary.symbols.symbol$}}
-$endif$
-\glsxtrnewsymbol[description={$glossary.symbols.description$}]{$glossary.symbols.label$}{\$glossary.symbols.label$}
-$endfor$
-$endif$ %%%%%PANCAKE
-$if(title)$
-\title{$if(titlefont)$\newfontfamily\titlefont[$for(titlefontoptions)$$titlefontoptions$$sep$,$endfor$]{$titlefont$}\titlefont$endif$ $title$$if(thanks)$\thanks{$thanks$}$endif$}
-$endif$
-$if(subtitle)$
 $if(beamer)$
 $else$
-\usepackage{etoolbox}
-\makeatletter
-\providecommand{\subtitle}[1]{% add subtitle to \maketitle
-  \apptocmd{\@title}{\par {\large #1 \par}}{}{}
-}
-\makeatother
+  $if(block-headings)$
+    % Make \paragraph and \subparagraph free-standing
+    \ifx\paragraph\undefined\else
+      \let\oldparagraph\paragraph
+      \renewcommand{\paragraph}[1]{\oldparagraph{#1}\mbox{}}
+    \fi
+    \ifx\subparagraph\undefined\else
+      \let\oldsubparagraph\subparagraph
+      \renewcommand{\subparagraph}[1]{\oldsubparagraph{#1}\mbox{}}
+    \fi
+  $endif$
 $endif$
-\subtitle{$subtitle$}
+
+$if(pagestyle)$
+  \pagestyle{$pagestyle$}
 $endif$
+
+$for(header-includes)$
+  $header-includes$
+$endfor$
+
+$if(lang)$
+  \ifxetex
+    % Load polyglossia as late as possible: uses bidi with RTL langages (e.g. Hebrew, Arabic)
+    \usepackage{polyglossia}
+    \setmainlanguage[$polyglossia-lang.options$]{$polyglossia-lang.name$}
+  $for(polyglossia-otherlangs)$
+    \setotherlanguage[$polyglossia-otherlangs.options$]{$polyglossia-otherlangs.name$}
+  $endfor$
+  \else
+    \usepackage[shorthands=off,$for(babel-otherlangs)$$babel-otherlangs$,$endfor$main=$babel-lang$]{babel}
+  $if(babel-newcommands)$
+    $babel-newcommands$
+  $endif$
+  \fi
+$endif$
+
+$if(dir)$
+  \ifxetex
+    % Load bidi as late as possible as it modifies e.g. graphicx
+    \usepackage{bidi}
+  \fi
+  \ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+    \TeXXeTstate=1
+    \newcommand{\RL}[1]{\beginR #1\endR}
+    \newcommand{\LR}[1]{\beginL #1\endL}
+    \newenvironment{RTL}{\beginR}{\endR}
+    \newenvironment{LTR}{\beginL}{\endL}
+  \fi
+$endif$
+
+$if(natbib)$
+  \usepackage[$natbiboptions$]{natbib}
+  \bibliographystyle{$if(biblio-style)$$biblio-style$$else$plainnat$endif$}
+$endif$
+
+$if(biblatex)$
+  \usepackage[$if(biblio-style)$style=$biblio-style$,$endif$$for(biblatexoptions)$$biblatexoptions$$sep$,$endfor$]{biblatex}
+  $for(bibliography)$
+    \addbibresource{$bibliography$}
+  $endfor$
+$endif$
+
+$if(csl-refs)$
+  \newlength{\cslhangindent}
+  \setlength{\cslhangindent}{1.5em}
+  \newenvironment{cslreferences}%
+    {$if(csl-hanging-indent)$\setlength{\parindent}{0pt}%
+    \everypar{\setlength{\hangindent}{\cslhangindent}}\ignorespaces$endif$}%
+    {\par}
+$endif$
+
+$if(glossary)$
+  \usepackage[acronym,symbols,toc,footnote]{glossaries-extra}
+  $if(multicol)$
+    \usepackage{multicol}
+  $endif$
+  \makenoidxglossaries
+  $for(glossary.entries)$
+    \newglossaryentry{$glossary.entries$}{
+      name={$glossary.entries.name$},
+      description={$glossary.entries.description$}
+    }
+  $endfor$
+  $for(glossary.acronyms)$
+    $for(glossary.acronyms/pairs)$
+      \newacronym{$it.key/lowercase$}{$it.key$}{$it.value$}
+    $endfor$
+  $endfor$
+  $for(glossary.symbols)$
+    $if(glossary.symbols.nomacro)$
+    $else$
+      \newcommand{\$glossary.symbols.label$}{\ensuremath{$glossary.symbols.symbol$}}
+    $endif$
+    \glsxtrnewsymbol[description={$glossary.symbols.description$}]{$glossary.symbols.label$}{\$glossary.symbols.label$}
+  $endfor$
+$endif$
+
+$if(title)$
+  \title{$if(titlefont)$\newfontfamily\titlefont[$for(titlefontoptions)$$titlefontoptions$$sep$,$endfor$]{$titlefont$}\titlefont$endif$ $title$$if(thanks)$\thanks{$thanks$}$endif$}
+$endif$
+
+$if(subtitle)$
+  $if(beamer)$
+  $else$
+    \usepackage{etoolbox}
+    \makeatletter
+    \providecommand{\subtitle}[1]{% add subtitle to \maketitle
+      \apptocmd{\@title}{\par {\large #1 \par}}{}{}
+    }
+    \makeatother
+  $endif$
+  \subtitle{$subtitle$}
+$endif$
+
 \author{$for(author)$$author$$sep$ \and $endfor$}
 \date{$date$}
+
 $if(beamer)$
-$if(institute)$
-\providecommand{\institute}[1]{} 
-\institute{$for(institute)$$institute$$sep$ \and $endfor$}
-$endif$
-$if(titleabstract)$ 
-\abstract{$abstract$}
-$endif$ 
-\date{$date$}
-$if(keywords)$ 
-\keywords{$for(keywords)$$keywords$$sep$, $endfor$}
-$endif$ 
-$if(titlegraphic)$
-\titlegraphic{\includegraphics{$titlegraphic$}}
-$endif$
-$if(logo)$
-\logo{\includegraphics{$logo$}}
-$endif$
+  $if(institute)$
+    \providecommand{\institute}[1]{} 
+    \institute{$for(institute)$$institute$$sep$ \and $endfor$}
+  $endif$
+  $if(titleabstract)$ 
+    \abstract{$abstract$}
+  $endif$ 
+  \date{$date$}
+  $if(keywords)$ 
+    \keywords{$for(keywords)$$keywords$$sep$, $endfor$}
+  $endif$ 
+  $if(titlegraphic)$
+    \titlegraphic{\includegraphics{$titlegraphic$}}
+  $endif$
+  $if(logo)$
+    \logo{\includegraphics{$logo$}}
+  $endif$
 $endif$
 
 \ifdefined\and 
 \else
   \newcommand{\and}{\quad}
 \fi 
+
 \begin{document}
 $if(pagecolor)$ 
-\pagecolor{$pagecolor$}
+  \pagecolor{$pagecolor$}
 $endif$ 
 $if(textcolor)$ 
-\color{$textcolor$}
+  \color{$textcolor$}
 $endif$ 
 $if(has-frontmatter)$
-\frontmatter
+  \frontmatter
 $endif$
 $if(title)$
-$if(beamer)$
-\frame{\titlepage}
-$else$
-\maketitle
+  $if(beamer)$
+    \frame{\titlepage}
+  $else$
+  \maketitle
 $endif$
+
 $if(titleabstract)$ 
 $else$ 
-$if(abstract)$
-\begin{abstract}
-$abstract$
-\end{abstract}
+  $if(abstract)$
+    \begin{abstract}
+    $abstract$
+    \end{abstract}
+  $endif$
 $endif$
-$endif$
-$endif$ 
 
 $for(include-before)$
-$include-before$
-
+  $include-before$
 $endfor$
+
 $if(toc)$
-$if(toc-col)$ 
-\begin{multicols}{$toc-col$}
+  $if(toc-col)$ 
+    \begin{multicols}{$toc-col$}
+  $endif$
+  $if(toc-title)$
+    \renewcommand*\contentsname{$toc-title$}
+  $endif$
+  $if(beamer)$
+    \begin{frame}[allowframebreaks]
+    $if(toc-title)$
+      \frametitle{$toc-title$}
+    $endif$
+    \tableofcontents[hideallsubsections]
+    \end{frame}
+  $else$
+    {
+    $if(colorlinks)$
+      \hypersetup{linkcolor=$if(toccolor)$$toccolor$$else$$endif$}
+    $endif$
+    \setcounter{tocdepth}{$toc-depth$}
+    \tableofcontents
+    }
+  $endif$
+  $if(toc-col)$ 
+    \end{multicols}
+  $endif$
 $endif$
-$if(toc-title)$
-\renewcommand*\contentsname{$toc-title$}
-$endif$
-$if(beamer)$
-\begin{frame}[allowframebreaks]
-$if(toc-title)$
-  \frametitle{$toc-title$}
-$endif$
-  \tableofcontents[hideallsubsections]
-\end{frame}
-$else$
-{
-$if(colorlinks)$
-\hypersetup{linkcolor=$if(toccolor)$$toccolor$$else$$endif$}
-$endif$
-\setcounter{tocdepth}{$toc-depth$}
-\tableofcontents
-}
-$endif$
-$if(toc-col)$ 
-\end{multicols}
-$endif$
-$endif$
+
 $if(lot)$
-$if(lot-col)$ 
-\begin{multicols}{$lot-col$}
+  $if(lot-col)$ 
+    \begin{multicols}{$lot-col$}
+  $endif$
+  \listoftables
+  $if(lot-col)$ 
+    \end{multicols}
+  $endif$
 $endif$
-\listoftables
-$if(lot-col)$ 
-\end{multicols}
-$endif$
-$endif$
+
 $if(lof)$
-$if(lof-col)$ 
-\begin{multicols}{$lof-col$}
+  $if(lof-col)$ 
+    \begin{multicols}{$lof-col$}
+  $endif$
+  \listoffigures
+  $if(lof-col)$ 
+    \end{multicols}
+  $endif$
 $endif$
-\listoffigures
-$if(lof-col)$ 
-\end{multicols}
-$endif$
-$endif$
+
 $if(glossary)$ 
-$if(glos-col)$ 
-\begin{multicols}{$glos-col$}
-$endif$
-\printnoidxglossaries
-$if(glos-col)$ 
-\end{multicols}
-$endif$
+  $if(glos-col)$ 
+    \begin{multicols}{$glos-col$}
+  $endif$
+  \printnoidxglossaries
+  $if(glos-col)$ 
+    \end{multicols}
+  $endif$
 $endif$ 
 
 $if(linestretch)$
-\setstretch{$linestretch$}
+  \setstretch{$linestretch$}
 $endif$
+
 $if(has-frontmatter)$
-\mainmatter
+  \mainmatter
 $endif$
+
 $body$
 
 $if(has-frontmatter)$
-\backmatter
+  \backmatter
 $endif$
+
 $if(natbib)$
-$if(bibliography)$
-$if(biblio-title)$
-$if(has-chapters)$
-\renewcommand\bibname{$biblio-title$}
-$else$
-\renewcommand\refname{$biblio-title$}
-$endif$
-$endif$
-$if(beamer)$
-\begin{frame}[allowframebreaks]{$biblio-title$}
-  \bibliographytrue
-$endif$
-  \bibliography{$for(bibliography)$$bibliography$$sep$,$endfor$}
-$if(beamer)$
-\end{frame}
+  $if(bibliography)$
+    $if(biblio-title)$
+      $if(has-chapters)$
+        \renewcommand\bibname{$biblio-title$}
+      $else$
+        \renewcommand\refname{$biblio-title$}
+      $endif$
+    $endif$
+    $if(beamer)$
+      \begin{frame}[allowframebreaks]{$biblio-title$}
+      \bibliographytrue
+    $endif$
+    \bibliography{$for(bibliography)$$bibliography$$sep$,$endfor$}
+    $if(beamer)$
+  \   end{frame}
+    $endif$
+  $endif$
 $endif$
 
-$endif$
-$endif$
 $if(biblatex)$
-$if(beamer)$
-\begin{frame}[allowframebreaks]{$biblio-title$}
-  \bibliographytrue
-  \printbibliography[heading=none]
-\end{frame}
-$else$
-\printbibliography$if(biblio-title)$[title=$biblio-title$]$endif$
+  $if(beamer)$
+    \begin{frame}[allowframebreaks]{$biblio-title$}
+    \bibliographytrue
+    \printbibliography[heading=none]
+    \end{frame}
+  $else$
+    \printbibliography$if(biblio-title)$[title=$biblio-title$]$endif$
+  $endif$
 $endif$
 
-$endif$
 $for(include-after)$
-$include-after$
-
+  $include-after$
 $endfor$
+
 \end{document}

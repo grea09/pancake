@@ -8,7 +8,7 @@ key="$1"
 
 case $key in
     -o|--output)
-    PANCAKE_OUTPUT="$2"
+    PANDOC_OUTPUT="$2"
     shift # past argument
     shift # past value
     ;;
@@ -17,7 +17,7 @@ case $key in
     shift # past argument
     ;;
     -t|--type)
-    PANCAKE_TYPE="$2"
+    PANDOC_TYPE="$2"
     shift # past argument
     shift # past value
     ;;
@@ -34,17 +34,17 @@ CONF="/root/.pancake"
 CACHE=".cache"
 LOG=".pancake.log"
 
-if [ -z "$PANCAKE_INPUT" ]; then
-  PANCAKE_INPUT="*.md"
+if [ -z "$PANDOC_INPUT" ]; then
+  PANDOC_INPUT="*.md"
 fi
 
 declare -a IN
 if [ $# == 0 ]; then
-    if [ ! ls $PANCAKE_INPUT 2>/dev/null ] ; then
+    if [ ! ls $PANDOC_INPUT 2>/dev/null ] ; then
         echo -e "\033[1;31mNo file to convert!\033[0m";
         exit 1;
     fi
-    IN=$(ls $PANCAKE_INPUT | tr '\n' ' ')
+    IN=$(ls $PANDOC_INPUT | tr '\n' ' ')
 fi
 
 while [[ $# -gt 0 ]]
@@ -58,25 +58,25 @@ IN=("${IN[@]}" $(ls $1  | tr '\n' ' '))
 shift
 done
 
-if [ -z $PANCAKE_OUTPUT ]; then
-    if [ -z $PANCAKE_TYPE ]; then
-        PANCAKE_TYPE="pdf"
-        PANCAKE_OUTPUT="output.pdf"
+if [ -z $PANDOC_OUTPUT ]; then
+    if [ -z $PANDOC_TYPE ]; then
+        PANDOC_TYPE="pdf"
+        PANDOC_OUTPUT="output.pdf"
     elif [ ${#IN[@]} -eq 1 ]; then
-        PANCAKE_OUTPUT="${IN[0]%.*}.$PANCAKE_TYPE"
+        PANDOC_OUTPUT="${IN[0]%.*}.$PANDOC_TYPE"
     fi
-elif [ -z $PANCAKE_TYPE ]; then
-  PANCAKE_TYPE="${PANCAKE_OUTPUT##*.}"
+elif [ -z $PANDOC_TYPE ]; then
+  PANDOC_TYPE="${PANDOC_OUTPUT##*.}"
 fi
 
 OPT="-s --template=$CONF/templates/pancake"
 
 EXTRA=" --quiet --log=$LOG"
-if [ "$PANCAKE_TYPE" == "pdf" ] ; then
+if [ "$PANDOC_TYPE" == "pdf" ] ; then
     EXTRA="$EXTRA -t latex --pdf-engine=tectonic --pdf-engine-opt=--print"
 fi
 
-UPDATE=$(echo -e "\033[1m%w%f\033[0m changed. Updating \033[1m$PANCAKE_OUTPUT\033[0m…")
+UPDATE=$(echo -e "\033[1m%w%f\033[0m changed. Updating \033[1m$PANDOC_OUTPUT\033[0m…")
 echo -e "Watching \033[1m$IN\033[0m for changes…"
 while true ; do
     mkdir $CACHE 2>/dev/null
@@ -97,15 +97,15 @@ while true ; do
     if [[ $MD5 == $(md5sum $IN) ]] ; then
         inotifywait -qre close_write $IN --format "$UPDATE"
     else
-        echo -e "\033[1m$PANCAKE_OUTPUT\033[0m needs updating…"
+        echo -e "\033[1m$PANDOC_OUTPUT\033[0m needs updating…"
     fi
     MD5=$(md5sum $IN)
     FAIL=0
-    CMD="$PANDOC $OPT $FILTERS $EXTRA $YAML $PANCAKE_OPTIONS $IN -o $PANCAKE_OUTPUT"
+    CMD="$PANDOC $OPT $FILTERS $EXTRA $YAML $PANDOC_OPTIONS $IN -o $PANDOC_OUTPUT"
     echo "$CMD"
     $CMD 2>&1 || FAIL=$?
     OWNER=($(ls -ld ${IN[0]}))
-    chown ${OWNER[2]}:${OWNER[3]} $PANCAKE_OUTPUT 2>/dev/null
+    chown ${OWNER[2]}:${OWNER[3]} $PANDOC_OUTPUT 2>/dev/null
     if [ $PANCAKE_ONCE ] ; then
         exit 0;
     fi
