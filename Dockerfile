@@ -1,7 +1,9 @@
 FROM alpine
 
 COPY --from=pandoc/core /usr/bin/pandoc* /usr/local/bin/
+COPY --from=pandoc/core /usr/lib/* /usr/lib/
 COPY --from=grea09/tectonic /root/.cargo/bin/tectonic /usr/local/bin/
+COPY --from=grea09/tectonic /usr/lib/* /usr/lib/
 
 RUN echo -e "http://dl-cdn.alpinelinux.org/alpine/edge/community\nhttp://dl-cdn.alpinelinux.org/alpine/edge/main" >> /etc/apk/repositories
 

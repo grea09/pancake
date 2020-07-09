@@ -1,5 +1,5 @@
-
-${it.font}$[
+$if(it.font)${$it.font$}$else${$it$}$endif$
+[
   $if(it.regular)$UprightFont = $it.regular$ ,$endif$
   $if(it.italic)$ItalicFont = $it.italic$ ,$endif$
   $if(it.bold)$BoldFont = $it.bold$ ,$endif$

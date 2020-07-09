@@ -27,8 +27,9 @@ Pancake will search for `.yaml` files in the working directory. For convenience,
 To specify a font you need to define it either using Pandoc's `fontfamily` variable or using the following:
 
         fonts:
+          a-font: Times New Roman
           my-font:
-            font: latexMacroName
+            font: Arial # Main font
             regular: Arial
             italic: Arial Italic
             bold: Arial Black
@@ -40,7 +41,7 @@ To specify a font you need to define it either using Pandoc's `fontfamily` varia
             color: magenta
             options: #fontspec options as a string list
 
-To define default fonts, name your font one of the following:
+The name of the font will be the key suffixed with `font` (here `my-fontfont`). To define default fonts, name your font one of the following:
 
         main:
         sans:
@@ -48,7 +49,77 @@ To define default fonts, name your font one of the following:
         math:
         cjk:
 
+## Element style
+
+In order to change the appearance of the different elements in the document one must use the following:
+
+        elements:
+          my-element:
+            theorem: #or
+            block: true
+            prefix:
+             - singularForm
+             - pluralForm
+            ref: shortcode for refs
+            font: macroFontName
+            color: Blue
+            title: 
+              font: anotherMacro
+              background: Grey
+            style:
+            border:
+            background:
+            options: #latex options as a string list
+            number: section
+
+The following elements can be styled:
+
+        code: #verbatim code
+        algorithm: #Enables algorithmx
+        document: #Title is main title, number is page number and only box.background change the page color. Style is pagestyle.
+        chapter:
+        section:
+        figure:
+        table:
+        equation:
+
 ## List options
+
+Several lists of elements can be used in each document. Lists are tables that enumerates elements of a certain type and some of their properties. For example list of figures with their caption or various table of content or glossary. To change their display, use the following:
+
+        lists:
+          my-list: #Enables the list
+            title: Super List
+            depth: 4
+            columns: 3 #Requires multicol
+
+Here is the list of lists:
+
+        glossary:
+        figures:
+        content:
+        tables:
+
+## Links color
+
+In order to change the default link colors, one must use the following:
+
+        links:
+          colors:
+            link: Cyan
+            cite: Grey
+            url: Blue
+            file: Green
+
+## Latex Commands
+
+For convenience, a new latex command parameter has been added to define custom LaTeX command:
+
+        macro:
+          - name: definition
+          - bb: \mathbb
+          …
+
 
 
 

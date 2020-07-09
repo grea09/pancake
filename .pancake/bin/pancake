@@ -84,7 +84,7 @@ while true ; do
     for i in $CONF/filters/* ; do
     FILTERS="$FILTERS --filter $i"
     done
-    FILTERS="$FILTERS --filter pandoc-crossref --filter pandoc-citeproc"
+    FILTERS="$FILTERS --filter pandoc-citeproc"
     
     YAML="--metadata-file=$CONF/pancake.yaml"
     for i in *.yaml ; do

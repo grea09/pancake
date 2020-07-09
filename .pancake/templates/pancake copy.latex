@@ -15,8 +15,14 @@ $endif$
 
 %%%% Document class
 \documentclass[
+  $if(fontsize)$
+    $fontsize$,
+  $endif$
   $if(lang)$
     $babel-lang$,
+  $endif$
+  $if(papersize)$
+    $papersize$paper,
   $endif$
   $if(beamer)$
     ignorenonframetext,
@@ -27,16 +33,16 @@ $endif$
     aspectratio=$aspectratio$,
   $endif$
   $endif$
-  $for(elements.document.options)$
-    $elements.document.options$$sep$,
+  $for(classoption)$
+    $classoption$$sep$,
   $endfor$
-]{$elements.document.style$}
+]{$documentclass$}
 
 %%%% Beamer style
 $if(beamer)$
-  $if(elements.document.background)$
+  $if(background-image)$
     \usebackgroundtemplate{%
-      \includegraphics[width=\paperwidth]{$elements.document.background$}%
+      \includegraphics[width=\paperwidth]{$background-image$}%
     }
   $endif$
   \usepackage{pgfpages}
@@ -122,54 +128,49 @@ $endif$
   \usepackage[utf8]{inputenc}
   \usepackage{textcomp} % provide euro and other symbols
 \else % if luatex or xetex
-$if(mathspec)$
-  \ifxetex
-    \usepackage{mathspec}
-  \else
+  $if(mathspec)$
+    \ifxetex
+      \usepackage{mathspec}
+    \else
+      \usepackage{unicode-math}
+    \fi
+  $else$
     \usepackage{unicode-math}
-  \fi
-$else$
-  \usepackage{unicode-math}
-$endif$
-  \defaultfontfeatures{Scale=MatchLowercase}
-  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
-$if(fonts.main)$
-  \setmainfont$fonts.main:font()$
-$endif$
-$if(fonts.sans)$
-  \setsansfont$fonts.sans:font()$
-$endif$
-$if(fonts.mono)$
-  \setmonofont$fonts.mono:font()$
-$endif$
-$if(mathfont)$
-$if(mathspec)$
-  \ifxetex
-    \setmathfont(Digits,Latin,Greek)$fonts.math:font()$
-  \else
-    \setmathfont$fonts.math:font()$
-  \fi
-$else$
-  \setmathfont$fonts.math:font()$
-$endif$
-$endif$
-$if(fonts.cjk)$
-  \ifxetex
-    \usepackage{xeCJK}
-    \setCJKmainfont$fonts.cjk:font()$
-  \fi
-$endif$
-$if(luatexjapresetoptions)$
-  \ifluatex
-    \usepackage[$for(luatexjapresetoptions)$$luatexjapresetoptions$$sep$,$endfor$]{luatexja-preset}
-  \fi
-$endif$
-$if(fonts.cjk)$
-  \ifluatex
-    \usepackage[$for(luatexjafontspecoptions)$$luatexjafontspecoptions$$sep$,$endfor$]{luatexja-fontspec}
-    \setmainjfont$fonts.cjk:font()$
-  \fi
-$endif$
+  $endif$
+    \defaultfontfeatures{Scale=MatchLowercase}
+    \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+  $if(fonts.main)$
+    \setmainfont$fonts.main:font()$
+    \setmonofont$fonts.mono:font()$
+  $endif$
+  $if(fonts.math)$
+    $if(mathspec)$
+      \ifxetex
+        \setmathfont(Digits,Latin,Greek)$fonts.math:font()$
+      \else
+        \setmathfont$fonts.math:font()$
+      \fi
+    $else$
+      \setmathfont$fonts.math:font()$
+    $endif$
+  $endif$
+  $if(fonts.cjk)$
+    \ifxetex
+      \usepackage{xeCJK}
+      \setCJKmainfont$fonts.cjk:font()$
+    \fi
+  $endif$
+  $if(luatexjapresetoptions)$
+    \ifluatex
+      \usepackage[$for(luatexjapresetoptions)$$luatexjapresetoptions$$sep$,$endfor$]{luatexja-preset}
+    \fi
+  $endif$
+  $if(fonts.cjk)$
+    \ifluatex
+      \usepackage[$for(luatexjafontspecoptions)$$luatexjafontspecoptions$$sep$,$endfor$]{luatexja-fontspec}
+      \setmainjfont$fonts.cjk:font()$
+    \fi
+  $endif$
 \fi
 
 $for(fonts)$
@@ -177,13 +178,13 @@ $for(fonts)$
 $endfor$
 
 $if(elements.section.font)$
-  \addtokomafont{section}{\$elements.section.font$}
-  \addtokomafont{subsection}{\$elements.section.font$}
-  \addtokomafont{subsubsection}{\$elements.section.font$}
+  \addtokomafont{section}{$elements.section.font:macro()$}
+  \addtokomafont{subsection}{$elements.section.font:macro()$}
+  \addtokomafont{subsubsection}{$elements.section.font:macro()$}
 $endif$
 
 $if(elements.chapter.font)$
-  \addtokomafont{chapter}{\$elements.chapter.font$}
+  \addtokomafont{chapter}{$elements.chapter.font:macro()$}
 $endif$
 
 
@@ -215,11 +216,11 @@ $if(geometry)$
 $endif$
 
 %%%% Color
-$if(pagecolor)$ 
+$if(elements.document.box.background)$ 
   \usepackage{pagecolor}
 $endif$
 
-$if(colorlinks)$
+$if(color)$
   \usepackage{xcolor}
   $if(solarized)$
 
@@ -250,8 +251,20 @@ $endif$
 $if(amsthm)$ 
   \usepackage{amsthm}
   \usepackage{mfirstuc}
-
 $endif$
+
+$for(elements)$
+  $if(it.theorem)$
+    \newtcbtheorem[$if(it.number)$auto counter, $if(it.number.within)$number within=$it.number.within$,$endif$$endif$ $if(it.style)$style=$it.style$$endif$]{$it.name$}{$it.prefix.first$}{
+      $if(it.box.background)$colback=$it.box.background$,$endif$
+      $if(it.box.background-title)$colbacktitle=$it.box.background-title$,$endif$
+      $if(it.box.frame)$colframe=$it.box.frame$,$endif$
+      $if(it.font-title)$fonttitle=$it.font-title$,$endif$
+      $if(it.font)$fontupper=$it.font$,$endif$
+      $for(it.box.options)$$it.box.options$$sep$,$endfor$
+    }
+  $endif$
+$endfor$
 
 $if(noqed)$
   \makeatletter
@@ -330,8 +343,7 @@ $if(cref)$
   $for(cref-labelled)$
     \crefname{$cref-labelled.name$}{$cref-labelled.name$}{$if(cref-labelled.plurial)$$cref-labelled.plurial$$else$$cref-labelled.name$s$endif$}
   $endfor$
-$endif$ 
-
+$endif$
 
 $if(beamer)$
   \newif\ifbibliography
@@ -463,7 +475,7 @@ $endif$
 \providecommand{\tightlist}{%
   \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
 
-$if(numbersections)$
+$if(elements.section.number)$
   \setcounter{secnumdepth}{$if(secnumdepth)$$secnumdepth$$else$5$endif$}
 $else$
   \setcounter{secnumdepth}{-\maxdimen} % remove section numbering
@@ -484,8 +496,8 @@ $else$
   $endif$
 $endif$
 
-$if(pagestyle)$
-  \pagestyle{$pagestyle$}
+$if(elements.document.box.style)$
+  \pagestyle{$elements.document.box.style$}
 $endif$
 
 $for(header-includes)$
@@ -565,12 +577,12 @@ $if(glossary)$
     $else$
       \newcommand{\$glossary.symbols.label$}{\ensuremath{$glossary.symbols.symbol$}}
     $endif$
-    \glsxtrnewsymbol[description={$glossary.symbols.description$}]{$glossary.symbols.label$}{\$glossary.symbols.label$}
+    \glsxtrnewsymbol[description={$glossary.symbols.description$}]{$glossary.symbols.label$}{$glossary.symbols.label:macro()$}
   $endfor$
 $endif$
 
 $if(title)$
-  \title{$if(titlefont)$\newfontfamily\titlefont[$for(titlefontoptions)$$titlefontoptions$$sep$,$endfor$]{$titlefont$}\titlefont$endif$ $title$$if(thanks)$\thanks{$thanks$}$endif$}
+  \title{$if(elements.document.font-title)$$elements.document.font-title:macro()$$endif$ $title$$if(thanks)$\thanks{$thanks$}$endif$}
 $endif$
 
 $if(subtitle)$
@@ -615,12 +627,13 @@ $endif$
 \fi 
 
 \begin{document}
-$if(pagecolor)$ 
-  \pagecolor{$pagecolor$}
-$endif$ 
-$if(textcolor)$ 
-  \color{$textcolor$}
-$endif$ 
+$if(elements.document.box.background)$
+  \pagecolor{$elements.document.box.background$}
+$endif$
+$if(elements.document.color)$
+  \color{$elements.document.color$}
+$endif$
+
 $if(has-frontmatter)$
   \frontmatter
 $endif$
@@ -629,6 +642,7 @@ $if(title)$
     \frame{\titlepage}
   $else$
   \maketitle
+  $endif$
 $endif$
 
 $if(titleabstract)$ 
@@ -644,17 +658,17 @@ $for(include-before)$
   $include-before$
 $endfor$
 
-$if(toc)$
-  $if(toc-col)$ 
-    \begin{multicols}{$toc-col$}
+$if(lists.content)$
+  $if(lists.content.columns)$ 
+    \begin{multicols}{$lists.content.columns$}
   $endif$
-  $if(toc-title)$
-    \renewcommand*\contentsname{$toc-title$}
+  $if(lists.content.title)$
+    \renewcommand*\contentsname{$lists.content.title$}
   $endif$
   $if(beamer)$
     \begin{frame}[allowframebreaks]
-    $if(toc-title)$
-      \frametitle{$toc-title$}
+    $if(lists.content.title)$
+      \frametitle{$lists.content.title$}
     $endif$
     \tableofcontents[hideallsubsections]
     \end{frame}
@@ -667,37 +681,37 @@ $if(toc)$
     \tableofcontents
     }
   $endif$
-  $if(toc-col)$ 
+  $if(lists.content.columns)$ 
     \end{multicols}
   $endif$
 $endif$
 
-$if(lot)$
-  $if(lot-col)$ 
-    \begin{multicols}{$lot-col$}
+$if(lists.tables)$
+  $if(lists.tables.columns)$ 
+    \begin{multicols}{$lists.tables.columns$}
   $endif$
   \listoftables
-  $if(lot-col)$ 
+  $if(lists.tables.columns)$ 
     \end{multicols}
   $endif$
 $endif$
 
-$if(lof)$
-  $if(lof-col)$ 
-    \begin{multicols}{$lof-col$}
+$if(lists.figures)$
+  $if(lists.figures.columns)$ 
+    \begin{multicols}{$lists.figures.columns$}
   $endif$
   \listoffigures
-  $if(lof-col)$ 
+  $if(lists.figures.columns)$ 
     \end{multicols}
   $endif$
 $endif$
 
-$if(glossary)$ 
-  $if(glos-col)$ 
-    \begin{multicols}{$glos-col$}
+$if(lists.glossary)$
+  $if(lists.glossary.columns)$ 
+    \begin{multicols}{$lists.glossary.columns$}
   $endif$
   \printnoidxglossaries
-  $if(glos-col)$ 
+  $if(lists.glossary.columns)$ 
     \end{multicols}
   $endif$
 $endif$ 
@@ -731,7 +745,7 @@ $if(natbib)$
     $endif$
     \bibliography{$for(bibliography)$$bibliography$$sep$,$endfor$}
     $if(beamer)$
-  \   end{frame}
+      \end{frame}
     $endif$
   $endif$
 $endif$
