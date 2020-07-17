@@ -121,9 +121,11 @@ $endif$
   \usepackage[$if(fontenc)$$fontenc$$else$T1$endif$]{fontenc}
   \usepackage[utf8]{inputenc}
   \usepackage{textcomp} % provide euro and other symbols
+  \usepackage{amssymb}
 \else % if luatex or xetex
 $if(mathspec)$
   \ifxetex
+    \usepackage{amssymb}
     \usepackage{mathspec}
   \else
     \usepackage{unicode-math}
@@ -172,19 +174,15 @@ $if(fonts.cjk)$
 $endif$
 \fi
 
-$for(fonts)$
-  \newfontfamily{$it.name$}$it:font()$
+$for(fonts/pairs)$
+\newfontfamily$it.key:macro()$font$it.value:font()$
 $endfor$
 
-$if(elements.section.font)$
-  \addtokomafont{section}{\$elements.section.font$}
-  \addtokomafont{subsection}{\$elements.section.font$}
-  \addtokomafont{subsubsection}{\$elements.section.font$}
-$endif$
-
-$if(elements.chapter.font)$
-  \addtokomafont{chapter}{\$elements.chapter.font$}
-$endif$
+$for(elements/pairs)$
+  $if(it.value.font$)
+    \addtokomafont{$it.key$}{$it.value.font:macro()$}
+  $endif$
+$endfor$
 
 
 %%%% Geometry
@@ -214,43 +212,27 @@ $if(geometry)$
   $endif$
 $endif$
 
-%%%% Color
-$if(pagecolor)$ 
-  \usepackage{pagecolor}
+$if(multicol)$
+  \usepackage{multicol}
 $endif$
 
-$if(colorlinks)$
+%%%% Color
+$if(elements.document.background)$ 
+  \usepackage{elements.document.background}
+$endif$
+
+$if(color)$
   \usepackage{xcolor}
   $if(solarized)$
-
-    \IfFileExists{xcolor-solarized.sty}{\usepackage{xcolor-solarized}} {
-    % We now define the sixteen \solarized{} colors.
-    \definecolor{solarized-base03} {RGB}{000, 043, 054}
-    \definecolor{solarized-base02} {RGB}{007, 054, 066}
-    \definecolor{solarized-base01} {RGB}{088, 110, 117}
-    \definecolor{solarized-base00} {RGB}{101, 123, 131}
-    \definecolor{solarized-base0}  {RGB}{131, 148, 150}
-    \definecolor{solarized-base1}  {RGB}{147, 161, 161}
-    \definecolor{solarized-base2}  {RGB}{238, 232, 213}
-    \definecolor{solarized-base3}  {RGB}{253, 246, 227}
-    \definecolor{solarized-yellow} {RGB}{181, 137, 000}
-    \definecolor{solarized-orange} {RGB}{203, 075, 022}
-    \definecolor{solarized-red}    {RGB}{220, 050, 047}
-    \definecolor{solarized-magenta}{RGB}{211, 054, 130}
-    \definecolor{solarized-violet} {RGB}{108, 113, 196}
-    \definecolor{solarized-blue}   {RGB}{038, 139, 210}
-    \definecolor{solarized-cyan}   {RGB}{042, 161, 152}
-    \definecolor{solarized-green}  {RGB}{133, 153, 000}
-    }
+    \usepackage{xcolor-solarized}
   $endif$
 $endif$
 
 %%%% Theorems
-\usepackage{amssymb,amsmath}
+\usepackage{amsmath}
 $if(amsthm)$ 
   \usepackage{amsthm}
   \usepackage{mfirstuc}
-
 $endif$
 
 $if(noqed)$
@@ -272,7 +254,6 @@ $endif$
 
 
 %%%% Verbatim
-
 % Use upquote if available, for straight quotes in verbatim environments
 \IfFileExists{upquote.sty}{\usepackage{upquote}}{}
 \IfFileExists{microtype.sty}{% use microtype if available
@@ -289,7 +270,6 @@ $endif$
 
 
 %%%% Links
-
 \IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
 \IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
 \hypersetup{
@@ -310,10 +290,9 @@ $endif$
   $endif$
   $if(colorlinks)$
     colorlinks=true,
-    linkcolor=$if(linkcolor)$$linkcolor$$else$Blue$endif$, 
-    filecolor=$if(filecolor)$$filecolor$$else$Pink$endif$, 
-    citecolor=$if(citecolor)$$citecolor$$else$Green$endif$, 
-    urlcolor=$if(urlcolor)$$urlcolor$$else$Blue$endif$,
+    $for(colorlinks/pairs)$
+      $it.key$color=$it.value$$sep$, 
+    $enfor$
   $else$
     hidelinks,
   $endif$
@@ -387,28 +366,28 @@ $endif$
 
 $if(highlighting-macros)$
   $if(solarized)$ 
-  \newcommand{\VerbBar}{|}
-  \newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
-  \DefineVerbatimEnvironment{Highlighting}{Verbatim}{fontsize=\footnotesize,commandchars=\\\{\}}
-  \newenvironment{Shaded}{\linespread{1}}{}
-  \newcommand{\KeywordTok}[1]{\color{solarized-yellow}{\textbf{{#1}}}}
-  \newcommand{\DataTypeTok}[1]{\color{solarized-cyan}{{#1}}}
-  \newcommand{\DecValTok}[1]{\color{solarized-magenta}{{#1}}}
-  \newcommand{\BaseNTok}[1]{\color{solarized-magenta}{{#1}}}
-  \newcommand{\FloatTok}[1]{\color{solarized-magenta}{{#1}}}
-  \newcommand{\CharTok}[1]{\color{solarized-cyan}{{#1}}}
-  \newcommand{\StringTok}[1]{\color{solarized-cyan}{{#1}}}
-  \newcommand{\SpecialCharTok}[1]{\color{solarized-violet}{\textbf{{#1}}}}
-  \newcommand{\CommentTok}[1]{\color{solarized-base0}{\textit{{#1}}}}
-  \newcommand{\OtherTok}[1]{\color{solarized-base00}{{#1}}}
-  \newcommand{\AlertTok}[1]{\color{solarized-orange}{\textbf{{#1}}}}
-  \newcommand{\FunctionTok}[1]{\color{solarized-green}{{#1}}}
-  \newcommand{\RegionMarkerTok}[1]{{#1}}
-  \newcommand{\ErrorTok}[1]{\color{solarized-red}{\textbf{{#1}}}}
-  \newcommand{\NormalTok}[1]{\color{solarized-base02}{#1}}
-  \newcommand{\BuiltInTok}[1]{\color{solarized-blue}{\textbf{{#1}}}}
+    \newcommand{\VerbBar}{|}
+    \newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+    \DefineVerbatimEnvironment{Highlighting}{Verbatim}{fontsize=\footnotesize,commandchars=\\\{\}}
+    \newenvironment{Shaded}{\linespread{1}}{}
+    \newcommand{\KeywordTok}[1]{\color{solarized-yellow}{\textbf{{#1}}}}
+    \newcommand{\DataTypeTok}[1]{\color{solarized-cyan}{{#1}}}
+    \newcommand{\DecValTok}[1]{\color{solarized-magenta}{{#1}}}
+    \newcommand{\BaseNTok}[1]{\color{solarized-magenta}{{#1}}}
+    \newcommand{\FloatTok}[1]{\color{solarized-magenta}{{#1}}}
+    \newcommand{\CharTok}[1]{\color{solarized-cyan}{{#1}}}
+    \newcommand{\StringTok}[1]{\color{solarized-cyan}{{#1}}}
+    \newcommand{\SpecialCharTok}[1]{\color{solarized-violet}{\textbf{{#1}}}}
+    \newcommand{\CommentTok}[1]{\color{solarized-base0}{\textit{{#1}}}}
+    \newcommand{\OtherTok}[1]{\color{solarized-base00}{{#1}}}
+    \newcommand{\AlertTok}[1]{\color{solarized-orange}{\textbf{{#1}}}}
+    \newcommand{\FunctionTok}[1]{\color{solarized-green}{{#1}}}
+    \newcommand{\RegionMarkerTok}[1]{{#1}}
+    \newcommand{\ErrorTok}[1]{\color{solarized-red}{\textbf{{#1}}}}
+    \newcommand{\NormalTok}[1]{\color{solarized-base02}{#1}}
+    \newcommand{\BuiltInTok}[1]{\color{solarized-blue}{\textbf{{#1}}}}
   $else$ 
-  $highlighting-macros$
+    $highlighting-macros$
   $endif$
 $endif$
 
@@ -463,7 +442,7 @@ $endif$
 \providecommand{\tightlist}{%
   \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
 
-$if(numbersections)$
+$if(numbersections)$ %TODO
   \setcounter{secnumdepth}{$if(secnumdepth)$$secnumdepth$$else$5$endif$}
 $else$
   \setcounter{secnumdepth}{-\maxdimen} % remove section numbering
@@ -484,8 +463,8 @@ $else$
   $endif$
 $endif$
 
-$if(pagestyle)$
-  \pagestyle{$pagestyle$}
+$if(elements.page.style)$
+  \pagestyle{$elements.page.style$}
 $endif$
 
 $for(header-includes)$
@@ -545,9 +524,6 @@ $endif$
 
 $if(glossary)$
   \usepackage[acronym,symbols,toc,footnote]{glossaries-extra}
-  $if(multicol)$
-    \usepackage{multicol}
-  $endif$
   \makenoidxglossaries
   $for(glossary.entries)$
     \newglossaryentry{$glossary.entries$}{
@@ -565,11 +541,11 @@ $if(glossary)$
     $else$
       \newcommand{\$glossary.symbols.label$}{\ensuremath{$glossary.symbols.symbol$}}
     $endif$
-    \glsxtrnewsymbol[description={$glossary.symbols.description$}]{$glossary.symbols.label$}{\$glossary.symbols.label$}
+    \glsxtrnewsymbol[description={$glossary.symbols.description$}]{$glossary.symbols.label$}{$glossary.symbols.label:macro()$}
   $endfor$
 $endif$
 
-$if(title)$
+$if(title)$ %%%%%%%%%%%%%%HERE%%%%%%%%%%%%%%%%%
   \title{$if(titlefont)$\newfontfamily\titlefont[$for(titlefontoptions)$$titlefontoptions$$sep$,$endfor$]{$titlefont$}\titlefont$endif$ $title$$if(thanks)$\thanks{$thanks$}$endif$}
 $endif$
 
@@ -629,6 +605,7 @@ $if(title)$
     \frame{\titlepage}
   $else$
   \maketitle
+  $endif$
 $endif$
 
 $if(titleabstract)$ 
@@ -661,7 +638,7 @@ $if(toc)$
   $else$
     {
     $if(colorlinks)$
-      \hypersetup{linkcolor=$if(toccolor)$$toccolor$$else$$endif$}
+      \hypersetup{linkcolor=$if(toccolor)$ $toccolor$ $else$ $endif$}
     $endif$
     \setcounter{tocdepth}{$toc-depth$}
     \tableofcontents

@@ -27,8 +27,8 @@ Pancake will search for `.yaml` files in the working directory. For convenience,
 To specify a font you need to define it either using Pandoc's `fontfamily` variable or using the following:
 
         fonts:
-          a-font: Times New Roman
-          my-font:
+          timesnew: Times New Roman
+          foo:
             font: Arial # Main font
             regular: Arial
             italic: Arial Italic
@@ -41,13 +41,15 @@ To specify a font you need to define it either using Pandoc's `fontfamily` varia
             color: magenta
             options: #fontspec options as a string list
 
-The name of the font will be the key suffixed with `font` (here `my-fontfont`). To define default fonts, name your font one of the following:
+The name of the font will be the key suffixed with `font` (here `\timesnewfont` & `\foofont` respectively). To define default fonts, name your font one of the following:
 
         main:
         sans:
         mono:
         math:
         cjk:
+
+Additional fonts will be loaded from the `/data/fonts` folder. To list the available fonts, execute the `fc-list` inside the container using `docker exec` while it is running.
 
 ## Element style
 
@@ -104,12 +106,11 @@ Here is the list of lists:
 
 In order to change the default link colors, one must use the following:
 
-        links:
-          colors:
-            link: Cyan
-            cite: Grey
-            url: Blue
-            file: Green
+        colorlinks:
+          link: solarized-blue
+          file: solarized-magenta
+          cite: solarized-green
+          url: solarized-cyan
 
 ## Latex Commands
 
@@ -120,12 +121,37 @@ For convenience, a new latex command parameter has been added to define custom L
           - bb: \mathbb
           …
 
-
-
-
 # Filters
 
+## Glossary
+
+Glossaries are used in two steps: definition and usage. The glossary is defined in a `.yaml` configuration file. It can be put in a separate file or defined in the main configuration file as follows :
+
+        glossary:
+          acronyms:
+            - FOO: First On Observation
+          symbols:
+            - label: bar
+              symbol: _
+              description: An example symbol
+          entries:
+            - name: trivial
+              description: Complicated word to say simple.
+
+Once defined, you may use the following notation to reference a word/acronym/symbol in your text:
+
+        A few <+trivialS> ways to express examples can be done when <+foo> using the <-bar> notation.
+
+The behavior can be modified in a few ways:
+
+* +/- at the start of the `<>` notation is used for the entry type:
+  + + for linked reference
+  - - for text only reference
+* Capitalisation of the first letter of the reference to use the capitalized form
+* Adding a upper case `S` at the end of the reference for plural form.
+
 ### pancake_blocks
+
 Main component for scientific writing. It is an old personal filter that evolved a lot with time.
 Strongly inspired by [pandoc-amsthm](https://github.com/ickc/pandoc-amsthm) it mainly adds cref support.
 Here is an example of its usage with the fenced divs of Pandoc 2:

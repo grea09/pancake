@@ -16,7 +16,7 @@ RUN ln -s `which python3` /usr/bin/python
 RUN pip install -U pandocfilters pip
 
 RUN apk --no-cache -U add lua5.3 lua5.3-lpeg gmp
-RUN apk --no-cache -U add libstdc++ libressl3.0-libssl harfbuzz harfbuzz-icu icu fontconfig libpng zlib librsvg
+RUN apk --no-cache -U add libstdc++ libressl3.1-libssl harfbuzz harfbuzz-icu icu fontconfig libpng zlib librsvg
 RUN apk --no-cache -U add inotify-tools wget bash git
 
 COPY .fonts /root/.fonts
