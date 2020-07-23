@@ -150,18 +150,8 @@ The behavior can be modified in a few ways:
 * Capitalisation of the first letter of the reference to use the capitalized form
 * Adding a upper case `S` at the end of the reference for plural form.
 
-### pancake_blocks
-
-Main component for scientific writing. It is an old personal filter that evolved a lot with time.
-Strongly inspired by [pandoc-amsthm](https://github.com/ickc/pandoc-amsthm) it mainly adds cref support.
-Here is an example of its usage with the fenced divs of Pandoc 2:
-
-        ::: {.definition #def:resolver name="Resolvers"}
-        A resolver is a potential causal link defined as a tuple $r = \langle a_s, a_t, f\rangle$
-        ::::::::::::::::::::::::::::::::::::::::::::::::
-
-## pancake_algorithm
-Also, one can use code blocks to write pseudocode using
+## Pseudocode
+Also, one can use code blocks to write pseudocode using `algpseudocode`:
 
         ~~~ {.algorithm #alg:example name="A smart caption" startLine="1"}
         \Function{example}{Stuff $s$, Problem $\mathcal{P}$} \EndFunction

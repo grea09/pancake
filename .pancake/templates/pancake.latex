@@ -179,7 +179,7 @@ $for(fonts/pairs)$
 $endfor$
 
 $for(elements/pairs)$
-  $if(it.value.font$)
+  $if(it.value.font)$
     \addtokomafont{$it.key$}{$it.value.font:macro()$}
   $endif$
 $endfor$
@@ -218,7 +218,7 @@ $endif$
 
 %%%% Color
 $if(elements.document.background)$ 
-  \usepackage{elements.document.background}
+  \usepackage{pagecolor}
 $endif$
 
 $if(color)$
@@ -292,7 +292,7 @@ $endif$
     colorlinks=true,
     $for(colorlinks/pairs)$
       $it.key$color=$it.value$$sep$, 
-    $enfor$
+    $endfor$
   $else$
     hidelinks,
   $endif$
@@ -545,8 +545,8 @@ $if(glossary)$
   $endfor$
 $endif$
 
-$if(title)$ %%%%%%%%%%%%%%HERE%%%%%%%%%%%%%%%%%
-  \title{$if(titlefont)$\newfontfamily\titlefont[$for(titlefontoptions)$$titlefontoptions$$sep$,$endfor$]{$titlefont$}\titlefont$endif$ $title$$if(thanks)$\thanks{$thanks$}$endif$}
+$if(title)$
+  \title{$if(elements.document.title.font)$$elements.document.title.font:macro()$$endif$ $title$$if(thanks)$\thanks{$thanks$}$endif$}
 $endif$
 
 $if(subtitle)$
@@ -591,11 +591,11 @@ $endif$
 \fi 
 
 \begin{document}
-$if(pagecolor)$ 
-  \pagecolor{$pagecolor$}
+$if(elements.document.background)$ 
+  \pagecolor{$elements.document.background$}
 $endif$ 
-$if(textcolor)$ 
-  \color{$textcolor$}
+$if(elements.document.color)$ 
+  \color{$elements.document.color$}
 $endif$ 
 $if(has-frontmatter)$
   \frontmatter
@@ -621,17 +621,17 @@ $for(include-before)$
   $include-before$
 $endfor$
 
-$if(toc)$
-  $if(toc-col)$ 
-    \begin{multicols}{$toc-col$}
+$if(lists.content)$
+  $if(lists.content.columns)$ 
+    \begin{multicols}{$lists.content.columns$}
   $endif$
-  $if(toc-title)$
-    \renewcommand*\contentsname{$toc-title$}
+  $if(lists.content.title)$
+    \renewcommand*\contentsname{$lists.content.title$}
   $endif$
   $if(beamer)$
     \begin{frame}[allowframebreaks]
-    $if(toc-title)$
-      \frametitle{$toc-title$}
+    $if(lists.content.title)$
+      \frametitle{$lists.content.title$}
     $endif$
     \tableofcontents[hideallsubsections]
     \end{frame}
@@ -640,41 +640,41 @@ $if(toc)$
     $if(colorlinks)$
       \hypersetup{linkcolor=$if(toccolor)$ $toccolor$ $else$ $endif$}
     $endif$
-    \setcounter{tocdepth}{$toc-depth$}
+    \setcounter{tocdepth}{$lists.content.depth$}
     \tableofcontents
     }
   $endif$
-  $if(toc-col)$ 
+  $if(lists.content.columns)$ 
     \end{multicols}
   $endif$
 $endif$
 
-$if(lot)$
-  $if(lot-col)$ 
-    \begin{multicols}{$lot-col$}
+$if(lists.tables.columns)$
+  $if(lists.tables.columns)$ 
+    \begin{multicols}{$lists.tables.columns$}
   $endif$
   \listoftables
-  $if(lot-col)$ 
+  $if(lists.tables.columns)$ 
     \end{multicols}
   $endif$
 $endif$
 
-$if(lof)$
-  $if(lof-col)$ 
-    \begin{multicols}{$lof-col$}
+$if(lists.figures.columns)$
+  $if(lists.figures.columns)$ 
+    \begin{multicols}{$lists.figures.columns$}
   $endif$
   \listoffigures
-  $if(lof-col)$ 
+  $if(lists.figures.columns)$ 
     \end{multicols}
   $endif$
 $endif$
 
-$if(glossary)$ 
-  $if(glos-col)$ 
-    \begin{multicols}{$glos-col$}
+$if(lists.glossary)$ 
+  $if(lists.glossary.columns)$ 
+    \begin{multicols}{$lists.glossary.columns$}
   $endif$
   \printnoidxglossaries
-  $if(glos-col)$ 
+  $if(lists.glossary.columns)$ 
     \end{multicols}
   $endif$
 $endif$ 
@@ -708,7 +708,7 @@ $if(natbib)$
     $endif$
     \bibliography{$for(bibliography)$$bibliography$$sep$,$endfor$}
     $if(beamer)$
-  \   end{frame}
+      \end{frame}
     $endif$
   $endif$
 $endif$
