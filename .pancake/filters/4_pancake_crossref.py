@@ -25,10 +25,10 @@ def pancake_crossref(key, value, format, meta):
             if citationid in ['before', 'later', 'citation'] :
                 return (ilatex(latex_command('textbf',citationid.upper())))
             prefix = citationid.split(":", 1)[0]
-            for env in getListMap(meta,'ref-numbered') :
+            for env in getMeta(meta,'ref-numbered') :
               if prefix == getKey(env) :
                 return(ilatex(ref(citationid, getValue(env), title)))
-            for env in getListMap(meta,'ref-named') :
+            for env in getMeta(meta,'ref-named') :
               if prefix == getKey(env) :
                 return(ilatex(nameref(citationid, getValue(env), title)))
             if ('natbib' in meta and meta['natbib']['c']) or ('biblatex' in meta and meta['biblatex']['c']) :

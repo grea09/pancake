@@ -1,0 +1,6 @@
+{
+  "docker.commands.build": "docker build . -t grea09/pancake",
+  "docker.commands.attach": "docker exec -it pancake bash",
+  "docker.containers.label": "ContainerName",
+  "docker.containers.groupBy": "Status",
+}

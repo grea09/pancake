@@ -66,7 +66,7 @@ In order to change the appearance of the different elements in the document one 
             font: macroFontName
             color: Blue
             title: 
-              font: anotherMacro
+              font: \anotherMacro
               background: Grey
             style:
             border:
@@ -155,4 +155,4 @@ Also, one can use code blocks to write pseudocode using `algpseudocode`:
 
         ~~~ {.algorithm #alg:example name="A smart caption" startLine="1"}
         \Function{example}{Stuff $s$, Problem $\mathcal{P}$} \EndFunction
-        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        ~~~

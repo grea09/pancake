@@ -11,18 +11,24 @@ from pandocfilters import toJSONFilter
 def pancake_figure(key, value, format, meta):
     if key == 'Image':
         if format == "latex":
-            [[id, classes, properties],name, content] = value
+            [[id, classes, _],name, content] = value
             currentClasses = set(classes)
             image = content[0]
             if 'wide' in currentClasses: 
                 if str(image).endswith("svg"):
                     image = tmpPdf(image)
-                return [ilatex(latex_command('hypertarget{' + id + '}', '%\n' + begin('figure*') + '\n\\centering\n' + latex_command('includegraphics',image) + '\n' + caption(stringify(name)) + '\n' + end('figure*') + '\n'))]
+                return [ilatex(latex_command('hypertarget{' + id + '}', 
+                '%\n' + begin('figure*') + '\n\\centering\n' + 
+                latex_command('includegraphics',image) + '\n' + 
+                caption(stringify(name)) + '\n' + 
+                end('figure*') + '\n'))]
 
             if 'margin' in currentClasses: 
                 if str(image).endswith("svg"):
                     image = tmpPdf(image)
-                return [ilatex(latex_command('marginpar', '%\n' + latex_command('includegraphics',image) + '\n' + captionof(stringify(name)) + label(id) + '\n' ))]
+                return [ilatex(latex_command('marginpar', '%\n' + 
+                latex_command('includegraphics',image) + '\n' + 
+                captionof(stringify(name)) + label(id) + '\n' ))]
 
 if __name__ == '__main__':
     toJSONFilter(pancake_figure)

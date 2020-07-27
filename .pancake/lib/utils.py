@@ -66,65 +66,37 @@ def parentesis(x):
     else:
         return '(' + x + ')'
 
-def getListMap(meta, name):
-    # Return a MetaMap as defined in the meta
-    #if not hasattr(getListMap, 'value'):
-    getListMap.value = {}
-    if name in meta and meta[name]['t'] == 'MetaList':
-        getListMap.value = []
-        for valuemap in meta[name]['c']:
-            tmpmap = {}
-            if valuemap['t'] == 'MetaMap':
-                for key, value in valuemap['c'].items():
-                    if value['t'] == 'MetaInlines':
-                        string = stringify(value['c'])
-                        if re.match('^[a-zA-Z][\w.:-]*$', string):
-                            tmpmap[key] = string
-            if tmpmap :
-                getListMap.value.append(tmpmap)
-        getListMap.value = list(getListMap.value)
-    return getListMap.value
 
+def getMeta(meta, key):
+    # Return a structured data from a key
+    # as defined in the meta
+    if key in meta :
+        return decodeMeta(meta[key])
 
-def getMultiMap(meta, name):
-    # Return a MetaMap as defined in the meta
-    #if not hasattr(getMultiMap, 'value'):
-    getMultiMap.value = {}
-    if name in meta and meta[name]['t'] == 'MetaMap':
-        for key, values in meta[name]['c'].items():
-            if values['t'] == 'MetaList':
-                getMultiMap.value[key] = []
-                for value in values['c']:
-                    string = stringify(value)
-                    if re.match('^[a-zA-Z][\w.:-]*$', string):
-                        getMultiMap.value[key].append(string)
-                getMultiMap.value[key] = set(getMultiMap.value[key])
-    return getMultiMap.value
-
-def getMap(meta, name):
-    # Return a MetaMap as defined in the meta
+def decodeMeta(meta):
+    # Return a structured data as defined in the meta
     #if not hasattr(getMap, 'value'):
-    getMap.value = {}
-    if name in meta and meta[name]['t'] == 'MetaMap':
-        for key, value in meta[name]['c'].items():
-            if value['t'] == 'MetaInlines':
-                string = stringify(value['c'])
-                if re.match('^[a-zA-Z][\w.:-]*$', string):
-                    getMap.value[key] = string
-    return getMap.value
+    decode = {
+        'MetaBool': bool,
+        'MetaInlines': stringify,
+        'MetaList': decodeList,
+        'MetaMap': decodeMap,
+    }
+    return decode[meta['t']](meta['c'])
 
-def getSet(meta, name):
-    # Return a MetaMap as defined in the meta
-    #if not hasattr(getSet, 'value'):
-    getSet.value = {}
-    if name in meta and meta[name]['t'] == 'MetaList':
-        getSet.value = []
-        for value in meta[name]['c']:
-            string = stringify(value)
-            if re.match('^[a-zA-Z][\w.:-]*$', string):
-                getSet.value.append(string)
-        getSet.value = set(getSet.value)
-    return getSet.value
+def decodeList(metaList):
+    # Return a list as encoded in the meta
+    result = []
+    for value in metaList:
+        result.append(decodeMeta(value))
+    return result  
+
+def decodeMap(metaMap):
+    # Return a dict as encoded in the meta
+    result = {}
+    for key, value in metaMap.items():
+        result[key] = decodeMeta(value)
+    return result
 
 def getKey(dictionary):
     key, value = next(iter(dictionary.items()))
