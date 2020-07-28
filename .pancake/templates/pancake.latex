@@ -179,8 +179,10 @@ $for(fonts/pairs)$
 $endfor$
 
 $for(elements/pairs)$
-  $if(it.value.font)$
-    \addtokomafont{$it.key$}{$it.value.font:macro()$}
+  $if(it.value.koma)$
+    $if(it.value.font)$
+      \setkomafont{$it.key$}{$it.value.font:macro()$}
+    $endif$
   $endif$
 $endfor$
 
@@ -234,18 +236,10 @@ $if(amsthm)$
   \usepackage{amsthm}
   \usepackage{mfirstuc}
   \usepackage[most]{tcolorbox}
+  \tcbuselibrary{theorems}
   $for(elements/pairs)$
       $if(elements.value.theorem)$
-      \newtcbtheorem[auto counter,$if(elements.value.number)$number within=$elements.value.number$,$endif$ $for(elements.value.options)$$elements.value.options$$sep$,$endfor$]
-        {$elements.key$}{$elements.value.prefix/first$}{%
-        $if(elements.value.style)$theorem style=$elements.value.style$,$endif$
-        $if(elements.value.title.font)$fonttitle=$elements.value.title.font$,$endif$
-        $if(elements.value.title.color)$coltitle=$elements.value.title.color$,$endif$
-        $if(elements.value.title.background)$colbacktitle=$elements.value.title.background$,$endif$
-        $if(elements.value.font)$fontupper=$elements.value.font$,$endif$
-        $if(elements.value.border)$colframe=$elements.value.border$,$endif$
-        $if(elements.value.background)$colback=$elements.value.background$,$endif$
-      }
+  \newtcbtheorem[$if(elements.value.number)$auto counter,number within=$elements.value.number$,$endif$]{$elements.key$}{$elements.value.prefix/first$}{$if(elements.value.style)$theorem style=$elements.value.style$,$endif$$if(elements.value.title.font)$fonttitle=$elements.value.title.font$,$endif$$if(elements.value.title.color)$coltitle=$elements.value.title.color$,$endif$$if(elements.value.title.background)$colbacktitle=$elements.value.title.background$,$endif$$if(elements.value.font)$fontupper=$elements.value.font$,$endif$$if(elements.value.border)$colframe=$elements.value.border$,$endif$$if(elements.value.background)$colback=$elements.value.background$,$endif$$for(elements.value.options)$$elements.value.options$$sep$,$endfor$}{$elements.value.ref$}
       $endif$
   $endfor$
 $endif$
@@ -605,6 +599,7 @@ $endif$
   \newcommand{\and}{\quad}
 \fi 
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{document}
 $if(elements.document.background)$ 
   \pagecolor{$elements.document.background$}

@@ -151,6 +151,7 @@ The behavior can be modified in a few ways:
 * Adding a upper case `S` at the end of the reference for plural form.
 
 ## Pseudocode
+
 Also, one can use code blocks to write pseudocode using `algpseudocode`:
 
         ~~~ {.algorithm #alg:example name="A smart caption" startLine="1"}

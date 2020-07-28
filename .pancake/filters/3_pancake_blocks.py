@@ -13,32 +13,41 @@ from pandocfilters import toJSONFilter
 
 def pancake_div2block(key, value, format, meta):
     if key == 'Div':
-        if format == "latex":
+        if format == 'latex':
+            conf = getMeta(meta, 'elements')
             [[id, classes, properties], content] = value
             for class_ in classes:
-                if class_ in allowedClasses(meta):
+                if class_ in allowedClasses(conf):
+                    if conf[class_]['theorem']:
+                        return theoremblock(properties, class_, id, content)
                     return latexblock(properties, class_, id, content)
 
 def allowedClasses(meta):
-    meta_ = getMeta(meta, "elements")
     result = []
-    for element, dict_ in meta_.items():
+    for element, dict_ in meta.items():
         if any([k in ['theorem', 'block'] and v 
             for k,v in dict_.items()]):
             result.append(element)
     return set(result)
 
-
+def theoremblock(properties, definedClass, id, content):
+    param = ''
+    name = ''
+    if 'name' in properties:
+        name = properties['name']
+    if 'param' in properties:
+        param = properties['param']
+    if not id:
+        id = definedClass + str(hash(stringify(content)))
+    return [latex(begin(definedClass) + brakets(param) + '{' + name + '}' + '{' + id + '}')] + content + [latex(end(definedClass))]
 
 def latexblock(properties, definedClass, id, content):
-    param = ""
-    for key_, value in properties:
-        if key_ == "param":
-            param = value
-    name = ""
-    for key_, value in properties:
-        if key_ == "name":
-            name = value
+    param = ''
+    name = ''
+    if 'name' in properties:
+        name = properties['name']
+    if 'param' in properties:
+        param = properties['param']
     return [latex(begin(definedClass) + brakets(name) + braces(param) + label(id))] + content + [latex(end(definedClass))]
 
 
