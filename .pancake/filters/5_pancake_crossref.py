@@ -19,20 +19,29 @@ def pancake_crossref(key, value, format, meta):
     if key == 'Cite':
         if format == "latex":
             [stuff, contents] = value
+            elements = elementsRef(getMeta(meta,'elements'))
             citationid = stuff[0]['citationId']
             title = citationid[0].isupper()
             citationid = citationid.lower()
-            if citationid in ['before', 'later', 'citation'] :
+            if citationid in ['fixme', 'todo', 'citation'] :
                 return (ilatex(latex_command('textbf',citationid.upper())))
             prefix = citationid.split(":", 1)[0]
-            for env in getMeta(meta,'ref-numbered') :
-              if prefix == getKey(env) :
-                return(ilatex(ref(citationid, getValue(env), title)))
-            for env in getMeta(meta,'ref-named') :
-              if prefix == getKey(env) :
-                return(ilatex(nameref(citationid, getValue(env), title)))
+            if prefix in elements:
+                element = elements[prefix]
+                if 'number' in element and element['number']:
+                    return(ilatex(ref(citationid, element['prefix'][0], title)))
+                else:
+                    return(ilatex(nameref(citationid, element['prefix'][0], title)))
             if ('natbib' in meta and meta['natbib']['c']) or ('biblatex' in meta and meta['biblatex']['c']) :
                 return(ilatex(cite(citationid)))
+
+def elementsRef(meta):
+    result = {}
+    for key, element in meta.items():
+        if 'ref' in element:
+            result[element['ref']] = element
+    return result
+
 
 if __name__ == '__main__':
     toJSONFilter(pancake_crossref)

@@ -1,12 +1,17 @@
 #!/bin/bash
 
-POSITIONAL=()
+positional=()
 
 while [[ $# -gt 0 ]]
 do
 key="$1"
 
 case $key in
+    -i|--input)
+    PANDOC_INPUT="$2"
+    shift # past argument
+    shift # past value
+    ;;
     -o|--output)
     PANDOC_OUTPUT="$2"
     shift # past argument
@@ -16,35 +21,55 @@ case $key in
     PANCAKE_ONCE=true
     shift # past argument
     ;;
-    -t|--type)
-    PANDOC_TYPE="$2"
+    -f|--from)
+    PANDOC_FROM="$2"
+    shift # past argument
+    shift # past value
+    ;;
+    -e|--extensions)
+    PANDOC_EXTENSIONS="$2"
+    shift # past argument
+    shift # past value
+    ;;
+    -t|--to)
+    PANDOC_TO="$2"
     shift # past argument
     shift # past value
     ;;
     *)    # unknown option
-    POSITIONAL+=("$1") # save it in an array for later
+    positional+=("$1") # save it in an array for later
     shift # past argument
     ;;
 esac
 done
-set -- "${POSITIONAL[@]}" # restore positional parameters
+set -- "${positional[@]}" # restore positional parameters
 
-PANDOC="pandoc"
-CONF="/root/.pancake"
-CACHE=".cache"
-LOG=".pancake.log"
+pandoc="pandoc"
+conf="/root/.pancake"
+cache=".cache"
+log=".pancake.log"
 
 if [ -z "$PANDOC_INPUT" ]; then
   PANDOC_INPUT="*.md"
 fi
 
-declare -a IN
+if [ -z $PANDOC_FROM ]; then
+  PANDOC_FROM="${PANDOC_INPUT##*.}"
+fi
+if [ $PANDOC_FROM == "md" ]; then
+  if [ -z $PANDOC_EXTENSIONS ]; then
+    PANDOC_FROM="markdown"
+  else
+    PANDOC_FROM="markdown+$PANDOC_EXTENSIONS"
+  fi
+fi
+
+declare -a input
 if [ $# == 0 ]; then
     if [ ! ls $PANDOC_INPUT 2>/dev/null ] ; then
         echo -e "\033[1;31mNo file to convert!\033[0m";
         exit 1;
     fi
-    IN=$(ls $PANDOC_INPUT | tr '\n' ' ')
 fi
 
 while [[ $# -gt 0 ]]
@@ -53,67 +78,76 @@ if [ ! ls $1 2>/dev/null ] ; then
     echo -e "\033[1;31mFile '$i' not found !\033[0m";
     exit 1;
 fi
-
-IN=("${IN[@]}" $(ls $1  | tr '\n' ' '))
 shift
 done
 
+shopt -s nullglob
+input=($PANDOC_INPUT)
+shopt -u nullglob
+
 if [ -z $PANDOC_OUTPUT ]; then
-    if [ -z $PANDOC_TYPE ]; then
-        PANDOC_TYPE="pdf"
+    if [ -z $PANDOC_TO ]; then
+        PANDOC_TO="pdf"
         PANDOC_OUTPUT="output.pdf"
-    elif [ ${#IN[@]} -eq 1 ]; then
-        PANDOC_OUTPUT="${IN[0]%.*}.$PANDOC_TYPE"
+    elif [ ${#input[@]} -eq 1 ]; then
+        PANDOC_OUTPUT="${input[0]%.*}.$PANDOC_TO"
     fi
-elif [ -z $PANDOC_TYPE ]; then
-  PANDOC_TYPE="${PANDOC_OUTPUT##*.}"
+elif [ -z $PANDOC_TO ]; then
+  PANDOC_TO="${PANDOC_OUTPUT##*.}"
 fi
 
-OPT="-s --template=$CONF/templates/pancake"
 
-EXTRA=" --quiet --log=$LOG"
-if [ "$PANDOC_TYPE" == "pdf" ] ; then
-    EXTRA="$EXTRA -t latex --pdf-engine=tectonic --pdf-engine-opt=--print"
+options="-s --template=$conf/templates/pancake --quiet --log=$log"
+if [ "$PANDOC_TO" == "pdf" ] ; then
+    options="$options --pdf-engine=tectonic --pdf-engine-opt=--print"
+    PANDOC_TO="latex"
 fi
 
-UPDATE=$(echo -e "\033[1m%w%f\033[0m changed. Updating \033[1m$PANDOC_OUTPUT\033[0m…")
-echo -e "Watching \033[1m$IN\033[0m for changes…"
+if [ -n $PANDOC_FROM ]; then
+  format="$format -f $PANDOC_FROM"
+fi
+if [ -n $PANDOC_TO ]; then
+  format="$format -t $PANDOC_TO"
+fi
+
+update=$(echo -e "\033[1m%w%f\033[0m changed. Updating \033[1m$PANDOC_OUTPUT\033[0m…")
+echo -e "Watching \033[1m$input\033[0m for changes…"
 while true ; do
-    mkdir $CACHE 2>/dev/null
-    FILTERS=""
-    for i in $CONF/filters/* ; do
-    FILTERS="$FILTERS --filter $i"
+    mkdir $cache 2>/dev/null
+    filters=""
+    for i in $conf/filters/* ; do
+    filters="$filters --filter $i"
     done
-    FILTERS="$FILTERS --filter pandoc-citeproc"
+    filters="$filters --filter pandoc-citeproc"
     
-    YAML="--metadata-file=$CONF/pancake.yaml"
+    yaml="--metadata-file=$conf/pancake.yaml"
     for i in *.yaml ; do
-        [ -e "$i" ] && YAML="$YAML --metadata-file=$i"
+        [ -e "$i" ] && yaml="$yaml --metadata-file=$i"
     done
     for i in style/*.yaml ; do
-        [ -e "$i" ] && YAML="$YAML --metadata-file=$i"
+        [ -e "$i" ] && yaml="$yaml --metadata-file=$i"
     done
     
-    if [[ $MD5 == $(md5sum $IN) ]] ; then
-        inotifywait -qre close_write $IN --format "$UPDATE"
+    if [[ $md5 == $(md5sum $input) ]] ; then
+        inotifywait -qre close_write $input --format "$update"
     else
         echo -e "\033[1m$PANDOC_OUTPUT\033[0m needs updating…"
     fi
-    MD5=$(md5sum $IN)
-    FAIL=0
-    CMD="$PANDOC $OPT $FILTERS $EXTRA $YAML $PANDOC_OPTIONS $IN -o $PANDOC_OUTPUT"
-    echo "$CMD"
-    $CMD 2>&1 || FAIL=$?
-    OWNER=($(ls -ld ${IN[0]}))
-    chown ${OWNER[2]}:${OWNER[3]} $PANDOC_OUTPUT 2>/dev/null
+    md5=$(md5sum $input)
+    fail=0
+    cmd="$pandoc $options $filters $yaml $PANDOC_OPTIONS $format $input -o $PANDOC_OUTPUT"
+    
+    $cmd 2>&1 || fail=$?
+    owner=($(ls -ld ${input[0]}))
+    chown ${owner[2]}:${owner[3]} $PANDOC_OUTPUT 2>/dev/null
     if [ $PANCAKE_ONCE ] ; then
         exit 0;
     fi
-    if [ $FAIL != 0 ] ; then
+    if [ $fail != 0 ] ; then
         echo -e '\033[1;31mConversion failed !\033[0m'
     else
         echo -e '\033[1;32mConverted with success !\033[0m'
     fi
-    chmod 755 -R $CACHE
-    chmod 755 -R $LOG
+    chmod 755 -R $cache
+    chmod 755 -R $log
 done

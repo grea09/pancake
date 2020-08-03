@@ -181,7 +181,7 @@ $endfor$
 $for(elements/pairs)$
   $if(it.value.koma)$
     $if(it.value.font)$
-      \setkomafont{$it.key$}{$it.value.font:macro()$}
+      \addtokomafont{$it.key$}{$it.value.font:macro()$ $if(it.value.color)$\color{$it.value.color$} $endif$$if(it.value.style)$$it.value.style:macro()$}$endif$}
     $endif$
   $endif$
 $endfor$
@@ -216,6 +216,51 @@ $endif$
 
 $if(multicol)$
   \usepackage{multicol}
+$endif$
+
+\makeatletter
+\renewcommand\tableofcontents{%
+    $if(lists.content.level)$$lists.content.level:macro()$$else$\section$endif${\contentsname}%
+    \@mkboth{\MakeUppercase\contentsname}%
+        {\MakeUppercase\contentsname}%
+    $if(lists.content.columns)$
+      \begin{multicols}{$lists.content.columns$}
+    $endif$
+        \@starttoc{toc}%
+    $if(lists.content.columns)$
+      \end{multicols}
+    $endif$
+}
+\renewcommand\listoftables{%
+    $if(lists.tables.level)$$lists.tables.level:macro()$$else$\section$endif${\listtablename}%
+    \@mkboth{\MakeUppercase\listtablename}%
+        {\MakeUppercase\listtablename}%
+    $if(lists.tables.columns)$
+      \begin{multicols}{$lists.tables.columns$}
+    $endif$
+        \@starttoc{lot}%
+    $if(lists.tables.columns)$
+      \end{multicols}
+    $endif$
+}
+\renewcommand\listoffigures{%
+    $if(lists.figures.level)$$lists.figures.level:macro()$$else$\section$endif${\listfigurename}%
+    \@mkboth{\MakeUppercase\listfigurename}%
+        {\MakeUppercase\listfigurename}%
+    $if(lists.figures.columns)$
+      \begin{multicols}{$lists.figures.columns$}
+    $endif$
+        \@starttoc{lof}%
+    $if(lists.figures.columns)$
+      \end{multicols}
+    $endif$
+}
+\makeatother
+
+$if(lists.glossary.columns)$
+  \usepackage{glossary-mcols}
+  \renewcommand*{\glsmcols}{$lists.glossary.columns$}
+  \setglossarystyle{mcolindex}
 $endif$
 
 %%%% Color
@@ -326,12 +371,16 @@ $if(beamer)$
 $endif$
 
 $if(algorithm)$
-  $algorithm()$
+\usepackage{algorithm}
+\usepackage[noend]{algpseudocode}
+\newcommand{\algorithmicbreak}{\textbf{break}}
+\newcommand{\Break}{\State \algorithmicbreak}\newcommand{\algorithmiccontinue}{\textbf{continue}} 
+\newcommand{\Continue}{\State \algorithmiccontinue}
 $endif$
 
 $if(listings)$
   \usepackage{listings}
-  \newcommand{\passthrough}[1]{#1}
+  \newcommand{\passthrough}[1]{#1}5
   \lstset{defaultdialect=[5.3]Lua}
   \lstset{defaultdialect=[x86masm]Assembler}
 
@@ -632,9 +681,6 @@ $for(include-before)$
 $endfor$
 
 $if(lists.content)$
-  $if(lists.content.columns)$ 
-    \begin{multicols}{$lists.content.columns$}
-  $endif$
   $if(lists.content.title)$
     \renewcommand*\contentsname{$lists.content.title$}
   $endif$
@@ -647,47 +693,35 @@ $if(lists.content)$
     \end{frame}
   $else$
     {
-    $if(colorlinks)$
-      \hypersetup{linkcolor=$if(toccolor)$ $toccolor$ $else$ $endif$}
+    $if(lists.content.linkcolor)$
+      \hypersetup{linkcolor=$lists.content.linkcolor$}
     $endif$
     \setcounter{tocdepth}{$lists.content.depth$}
     \tableofcontents
     }
   $endif$
-  $if(lists.content.columns)$ 
-    \end{multicols}
-  $endif$
 $endif$
 
-$if(lists.tables.columns)$
-  $if(lists.tables.columns)$ 
-    \begin{multicols}{$lists.tables.columns$}
+$if(lists.tables)$
+  $if(lists.tables.title)$
+    \renewcommand*\listtablename{$lists.tables.title$}
   $endif$
   \listoftables
-  $if(lists.tables.columns)$ 
-    \end{multicols}
-  $endif$
 $endif$
 
-$if(lists.figures.columns)$
-  $if(lists.figures.columns)$ 
-    \begin{multicols}{$lists.figures.columns$}
+$if(lists.figures)$
+  $if(lists.tables.title)$
+  \renewcommand*\listfigurename{$lists.tables.title$}
   $endif$
   \listoffigures
-  $if(lists.figures.columns)$ 
-    \end{multicols}
-  $endif$
 $endif$
 
-$if(lists.glossary)$ 
-  $if(lists.glossary.columns)$ 
-    \begin{multicols}{$lists.glossary.columns$}
+$if(lists.glossary)$
+  $if(lists.glossary.title)$
+  \renewcommand*\glossaryname{$lists.glossary.title$}
   $endif$
   \printnoidxglossaries
-  $if(lists.glossary.columns)$ 
-    \end{multicols}
-  $endif$
-$endif$ 
+$endif$
 
 $if(linestretch)$
   \setstretch{$linestretch$}

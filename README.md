@@ -15,7 +15,9 @@ The following options may be of use:
 * `PANDOC_OPTIONS`: options to give to `pandoc`
 * `PANDOC_INPUT`: input files to be converted
 * `PANDOC_OUTPUT`: output file
-* `PANDOC_TYPE`: output type, if unspecified it is inferred from output's extension.
+* `PANDOC_FROM`: input format, if unspecified it is inferred from input's extension.
+* `PANDOC_EXTENSIONS`: additional pandoc extensions to add to the format (e.g. `markdown+hard_line_breaks`).
+* `PANDOC_TO`: output format, if unspecified it is inferred from output's extension.
 * `PANCAKE_ONCE`: if defined, will end the container after the first conversion attempt. Otherwise, `pandoc` will be invoked on every file change until the container is manually stopped.
 
 # Configuration
@@ -38,7 +40,6 @@ To specify a font you need to define it either using Pandoc's `fontfamily` varia
             bold-slanted: Verdana Bold
             smallcaps: Times New Roman
             scale: 1.2
-            color: magenta
             options: #fontspec options as a string list
 
 The name of the font will be the key suffixed with `font` (here `\timesnewfont` & `\foofont` respectively). To define default fonts, name your font one of the following:
@@ -59,6 +60,7 @@ In order to change the appearance of the different elements in the document one 
           my-element:
             theorem: #or
             block: true
+            koma: true #Koma element
             prefix:
              - singularForm
              - pluralForm
@@ -85,6 +87,27 @@ The following elements can be styled:
         table:
         equation:
 
+### Document
+
+For the document element, here is the list of handled options:
+
+* `style`: documet class
+* `color`: text color
+* `background`: page color
+* `options`: class options like `a4paper` and such.
+
+### Theorems
+
+This part will use `tcolorbox` to generate theorem like blocks. Please refer to the (package documentation)[http://www.texdoc.net/texmf-dist/doc/latex/tcolorbox/tcolorbox.pdf].
+
+### Blocks
+
+Will generate classical block LaTeX code using `begin` and `end`.
+
+### Koma
+
+This setting allows to style default KOMA class elements like `section` or `chapter`. The style is applied as part of the `\addtokomafont` command. Don't forget the `font` prefix added when defining fonts in Pancake. The `style` element is passed as a latex command.
+
 ## List options
 
 Several lists of elements can be used in each document. Lists are tables that enumerates elements of a certain type and some of their properties. For example list of figures with their caption or various table of content or glossary. To change their display, use the following:
@@ -93,7 +116,9 @@ Several lists of elements can be used in each document. Lists are tables that en
           my-list: #Enables the list
             title: Super List
             depth: 4
+            level: chapter #Heading of the list
             columns: 3 #Requires multicol
+            linkcolor: solarized-base1
 
 Here is the list of lists:
 
@@ -117,7 +142,7 @@ In order to change the default link colors, one must use the following:
 For convenience, a new latex command parameter has been added to define custom LaTeX command:
 
         macro:
-          - name: definition
+          - name: raw LaTeX definition
           - bb: \mathbb
           …
 

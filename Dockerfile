@@ -1,7 +1,7 @@
 FROM alpine
 
-COPY --from=pandoc/core:edge /usr/local/bin/pandoc* /usr/local/bin/
-COPY --from=pandoc/core:edge /usr/lib/* /usr/lib/
+COPY --from=pandoc/crossref /usr/local/bin/pandoc* /usr/local/bin/
+COPY --from=pandoc/crossref /usr/lib/* /usr/lib/
 COPY --from=grea09/tectonic /root/.cargo/bin/tectonic /usr/local/bin/
 COPY --from=grea09/tectonic /usr/lib/* /usr/lib/
 
@@ -15,7 +15,7 @@ RUN ln -s `which python3` /usr/bin/python
 #RUN ln -s `which pip3` /usr/bin/pip
 RUN pip install -U pandocfilters pip
 
-RUN apk --no-cache -U add lua5.3 lua5.3-lpeg gmp
+RUN apk --no-cache -U add lua5.3 lua5.3-lpeg gmp libffi
 RUN apk --no-cache -U add libstdc++ libressl3.1-libssl harfbuzz harfbuzz-icu icu fontconfig libpng zlib librsvg
 RUN apk --no-cache -U add inotify-tools wget bash git
 
