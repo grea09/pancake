@@ -115,10 +115,10 @@ echo -e "Watching \033[1m$input\033[0m for changes…"
 while true ; do
     mkdir $cache 2>/dev/null
     filters=""
-    for i in $conf/filters/* ; do
-    filters="$filters --filter $i"
-    done
-    filters="$filters --filter pandoc-citeproc"
+    #for i in $conf/filters/* ; do
+    #filters="$filters --filter $i"
+    #done
+    filters="$filters --filter panflute --filter pandoc-citeproc"
     
     yaml="--metadata-file=$conf/pancake.yaml"
     for i in *.yaml ; do
