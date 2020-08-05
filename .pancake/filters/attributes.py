@@ -1,6 +1,9 @@
 import re
+
 from html.parser import HTMLParser
-from panflute import run_filter, Table, Math, Str
+from panflute import run_filter, Table, Math, Para, Str, RawInline
+
+from utils.latex import label, tag
 
 r = re.compile(r"{([^!}]+)}")
 
@@ -22,29 +25,35 @@ class AttributeParser(HTMLParser):
             self.attributes[key] = value
 
 
-def nextAttributes(elem, doc):
-    index = doc.content.index(elem)
-    for i in range(index+1, len(doc.content)-1):
-        if type(doc.content[i]) == Str:
-            value = doc.content[i].content
-            if r.search(value) is not None:
-                doc.content[i].content = r.sub('', value)
-                parser = AttributeParser()
-                parser.feed("<div " + r.search(value).group(1) + "/>")
-                return parser.attributes
-
-
 def attributes(elem, doc):
     if doc.format == 'latex':
-        if type(elem) in {Table, Math}:
-            attributes = nextAttributes(elem, doc)
-            if 'id' in attributes:
-                elem.id = attributes['id']
-                del attributes['id']
-            if 'class' in attributes:
-                elem.classes.append(attributes['class'].split())
-                del attributes['class']
-            elem.attributes = {**elem.attributes, **attributes}
+        if type(elem) == Table or (type(elem) == Math and elem.format == 'DisplayMath'):
+            attrElem = elem.next
+            while type(attrElem) not in [Para, Str]:
+                if attrElem is None:
+                    return
+                attrElem = attrElem.next
+            if type(attrElem) == Para:
+                for labeltext in attrElem.content:
+                    if type(labeltext) == Str:
+                        attrElem = labeltext
+                        break
+            value = attrElem.text
+            if r.search(value) is not None:
+                attrElem.text = r.sub('', value)
+                parser = AttributeParser()
+                parser.feed("<div " + r.search(value).group(1) + "/>")
+                attributes = parser.attributes
+                if 'id' in attributes:
+                    if type(elem) == Table:
+                        elem.caption.insert(0, RawInline(label(attributes['id']), 'latex'))
+                    if type(elem) == Math:
+                        elem.text = label(attributes['id']) + elem.text
+                if 'name' in attributes:
+                    if type(elem) == Table:
+                        elem.caption.append(Str(attributes['name']))
+                    if type(elem) == Math:
+                        elem.text = tag(attributes['name']) + elem.text
 
 
 def main(doc=None):

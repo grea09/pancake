@@ -15,10 +15,10 @@ def algorithm(elem, doc):
                     name = elem.attributes['name']
                 if 'name' in elem.attributes.items():
                     numbered = '[' + elem.attributes['name'] + ']'
-                return RawBlock('latex', begin(algEnv) +
-                                caption(name) + label(elem.id) +
-                                begin('algorithmic') + numbered + elem.content +
-                                end('algorithmic') + end(algEnv))
+                return RawBlock(begin(algEnv) +
+                                caption(name) + label(elem.identifier) +
+                                begin('algorithmic') + numbered + elem.text +
+                                end('algorithmic') + end(algEnv), 'latex')
 
 
 def main(doc=None):

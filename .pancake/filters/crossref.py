@@ -1,20 +1,22 @@
-from panflute import run_filter, Cite, Citation, Space, Str, RawInline
+import logging
+
+from panflute import run_filter, Cite, Citation, Space, Str, RawInline, Para
 
 from utils.latex import latex_command
 
 
 def prefixes(meta):
     result = {}
-    for key, element in meta.items():
+    for _, element in meta.items():
         if 'ref' in element:
             result[element['ref']] = element
     return result
 
 
 def render(meta, citations, conjunction):
-    result = []
+    result = ''
     prefix = meta['prefix']
-    command = 'ref' if 'number' not in meta else 'nameref'
+    command = 'ref' if 'number' in meta else 'nameref'
     if len(citations) > 1 :
         prefix = prefix[1] # Plurial
     else:
@@ -23,15 +25,14 @@ def render(meta, citations, conjunction):
         prefix = prefix.title()
     else:
         prefix = prefix.lower()
-    result.append(Str(prefix))
+    result += prefix + '~'
     if 'preposition' in meta and 'number' not in meta:
-        result.append(Space())
-        result.append(Str(meta['preposition']))
+        result += meta['preposition'] + '~'
     for citation in citations[:-1]:
-        result.append(RawInline('latex', latex_command(command, citation.id)))
-        result.append([Str(','), Space()])
-    result.append([Space(), Str(conjunction), Space()])
-    result.append(RawInline('latex', latex_command(command, citations[-1].id)))
+        result += latex_command(command, citation.id) + ', '
+    if len(citations) > 1:
+        result += ' ' + conjunction + ' '
+    result += latex_command(command, citations[-1].id)
     return result
     
     
@@ -40,15 +41,22 @@ def render(meta, citations, conjunction):
 def crossref(elem, doc):
     if doc.format == 'latex':
         if type(elem) == Cite:
-            prefixes = prefixes(doc.get_metadata('elements'))
+            metaPrefix = prefixes(doc.get_metadata('elements'))
             citations = {}
             for citation in elem.citations :
-                prefix = citation.id.split(":", 1)[0]
+                split = citation.id.split(":", 1)
+                logging.warning("split=%s", split)
+                if len(split) <= 1 or split[0] not in metaPrefix:
+                    continue
+                prefix = split[0]
                 if prefix not in citations:
                     citations[prefix] = []
-                citation[prefix].append(citation)
-            for prefix, prefixed in citation.items() :
-                render(prefixes[prefix], prefixed, doc.get_metadata('ref-conjunction'))
+                citations[prefix].append(citation)
+            result = ''
+            for prefix, prefixed in citations.items() :
+                result += render(metaPrefix[prefix], prefixed, doc.get_metadata('ref-conjunction'))
+            logging.warning("render=%s", result)
+            return RawInline(result, 'latex')
 
             
 

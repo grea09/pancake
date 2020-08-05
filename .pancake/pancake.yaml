@@ -1,5 +1,5 @@
 # Base pandoc options
 smart: true
 standalone: true
-panflute-filters: [glossary]
+panflute-filters: [glossary, algorithm, attributes, blocks, crossref, figure]
 panflute-path: '/root/.pancake/filters'

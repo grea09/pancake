@@ -14,7 +14,7 @@ def glossary(elem, doc):
                 def keep(x): return ((x['c'] != '') and (
                     r.match(str(x['c'])) == None))
 
-                def parse(m): return RawInline('latex', gls(*m.group(1, 2)))
+                def parse(m): return RawInline(gls(*m.group(1, 2)), 'latex')
                 result = list(filter(keep,
                                      chain.from_iterable(
                                          zip_longest(
@@ -23,6 +23,7 @@ def glossary(elem, doc):
                                              map(parse, r.finditer(
                                                  elem.text)),
                                              fillvalue=Str('')))))
+                print("result=%s", result)
                 return result
 
 

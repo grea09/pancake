@@ -8,29 +8,6 @@ def latex_command(name, content, **kwargs):
         return '\\' + name + (('[' + kwargs.get('option') + ']')
                               if 'option' in kwargs else '') + '{' + content + '}'
 
-
-def tcb(properties, definedClass, id, content):
-    param = ''
-    name = ''
-    if 'name' in properties:
-        name = properties['name']
-    if 'param' in properties:
-        param = properties['param']
-    if not id:
-        id = definedClass + str(hash(stringify(content)))
-    return [RawBlock('latex', begin(definedClass) + brakets(param) + braces(param) + braces(id))] + content + [RawBlock('latex', end(definedClass))]
-
-
-def block(properties, definedClass, id, content):
-    param = ''
-    name = ''
-    if 'name' in properties:
-        name = properties['name']
-    if 'param' in properties:
-        param = properties['param']
-    return [RawBlock('latex', begin(definedClass) + brakets(name) + braces(param) + label(id))] + content + [RawBlock('latex', end(definedClass))]
-
-
 def image(url):
     return latex_command('includegraphics', url)
 
@@ -78,6 +55,8 @@ def label(x, *args, **kwargs):
     else:
         return latex_command('label', x)
 
+def tag(x, simple=False):
+    return latex_command('tag' + '*' if simple else '', x)
 
 def gls(entry, glsid):
     command = 'Gls' if glsid.isupper() else 'gls'
