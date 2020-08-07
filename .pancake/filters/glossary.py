@@ -11,8 +11,8 @@ def glossary(elem, doc):
     if doc.format == 'latex':
         if type(elem) == Str:
             if r.search(elem.text) is not None:
-                def keep(x): return ((x['c'] != '') and (
-                    r.match(str(x['c'])) == None))
+                def keep(x): return (x.text and (
+                    r.match(x.text) == None))
 
                 def parse(m): return RawInline(gls(*m.group(1, 2)), 'latex')
                 result = list(filter(keep,
@@ -23,7 +23,6 @@ def glossary(elem, doc):
                                              map(parse, r.finditer(
                                                  elem.text)),
                                              fillvalue=Str('')))))
-                print("result=%s", result)
                 return result
 
 

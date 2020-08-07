@@ -1,7 +1,7 @@
 # Pancake
 Using Tectonic + Pandoc + custom filters for scientific writing.
 This project is a docker image that contains various tools to write scientific papers in Markdown.
-All this is made for [Pandoc v2.10](https://github.com/jgm/pandoc).
+All this is made for [Pandoc v2.9](https://github.com/jgm/pandoc).
 
 # Usage
 
@@ -22,7 +22,7 @@ The following options may be of use:
 
 # Configuration
 
-Pancake will search for `.yaml` files in the working directory. For convenience, you may put them in a `style` folder. All style files will be read in the alphabetical order. The YAML files can contain any Pandoc metadata variables (except for font specification).
+Pancake will search for `.yaml` files in the working directory. For convenience, you may put them in a `styles` folder. All style files will be read in the alphabetical order. The YAML files can contain any Pandoc metadata variables (except for font specification).
 
 ## Font specification
 
@@ -65,6 +65,7 @@ In order to change the appearance of the different elements in the document one 
              - singularForm
              - pluralForm
             ref: shortcode for refs
+            preposition: of #Between prefix and name
             font: macroFontName
             color: Blue
             title: 

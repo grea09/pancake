@@ -1,5 +1,3 @@
-import logging
-
 from panflute import run_filter, Cite, Citation, Space, Str, RawInline, Para
 
 from utils.latex import latex_command
@@ -45,7 +43,6 @@ def crossref(elem, doc):
             citations = {}
             for citation in elem.citations :
                 split = citation.id.split(":", 1)
-                logging.warning("split=%s", split)
                 if len(split) <= 1 or split[0] not in metaPrefix:
                     continue
                 prefix = split[0]
@@ -55,7 +52,6 @@ def crossref(elem, doc):
             result = ''
             for prefix, prefixed in citations.items() :
                 result += render(metaPrefix[prefix], prefixed, doc.get_metadata('ref-conjunction'))
-            logging.warning("render=%s", result)
             return RawInline(result, 'latex')
 
             

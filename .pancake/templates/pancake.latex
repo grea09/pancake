@@ -1,3 +1,8 @@
+%%%%
+% This file is generated from Markdown.
+% If possible use Pancake to generate the PDF directly
+%%%%
+
 % Options for packages loaded elsewhere
 \PassOptionsToPackage{unicode$for(hyperrefoptions)$,$hyperrefoptions$$endfor$}{hyperref}
 \PassOptionsToPackage{hyphens}{url}
@@ -31,6 +36,20 @@ $endif$
     $elements.document.options$$sep$,
   $endfor$
 ]{$elements.document.style$}
+
+\usepackage{etoolbox}
+
+%%%% Color
+$if(elements.document.background)$ 
+  \usepackage{pagecolor}
+$endif$
+
+$if(color)$
+  \usepackage{xcolor}
+  $if(solarized)$
+    \usepackage{xcolor-solarized}
+  $endif$
+$endif$
 
 %%%% Beamer style
 $if(beamer)$
@@ -257,24 +276,6 @@ $endif$
 }
 \makeatother
 
-$if(lists.glossary.columns)$
-  \usepackage{glossary-mcols}
-  \renewcommand*{\glsmcols}{$lists.glossary.columns$}
-  \setglossarystyle{mcolindex}
-$endif$
-
-%%%% Color
-$if(elements.document.background)$ 
-  \usepackage{pagecolor}
-$endif$
-
-$if(color)$
-  \usepackage{xcolor}
-  $if(solarized)$
-    \usepackage{xcolor-solarized}
-  $endif$
-$endif$
-
 %%%% Theorems
 \usepackage{amsmath}
 $if(amsthm)$ 
@@ -345,7 +346,7 @@ $endif$
   $if(colorlinks)$
     colorlinks=true,
     $for(colorlinks/pairs)$
-      $it.key$color=$it.value$$sep$, 
+      $it.key$color=$it.value$,
     $endfor$
   $else$
     hidelinks,
@@ -529,6 +530,16 @@ $for(header-includes)$
   $header-includes$
 $endfor$
 
+\makeatletter\def\defcommand{\@ifstar\defcommand@S\defcommand@N}
+\def\defcommand@S#1{\let#1\outer\renewcommand*#1}
+\def\defcommand@N#1{\let#1\outer\renewcommand#1} \makeatother
+
+$for(macros)$
+  $for(it/pairs)$
+    \defcommand{$it.key:macro()$}{$it.value$}
+  $endfor$
+$endfor$
+
 $if(lang)$
   \ifxetex
     % Load polyglossia as late as possible: uses bidi with RTL langages (e.g. Hebrew, Arabic)
@@ -582,6 +593,11 @@ $endif$
 
 $if(glossary)$
   \usepackage[acronym,symbols,toc,footnote]{glossaries-extra}
+  $if(lists.glossary.columns)$
+    \usepackage{glossary-mcols}
+    \renewcommand*{\glsmcols}{$lists.glossary.columns$}
+    \setglossarystyle{mcolindex}
+  $endif$
   \makenoidxglossaries
   $for(glossary.entries)$
     \newglossaryentry{$glossary.entries$}{

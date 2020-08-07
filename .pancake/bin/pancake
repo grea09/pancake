@@ -81,9 +81,9 @@ fi
 shift
 done
 
-shopt -s nullglob
-input=($PANDOC_INPUT)
-shopt -u nullglob
+#shopt -s nullglob
+input=`ls $PANDOC_INPUT`
+#shopt -u nullglob
 
 if [ -z $PANDOC_OUTPUT ]; then
     if [ -z $PANDOC_TO ]; then
@@ -120,13 +120,15 @@ while true ; do
     #done
     filters="$filters --filter panflute --filter pandoc-citeproc"
     
-    yaml="--metadata-file=$conf/pancake.yaml"
-    for i in *.yaml ; do
-        [ -e "$i" ] && yaml="$yaml --metadata-file=$i"
+    metadata="--metadata-file=$conf/pancake.yaml"
+    shopt -s nullglob
+    for i in ./*.yaml; do
+        metadata="$metadata --metadata-file=$i"
     done
-    for i in style/*.yaml ; do
-        [ -e "$i" ] && yaml="$yaml --metadata-file=$i"
+    for i in ./styles/*.yaml; do
+        metadata="$metadata --metadata-file=$i"
     done
+    shopt -u nullglob
     
     if [[ $md5 == $(md5sum $input) ]] ; then
         inotifywait -qre close_write $input --format "$update"
@@ -135,8 +137,8 @@ while true ; do
     fi
     md5=$(md5sum $input)
     fail=0
-    cmd="$pandoc $options $filters $yaml $PANDOC_OPTIONS $format $input -o $PANDOC_OUTPUT"
-    
+    cmd="$pandoc $options $filters $metadata $PANDOC_OPTIONS $format $input -o $PANDOC_OUTPUT"
+    echo $cmd
     $cmd 2>&1 || fail=$?
     owner=($(ls -ld ${input[0]}))
     chown ${owner[2]}:${owner[3]} $PANDOC_OUTPUT 2>/dev/null

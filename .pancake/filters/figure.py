@@ -19,7 +19,7 @@ def figure(elem, doc):
             if 'margin' in elem.classes:
                 return RawInline(latex_command('marginpar', '%\n' +
                                                          image(elem.url) + '\n' +
-                                                         captionof(elem.title) + label(elem.id) + '\n'), 'latex')
+                                                         captionof(elem.title) + label(elem.identifier) + '\n'), 'latex')
 
 
 def main(doc=None):
