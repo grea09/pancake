@@ -1,11 +1,12 @@
 import re
+import logging
 
 from html.parser import HTMLParser
 from panflute import run_filter, Table, Math, Para, Str, RawInline
 
 from utils.latex import label, tag
 
-r = re.compile(r"{([^!}]+)}")
+r = re.compile(r"(:.+)?{([^!}]+)}")
 
 
 class AttributeParser(HTMLParser):
@@ -24,26 +25,35 @@ class AttributeParser(HTMLParser):
                 key = 'class'
             self.attributes[key] = value
 
-
 def attributes(elem, doc):
     if doc.format == 'latex':
         if type(elem) == Table or (type(elem) == Math and elem.format == 'DisplayMath'):
-            attrElem = elem.next
-            while type(attrElem) not in [Para, Str]:
-                if attrElem is None:
-                    return
-                attrElem = attrElem.next
-            if type(attrElem) == Para:
-                for labeltext in attrElem.content:
-                    if type(labeltext) == Str:
-                        attrElem = labeltext
+            if type(elem) == Table:
+                for a in elem.caption:
+                    if type(a) == Str and r.search(a.text) is not None:
+                        attrElem = a
                         break
+            else:
+                attrElem = elem.next
+                while type(attrElem) not in [Para, Str]:
+                    if attrElem is None:
+                        return
+                    attrElem = attrElem.next
+                if type(attrElem) == Para:
+                    for labeltext in attrElem.content:
+                        if type(labeltext) == Str:
+                            attrElem = labeltext
+                            break
+            logging.warning("FOUND. elem=%s &&&&&&&& attr=%s", elem, attrElem)
             value = attrElem.text
             if r.search(value) is not None:
                 attrElem.text = r.sub('', value)
                 parser = AttributeParser()
-                parser.feed("<div " + r.search(value).group(1) + "/>")
+                search = r.search(value)
+                parser.feed("<div " + search.group(2) + "/>")
                 attributes = parser.attributes
+                if search.group(1) and 'name' not in attributes:
+                    attributes['name'] = search.group(1)
                 if 'id' in attributes:
                     if type(elem) == Table:
                         elem.caption.insert(0, RawInline(label(attributes['id']), 'latex'))
@@ -51,9 +61,13 @@ def attributes(elem, doc):
                         elem.text = label(attributes['id']) + elem.text
                 if 'name' in attributes:
                     if type(elem) == Table:
+                        for c in elem.caption:
+                            if c == attrElem:
+                                c.text = r.sub('', value)
                         elem.caption.append(Str(attributes['name']))
                     if type(elem) == Math:
                         elem.text = tag(attributes['name']) + elem.text
+                logging.warning("AFTER. elem=%s &&&&&&&& attr=%s", elem, attrElem)
 
 
 def main(doc=None):

@@ -16,13 +16,14 @@ def glossary(elem, doc):
 
                 def parse(m): return RawInline(gls(*m.group(1, 2)), 'latex')
                 result = list(filter(keep,
-                                     chain.from_iterable(
-                                         zip_longest(
-                                             map(Str, r.split(
-                                                 elem.text) + [' ']),
-                                             map(parse, r.finditer(
-                                                 elem.text)),
-                                             fillvalue=Str('')))))
+                            chain.from_iterable(
+                                zip_longest(
+                                    map(Str, re.split(r"<[\+-][^!>]+>", elem.text) + [' ']),
+                                    map(parse, r.finditer(elem.text)),fillvalue=Str('')
+                                )
+                            )
+                        )
+                )
                 return result
 
 

@@ -12,6 +12,8 @@ def prefixes(meta):
 
 
 def render(meta, citations, conjunction):
+    if len(citations) == 0:
+        return
     result = ''
     prefix = meta['prefix']
     command = 'ref' if 'number' in meta else 'nameref'
@@ -26,11 +28,12 @@ def render(meta, citations, conjunction):
     result += prefix + '~'
     if 'preposition' in meta and 'number' not in meta:
         result += meta['preposition'] + '~'
-    for citation in citations[:-1]:
-        result += latex_command(command, citation.id) + ', '
+    result += latex_command(command, citations[0].id.lower())
+    for citation in citations[1:-1]:
+        result += ', ' + latex_command(command, citation.id.lower())
     if len(citations) > 1:
         result += ' ' + conjunction + ' '
-    result += latex_command(command, citations[-1].id)
+        result += latex_command(command, citations[-1].id.lower())
     return result
     
     
@@ -43,15 +46,15 @@ def crossref(elem, doc):
             citations = {}
             for citation in elem.citations :
                 split = citation.id.split(":", 1)
-                if len(split) <= 1 or split[0] not in metaPrefix:
-                    continue
-                prefix = split[0]
-                if prefix not in citations:
-                    citations[prefix] = []
-                citations[prefix].append(citation)
+                ref = split[0].lower()
+                if len(split) <= 1 or ref not in metaPrefix:
+                    return
+                if ref not in citations:
+                    citations[ref] = []
+                citations[ref].append(citation)
             result = ''
-            for prefix, prefixed in citations.items() :
-                result += render(metaPrefix[prefix], prefixed, doc.get_metadata('ref-conjunction'))
+            for ref, prefixed in citations.items() :
+                result += render(metaPrefix[ref], prefixed, doc.get_metadata('ref-conjunction'))
             return RawInline(result, 'latex')
 
             

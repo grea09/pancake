@@ -5,7 +5,7 @@ from utils.latex import begin, caption, label, end
 algEnv = 'algorithm'
 
 
-def algorithm(elem, doc):
+def code(elem, doc):
     if doc.format == 'latex':
         if type(elem) == CodeBlock:
             if algEnv in elem.classes:
@@ -19,10 +19,10 @@ def algorithm(elem, doc):
                                 caption(name) + label(elem.identifier) +
                                 begin('algorithmic') + numbered + elem.text +
                                 end('algorithmic') + end(algEnv), 'latex')
-
+                
 
 def main(doc=None):
-    return run_filter(algorithm, doc=doc)
+    return run_filter(code, doc=doc)
 
 
 if __name__ == "__main__":

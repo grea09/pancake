@@ -9,19 +9,25 @@ def blocks(elem, doc):
             for class_ in elem.classes:
                 if class_ in allowedClasses(conf):
                     if conf[class_]['theorem']:
-                        return tcb(elem, class_)
+                        return tcb(elem, class_, 'number' in conf[class_])
                     return block(elem, class_)
 
-def tcb(elem, definedClass):
+def tcb(elem, definedClass, numbered):
     param = ''
     name = ''
+    additional = '{}'
     if 'name' in elem.attributes:
         name = elem.attributes['name']
+        param = 'nameref=' + braces(name) +','
     if 'param' in elem.attributes:
         param = elem.attributes['param']
     if elem.identifier:
-        param = 'label=' + braces(elem.identifier) + param
-    beginElem = RawBlock(begin(definedClass) + brakets(param) + '{' + name + '}' + '{' + elem.identifier + '}', 'latex')
+        param = 'label=' + braces(elem.identifier) + ',' + param
+    if not numbered:
+        definedClass += '*'
+    else:
+        additional = '{' + elem.identifier + '}'
+    beginElem = RawBlock(begin(definedClass) + brakets(param) + '{' + name + '}' + additional, 'latex')
     endElem = RawBlock(end(definedClass), 'latex')
     return [beginElem, elem, endElem]
 

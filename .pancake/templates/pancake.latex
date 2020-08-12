@@ -134,7 +134,7 @@ $if(fontfamily)$
 $else$
   \usepackage{lmodern}
 $endif$
-
+\usepackage{amsmath}
 \usepackage{ifxetex,ifluatex}
 \ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
   \usepackage[$if(fontenc)$$fontenc$$else$T1$endif$]{fontenc}
@@ -163,7 +163,7 @@ $endif$
 $if(fonts.mono)$
   \setmonofont$fonts.mono:font()$
 $endif$
-$if(mathfont)$
+$if(fonts.math)$
 $if(mathspec)$
   \ifxetex
     \setmathfont(Digits,Latin,Greek)$fonts.math:font()$
@@ -277,7 +277,6 @@ $endif$
 \makeatother
 
 %%%% Theorems
-\usepackage{amsmath}
 $if(amsthm)$ 
   \usepackage{amsthm}
   \usepackage{mfirstuc}
@@ -364,8 +363,7 @@ $if(cref)$
   $for(cref-labelled)$
     \crefname{$cref-labelled.name$}{$cref-labelled.name$}{$if(cref-labelled.plurial)$$cref-labelled.plurial$$else$$cref-labelled.name$s$endif$}
   $endfor$
-$endif$ 
-
+$endif$
 
 $if(beamer)$
   \newif\ifbibliography
@@ -377,6 +375,7 @@ $if(algorithm)$
 \newcommand{\algorithmicbreak}{\textbf{break}}
 \newcommand{\Break}{\State \algorithmicbreak}\newcommand{\algorithmiccontinue}{\textbf{continue}} 
 \newcommand{\Continue}{\State \algorithmiccontinue}
+\MakeRobust{\Call} %For nested Calls
 $endif$
 
 $if(listings)$
@@ -443,8 +442,9 @@ $if(highlighting-macros)$
     \newcommand{\FunctionTok}[1]{\color{solarized-green}{{#1}}}
     \newcommand{\RegionMarkerTok}[1]{{#1}}
     \newcommand{\ErrorTok}[1]{\color{solarized-red}{\textbf{{#1}}}}
+    \newcommand{\OperatorTok}[1]{\color{solarized-blue}{\textbf{{#1}}}}
     \newcommand{\NormalTok}[1]{\color{solarized-base02}{#1}}
-    \newcommand{\BuiltInTok}[1]{\color{solarized-blue}{\textbf{{#1}}}}
+    \newcommand{\BuiltInTok}[1]{\color{solarized-green}{\textbf{{#1}}}}
   $else$ 
     $highlighting-macros$
   $endif$
@@ -662,15 +662,15 @@ $endif$
 \ifdefined\and 
 \else
   \newcommand{\and}{\quad}
-\fi 
+\fi
+$if(elements.document.color)$ 
+  \color{$elements.document.color$}
+$endif$ 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{document}
 $if(elements.document.background)$ 
   \pagecolor{$elements.document.background$}
-$endif$ 
-$if(elements.document.color)$ 
-  \color{$elements.document.color$}
 $endif$ 
 $if(has-frontmatter)$
   \frontmatter
