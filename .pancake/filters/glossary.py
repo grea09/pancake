@@ -18,12 +18,12 @@ def glossary(elem, doc):
                 result = list(filter(keep,
                             chain.from_iterable(
                                 zip_longest(
-                                    map(Str, re.split(r"<[\+-][^!>]+>", elem.text) + [' ']),
+                                    map(Str, re.split(r"<[\+-][^!>]+>", elem.text) + ['']),
                                     map(parse, r.finditer(elem.text)),fillvalue=Str('')
                                 )
                             )
                         )
-                )
+                    )
                 return result
 
 

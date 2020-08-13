@@ -1,5 +1,4 @@
 import re
-import logging
 
 from html.parser import HTMLParser
 from panflute import run_filter, Table, Math, Para, Str, RawInline
@@ -44,7 +43,6 @@ def attributes(elem, doc):
                         if type(labeltext) == Str:
                             attrElem = labeltext
                             break
-            logging.warning("FOUND. elem=%s &&&&&&&& attr=%s", elem, attrElem)
             value = attrElem.text
             if r.search(value) is not None:
                 attrElem.text = r.sub('', value)
@@ -67,7 +65,6 @@ def attributes(elem, doc):
                         elem.caption.append(Str(attributes['name']))
                     if type(elem) == Math:
                         elem.text = tag(attributes['name']) + elem.text
-                logging.warning("AFTER. elem=%s &&&&&&&& attr=%s", elem, attrElem)
 
 
 def main(doc=None):

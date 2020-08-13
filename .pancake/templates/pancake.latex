@@ -276,11 +276,12 @@ $endif$
 }
 \makeatother
 
+\usepackage[most]{tcolorbox}
+
 %%%% Theorems
 $if(amsthm)$ 
   \usepackage{amsthm}
   \usepackage{mfirstuc}
-  \usepackage[most]{tcolorbox}
   \tcbuselibrary{theorems}
   $for(elements/pairs)$
       $if(elements.value.theorem)$
@@ -380,42 +381,14 @@ $endif$
 
 $if(listings)$
   \usepackage{listings}
-  \newcommand{\passthrough}[1]{#1}5
-  \lstset{defaultdialect=[5.3]Lua}
-  \lstset{defaultdialect=[x86masm]Assembler}
-
-  \lstset{
-      language=java,
-      keywords={pre, eff, method, Action},
-      numbers=left,
-      stepnumber=1,
-      numbersep=5pt,
-      showspaces=false,
-      showstringspaces=false,
-      keepspaces=true,
-      showtabs=true,
-      tabsize=1,
-      extendedchars=true,
-      captionpos=b,
-      breaklines=true,
-      breakatwhitespace=true,
-      breakautoindent=true,
-  %    framexrightmargin=-2mm,
-      xleftmargin=5mm,
-      framexleftmargin=5mm} 
-
-  $if(solarized)$
-    %%%% For listings (code blocks)
-    \lstset{
-        basicstyle={\color{solarized-base02}\footnotesize\ttfamily},
-        backgroundcolor=\color{solarized-base3},
-        keywordstyle=\color{solarized-orange}\bfseries,
-        identifierstyle=\color{solarized-base01},
-        stringstyle=\color{solarized-green},
-        commentstyle=\color{solarized-base1}\itshape,
-        numberstyle=\footnotesize\color{solarized-base0}
-    }
-  $endif$
+  \newcommand{\passthrough}[1]{#1}
+  \tcbuselibrary{listings}
+  \tcbset{listing engine=listings}
+  $for(elements/pairs)$
+      $if(elements.value.listing)$
+  \newtcblisting[$if(elements.value.number)$auto counter,number within=$elements.value.number$,$endif$]{$elements.key$}{$elements.value.prefix/first$}{$if(elements.value.style)$theorem style=$elements.value.style$,$endif$$if(elements.value.title.font)$fonttitle=$elements.value.title.font$,$endif$$if(elements.value.title.color)$coltitle=$elements.value.title.color$,$endif$$if(elements.value.title.background)$colbacktitle=$elements.value.title.background$,$endif$$if(elements.value.font)$fontupper=$elements.value.font$,$endif$$if(elements.value.border)$colframe=$elements.value.border$,$endif$$if(elements.value.background)$colback=$elements.value.background$,$endif$$for(elements.value.options)$$elements.value.options$$sep$,$endfor$}{$elements.value.ref$}
+      $endif$
+  $endfor$
 $endif$
 
 $if(lhs)$
