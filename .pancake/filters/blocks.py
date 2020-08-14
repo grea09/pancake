@@ -1,4 +1,4 @@
-from panflute import run_filter, Div, RawBlock, CodeBlock
+from panflute import run_filter, Div, RawBlock
 
 from utils.latex import begin, end, braces, brakets, label, caption
 
@@ -8,17 +8,11 @@ def blocks(elem, doc):
             conf = doc.get_metadata('elements')
             for class_ in elem.classes:
                 if class_ in allowedClasses(conf):
+                    if 'alias' in conf[class_]:
+                        class_ = conf[class_]['alias']
                     if conf[class_]['theorem']:
                         return tcb(elem, class_, 'number' in conf[class_])
                     return block(elem, class_)
-        if type(elem) == CodeBlock:
-            conf = doc.get_metadata('elements')
-            for class_ in elem.classes:
-                if class_ in allowedClasses(conf):
-                    if conf[class_]['listing']:
-                        listing = tcb(elem, class_, 'number' in conf[class_])
-                        listing[1] = RawBlock(elem.text, 'latex')
-                        return listing
 
 
 def tcb(elem, definedClass, numbered):
@@ -58,7 +52,7 @@ def block(elem, definedClass):
 def allowedClasses(meta):
     result = []
     for element, dict_ in meta.items():
-        if any([k in ['theorem', 'block', 'listing'] and v
+        if any([k in ['theorem', 'block', 'boxed'] and v
                 for k, v in dict_.items()]):
             result.append(element)
     return set(result)

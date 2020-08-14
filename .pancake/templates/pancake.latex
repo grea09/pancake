@@ -288,6 +288,9 @@ $if(amsthm)$
   \newtcbtheorem[$if(elements.value.number)$auto counter,number within=$elements.value.number$,$endif$]{$elements.key$}{$elements.value.prefix/first$}{$if(elements.value.style)$theorem style=$elements.value.style$,$endif$$if(elements.value.title.font)$fonttitle=$elements.value.title.font$,$endif$$if(elements.value.title.color)$coltitle=$elements.value.title.color$,$endif$$if(elements.value.title.background)$colbacktitle=$elements.value.title.background$,$endif$$if(elements.value.font)$fontupper=$elements.value.font$,$endif$$if(elements.value.border)$colframe=$elements.value.border$,$endif$$if(elements.value.background)$colback=$elements.value.background$,$endif$$for(elements.value.options)$$elements.value.options$$sep$,$endfor$}{$elements.value.ref$}
       $endif$
   $endfor$
+  $if(elements.proof.boxed)$
+  \renewcommand*{\proof}{\proofbox}
+  $endif$
 $endif$
 
 $if(noqed)$
@@ -457,6 +460,10 @@ $if(graphics)$
   \makeatletter
   \def\fps@figure{htbp}
   \makeatother
+$endif$
+
+$if(subfigure)$
+\usepackage{subfig}
 $endif$
 
 $if(links-as-notes)$
