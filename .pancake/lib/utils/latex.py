@@ -5,11 +5,17 @@ def latex_command(name, content, **kwargs):
     if content == '':
         return ''
     else:
-        return '\\' + name + (('[' + kwargs.get('option') + ']')
-                              if 'option' in kwargs else '') + '{' + content + '}'
+        options = ''
+        if 'option' in kwargs:
+            options = kwargs['option']
+            del kwargs['option']
+        for key, value in kwargs.items():
+            options += ('' if options == '' else ',') + key + '=' + value
+        return '\\' + name + brakets(options) + '{' + content + '}'
 
-def image(url):
-    return latex_command('includegraphics', url)
+
+def image(url, **kwargs):
+    return latex_command('includegraphics', url, **kwargs)
 
 
 def begin(x):
@@ -55,8 +61,10 @@ def label(x, *args, **kwargs):
     else:
         return latex_command('label', x)
 
+
 def tag(x, simple=False):
     return latex_command('tag' + '*' if simple else '', x)
+
 
 def gls(entry, glsid):
     command = 'Gls' if glsid.isupper() else 'gls'

@@ -385,6 +385,25 @@ $endif$
 $if(listings)$
   \usepackage{listings}
   \newcommand{\passthrough}[1]{#1}
+  \lstset{
+        basicstyle=\small,
+        numbers=left,
+        numberstyle=\footnotesize,
+        stepnumber=1,
+        firstnumber=1,
+        frame=single,
+        tabsize=2,
+        numberfirstline=true,
+        breaklines=true,
+        linewidth=0.95\textwidth,
+        xleftmargin=1cm
+  }
+  $if(solarized)$
+  \lstset{
+    backgroundcolor=\color{solarized-base3},
+    basicstyle=\small\color{solarized-base01},
+  }
+  $endif$
   \tcbuselibrary{listings}
   \tcbset{listing engine=listings}
   $for(elements/pairs)$
@@ -426,10 +445,11 @@ $if(highlighting-macros)$
   $endif$
 $endif$
 
+\usepackage{caption}
+
 $if(tables)$
   \usepackage{longtable,booktabs}
   $if(beamer)$
-    \usepackage{caption}
     % Make caption package work with longtable
     \makeatletter
     \def\fnum@table{\tablename~\thetable}
@@ -444,6 +464,10 @@ $if(tables)$
     \IfFileExists{footnotehyper.sty}{\usepackage{footnotehyper}}{\usepackage{footnote}}
     \makesavenoteenv{longtable}
   $endif$
+$endif$
+
+$if(elements.caption.font)$
+\captionsetup{labelfont=$elements.caption.font$}
 $endif$
 
 $if(graphics)$
