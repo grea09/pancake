@@ -1,0 +1,1 @@
+$for(it/pairs)$$it.key$=$if(it.value.index)$[$it.value.index$]$endif$$if(it.value.list)${$for(it.value.list)$$it$$sep$,$endfor$}$elseif(it.value.content)$$it.value.content$$else$$it.value$$endif$$endfor$

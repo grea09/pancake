@@ -49,6 +49,9 @@ $if(color)$
   $if(solarized)$
     \usepackage{xcolor-solarized}
   $endif$
+  $for(colors/pairs)$
+  \definecolor{$it.key$} {$color.mode$}{$it.value$}
+  $endfor$
 $endif$
 
 %%%% Beamer style
@@ -385,30 +388,23 @@ $endif$
 $if(listings)$
   \usepackage{listings}
   \newcommand{\passthrough}[1]{#1}
-  \lstset{
-        basicstyle=\small,
-        numbers=left,
-        numberstyle=\footnotesize,
-        stepnumber=1,
-        firstnumber=1,
-        frame=single,
-        tabsize=2,
-        numberfirstline=true,
-        breaklines=true,
-        linewidth=0.95\textwidth,
-        xleftmargin=1cm
+  $for(listings-langages/pairs)$
+  \lstdefinelanguage{$it.key$}{
+    $for(it.value)$
+    $it:option()$$sep$,
+    $endfor$
   }
-  $if(solarized)$
+  $endfor$
   \lstset{
-    backgroundcolor=\color{solarized-base3},
-    basicstyle=\small\color{solarized-base01},
+    $for(listings)$
+    $it:option()$$sep$,
+    $endfor$
   }
-  $endif$
   \tcbuselibrary{listings}
   \tcbset{listing engine=listings}
   $for(elements/pairs)$
       $if(elements.value.listing)$
-  \newtcblisting[$if(elements.value.number)$auto counter,number within=$elements.value.number$,$endif$]{$elements.key$}{$elements.value.prefix/first$}{$if(elements.value.style)$theorem style=$elements.value.style$,$endif$$if(elements.value.title.font)$fonttitle=$elements.value.title.font$,$endif$$if(elements.value.title.color)$coltitle=$elements.value.title.color$,$endif$$if(elements.value.title.background)$colbacktitle=$elements.value.title.background$,$endif$$if(elements.value.font)$fontupper=$elements.value.font$,$endif$$if(elements.value.border)$colframe=$elements.value.border$,$endif$$if(elements.value.background)$colback=$elements.value.background$,$endif$$for(elements.value.options)$$elements.value.options$$sep$,$endfor$}{$elements.value.ref$}
+  \newtcblisting[$if(elements.value.number)$auto counter,number within=$elements.value.number$,$endif$]{$elements.key$}{$elements.value.prefix/first$}{$if(elements.value.style)$theorem style=$elements.value.style$,$endif$$if(elements.value.title.font)$fonttitle=$elements.value.title.font$,$endif$$if(elements.value.title.color)$coltitle=$elements.value.title.color$,$endif$$if(elements.value.title.background)$colbacktitle=$elements.value.title.background$,$endif$$if(elements.value.font)$fontupper=$elements.value.font$,$endif$$if(elements.value.border)$colframe=$elements.value.border$,$endif$$if(elements.value.background)$colback=$elements.value.background$,$endif$$for(elements.value.options)$$elements.value.options$c,$endfor$}{$elements.value.ref$}
       $endif$
   $endfor$
 $endif$
@@ -524,6 +520,25 @@ $else$
       \renewcommand{\subparagraph}[1]{\oldsubparagraph{#1}\mbox{}}
     \fi
   $endif$
+$endif$
+
+$if(titleps)$
+  \usepackage{titleps}
+  \usepackage{lastpage}
+  \newpagestyle{main}{
+    $if(elements.page.headrule)$
+    \setheadrule{$elements.page.headrule$}
+    $endif$
+    $if(elements.page.header)$
+    \sethead$for(elements.page.header)${$it$}$endfor$
+    $endif$
+    $if(elements.page.footrule)$
+    \setfootrule{$elements.page.footrule$}
+    $endif$
+    $if(elements.page.footer)$
+    \setfoot$for(elements.page.footer)${$it$}$endfor$
+    $endif$
+  }
 $endif$
 
 $if(elements.page.style)$

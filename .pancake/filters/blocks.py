@@ -10,7 +10,7 @@ def blocks(elem, doc):
                 if class_ in allowedClasses(conf):
                     if 'alias' in conf[class_]:
                         class_ = conf[class_]['alias']
-                    if conf[class_]['theorem']:
+                    if 'theorem' in conf[class_] and conf[class_]['theorem']:
                         return tcb(elem, class_, 'number' in conf[class_])
                     return block(elem, class_)
 
@@ -21,11 +21,11 @@ def tcb(elem, definedClass, numbered):
     additional = '{}'
     if 'name' in elem.attributes:
         name = elem.attributes['name']
-        param = 'nameref=' + braces(name) +','
+        param += 'nameref=' + braces(name) +','
     if 'caption' in elem.attributes:
-        param = 'caption=' + braces(elem.attributes['caption']) +','
+        param += 'caption=' + braces(elem.attributes['caption']) +','
     if 'param' in elem.attributes:
-        param = elem.attributes['param']
+        param += elem.attributes['param']
     if elem.identifier:
         param = 'label=' + braces(elem.identifier) + ',' + param
     if not numbered:
@@ -51,10 +51,11 @@ def block(elem, definedClass):
 
 def allowedClasses(meta):
     result = []
-    for element, dict_ in meta.items():
-        if any([k in ['theorem', 'block', 'boxed'] and v
-                for k, v in dict_.items()]):
-            result.append(element)
+    if meta is not None:
+        for element, dict_ in meta.items():
+            if any([k in ['theorem', 'block', 'boxed'] and v
+                    for k, v in dict_.items()]):
+                result.append(element)
     return set(result)
 
 
