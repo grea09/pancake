@@ -619,10 +619,12 @@ $if(glossary)$
   $endif$
   \makenoidxglossaries
   $for(glossary.entries)$
-    \newglossaryentry{$glossary.entries$}{
-      name={$glossary.entries.name$},
-      description={$glossary.entries.description$}
-    }
+    $for(glossary.entries/pairs)$
+      \newglossaryentry{$it.key/lowercase$}{
+        name={$it.value.name$},
+        description={$it.value.description$}
+      }
+    $endfor$
   $endfor$
   $for(glossary.acronyms)$
     $for(glossary.acronyms/pairs)$
@@ -682,6 +684,11 @@ $endif$
 \else
   \newcommand{\and}{\quad}
 \fi
+
+$if(elements.quote.title)$
+  \usepackage{lettrine}
+$endif$
+
 $if(elements.document.color)$ 
   \color{$elements.document.color$}
 $endif$ 

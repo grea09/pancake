@@ -1,17 +1,14 @@
 from panflute import RawBlock, stringify
 
 
-def latex_command(name, content, **kwargs):
-    if content == '':
-        return ''
-    else:
-        options = ''
-        if 'option' in kwargs:
-            options = kwargs['option']
-            del kwargs['option']
-        for key, value in kwargs.items():
-            options += ('' if options == '' else ',') + key + '=' + value
-        return '\\' + name + brakets(options) + '{' + content + '}'
+def latex_command(name, content='', **kwargs):
+    options = ''
+    if 'option' in kwargs:
+        options = kwargs['option']
+        del kwargs['option']
+    for key, value in kwargs.items():
+        options += ('' if options == '' else ',') + key + '=' + value
+    return '\\' + name + brakets(options) + braces(content)
 
 
 def image(url, **kwargs):
@@ -70,7 +67,7 @@ def gls(entry, glsid):
     command = 'Gls' if glsid.isupper() else 'gls'
     if entry == '-':
         command += 'entry'
-        command += 'name' if (glsid.endswith('S')) else 'plural'
+        command += 'plural' if (glsid.endswith('S')) else 'name'
     elif entry == '+':
         command += 'pl' if (glsid.endswith('S')) else ''
     glsid = glsid.lower()[:-1] if (glsid.endswith('S')) else glsid.lower()

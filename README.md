@@ -68,7 +68,7 @@ In order to change the appearance of the different elements in the document one 
             preposition: of #Between prefix and name
             font: macroFontName
             color: Blue
-            title: 
+            title:
               font: \anotherMacro
               background: Grey
             style:
@@ -79,6 +79,7 @@ In order to change the appearance of the different elements in the document one 
 
 The following elements can be styled:
 
+        quote: # Title is lettrine
         code: #verbatim code
         algorithm: #Enables algorithmx
         document: #Title is main title, number is page number and only box.background change the page color. Style is pagestyle.
