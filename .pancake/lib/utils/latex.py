@@ -53,6 +53,8 @@ def captionof(x):
 
 
 def label(x, *args, **kwargs):
+    if not x:
+        return ''
     if len(args) >= 1:
         return latex_command('label', x, option=args[0])
     else:
