@@ -45,10 +45,14 @@ def parentesis(x):
 
 
 def caption(x):
+    if not x:
+        return ''
     return latex_command('caption', x)
 
 
 def captionof(x):
+    if not x:
+        return ''
     return latex_command('captionof{figure}', x)
 
 
