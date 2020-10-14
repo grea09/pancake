@@ -32,7 +32,6 @@ def attributes(elem, doc):
                     if type(a) == Str and r.search(a.text) is not None:
                         attrElem = a
                         break
-                return
             else:
                 attrElem = elem.next
                 while type(attrElem) not in [Para, Str]:
