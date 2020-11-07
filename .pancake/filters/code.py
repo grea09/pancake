@@ -20,7 +20,11 @@ def code(elem, doc):
                                 caption(name) + label(elem.identifier) +
                                 begin('algorithmic') + numbered + elem.text +
                                 end('algorithmic') + end(algEnv), 'latex')
-                
+            languages = set(doc.get_metadata('listings-langages').keys()).intersection(elem.classes)
+            if languages :
+                elem.attributes['language'] = languages.pop()
+                return elem
+
 
 def main(doc=None):
     return run_filter(code, doc=doc)

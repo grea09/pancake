@@ -329,6 +329,10 @@ $if(verbatim-in-note)$
   \VerbatimFootnotes % allow verbatim text in footnotes
 $endif$
 
+$if(syntax)$
+  \usepackage{syntax}
+$endif$
+
 
 %%%% Links
 \IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available

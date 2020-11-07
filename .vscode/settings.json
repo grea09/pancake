@@ -5,5 +5,8 @@
   "docker.containers.groupBy": "Status",
   "python.autoComplete.extraPaths": [
     "/home/antoine/Projets/pancake/.pancake/lib"
+],
+"python.analysis.extraPaths": [
+  "/home/antoine/Projets/pancake/.pancake/lib"
 ]
 }
