@@ -114,11 +114,12 @@ update=$(echo -e "\033[1m%w%f\033[0m changed. Updating \033[1m$PANDOC_OUTPUT\033
 echo -e "Watching \033[1m$input\033[0m for changes…"
 while true ; do
     mkdir $cache 2>/dev/null
+    touch $log
     filters=""
     #for i in $conf/filters/* ; do
     #filters="$filters --filter $i"
     #done
-    filters="$filters --filter panflute --filter pandoc-citeproc"
+    filters="$filters --filter panflute"
     
     metadata="--metadata-file=$conf/pancake.yaml"
     shopt -s nullglob
